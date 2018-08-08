@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<title>PRONET - Professional Networking and more</title>
+	<style type="text/css">
+		
+		label {
+			display: inline-block;
+			width: 140px;
+			text-align: left;
+			margin-bottom: 3px;
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="main_container">
+		<h1 style="align: center">WELCOME TO PRONET</h1>
+		<p>Pronet is a PROfessional NETworking site developed as part of the university class project "Internet Technologies".</p>
+		<br>
+		<div class="form">
+			<h2>LOG IN</h2>
+			<form method="POST" action="/TEDProject/WelcomeServlet?register=false">
+				<label>Email: </label><input type="email" name="email"><br>
+				<label>Password: </label><input type="password" name="password"><br>
+				<input style="display: inline-block; margin: 0px 0px 0px 140px" type="submit" value="Log in"><br>
+			</form>
+		</div>
+		<br>
+		<div class="form">
+			<h2>SIGN UP</h2>
+			<form method=POST action="/TEDProject/WelcomeServlet?register=true">
+				<label>First name: </label><input type="text" name="firstname"><br>
+				<label>Last name: </label><input type="text" name="lastname"><br>
+				<label>Email: </label><input type="email" name="email"><br>
+				<label>Password: </label><input type="password" name="password"><br>
+				<label>Repeat Password: </label><input type="password" name="repeat_password"><br>
+				<label>Phone Number: </label><input type="text" name="phone_number"><br>
+				<input style="display: inline-block; margin: 0px 0px 0px 140px" type="submit" value="Sign up"><br>
+			</form>
+		</div>
+		<br>
+		<p style="text-align: center"> (!) This site is still under construction! </p>	
+	</div>
+</body>
+</html>
