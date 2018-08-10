@@ -9,9 +9,12 @@
 </head>
 <body>
 	<div class="main_container" style="text-align: center">
-	<% if ( request.getAttribute("errorType").equals("invalidLogin") ) { %>
+	<% if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
 		<h2>LOGIN FAILED</h2>
-		<p>Oops! The log in information that you entered appears to be incorrect.</p>
+		<p>Oops! It appears that the email you entered does not belong to a registered account.</p>
+	<% } else if ( request.getAttribute("errorType").equals("invalidLoginPassword") ) { %>	
+		<h2>LOGIN FAILED</h2>
+		<p>Oops! It  appears that the password that you entered is incorrect.</p>
 	<% } else if ( request.getAttribute("errorType").equals("notMatchingPasswords") ) { %>
 		<h2>REGISTRATION FAILED</h2>
 		<p>It seems that the password you re-entered does not match the first one.</p>
