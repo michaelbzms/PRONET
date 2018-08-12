@@ -21,6 +21,9 @@
 	<% } else if ( request.getAttribute("errorType").equals("emailTaken") ) { %>
 		<h2>REGISTRATION FAILED</h2>
 		<p>It seems that the email you entered is already registered to an account.</p>
+	<% } else if ( request.getAttribute("errorType").equals("invalidPageRequest") ) { %>
+		<h2>INVALID PAGE REQUEST</h2>
+		<p>The page you requested does not exist.</p>
 	<% } else { %>
 		<h2>UNKNOWN ERROR</h2>
 		<p>Well, this is embarassing.. An unknown error has occured! :(</p>

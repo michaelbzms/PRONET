@@ -11,12 +11,12 @@ public class Professional {
 		Professional prof = dbg.recoverProfessionalRecord(email);
 		dbg.close();           // close connection to the database
 		if (prof == null) {    // email does not exist in the database
-			return 1;
+			return -1;
 		}
 		else if (!prof.password.equals(password)) {    // password mismatch
-			return 2;
+			return -2;
 		}  // else
-		return 0;
+		return prof.ID;
 	}
 	
 	public static int register(String email, String password, String re_password, String firstName, String lastName, String phone, String profilePicFilePath) {

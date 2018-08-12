@@ -51,3 +51,16 @@ body{
 	width: 400px;
 	margin:0 auto;
 }​
+
+.navbar li{
+	display: inline-grid;
+	list-style-type: none;
+}
+
+.navbar ul li{
+	display: inline-block;
+	border-style: solid;
+	border-width: 2px;
+	margin: 5px;
+	padding: 5px;
+}

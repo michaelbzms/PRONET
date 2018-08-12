@@ -60,24 +60,24 @@ public class WelcomeServlet extends HttpServlet {
 			else {
 				// call register function from the model
 				int result = Professional.register(email, password, re_password, firstName, lastName, phone, profilePicFilePath);
-				// handle the result appropriatelly
+				// handle the result appropriately
 				RequestDispatcher RequetsDispatcherObj;
 				switch (result) {
 					case 0:     // success
 						System.out.println("Register successful for email: " + email);
-						// "login the user" or toast-notify him and promt him to log in from the welcome page
+						// "login the user" or toast-notify him and prompt him to log in from the welcome page
 						// ...	
 						// TEMP: for now just reload the same page
 						response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
 						break;
 					case 1:     // password mismatch
 						request.setAttribute("errorType", "notMatchingPasswords");
-						RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
 						RequetsDispatcherObj.forward(request, response);
 						break;
 					case 2:      // email already taken
 						request.setAttribute("errorType", "emailTaken");
-						RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
 						RequetsDispatcherObj.forward(request, response);
 						break;
 				}
@@ -91,32 +91,34 @@ public class WelcomeServlet extends HttpServlet {
 			if ( result == 0 ) {
 				System.out.println("Login successful for email: " + email);
 				// forward HTTP POST to logged in page for administrators
-				RequestDispatcher RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/AdminPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/AdminPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			} 
 			else if ( result == 2 ) {                   // if email existed on Administrators table then it cannot exist on Professional's table
 				request.setAttribute("errorType", "invalidLoginPassword");
-				RequestDispatcher RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			}
 			else {  // If that fails because the email doesn't exist on Administrator's table then try to login as a professional
-				result = Professional.login(email, password);
-				if ( result == 0 ) {   // successful login
+				int resultID = Professional.login(email, password);
+				if ( resultID >= 0 ) {   // successful login
 					System.out.println("Login successful for email: " + email);
 					// redirect to logged in page for professional
-					// TEMP: for now just reload the same page
-					response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
-				} else if ( result == 1 ) {                    // unsuccessful login
-					request.setAttribute("errorType", "invalidLoginEmail");
-					RequestDispatcher RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+					// forward HTTP POST to logged in page for administrators
+					request.setAttribute("ProfID", Integer.toString(resultID));
+					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
 					RequetsDispatcherObj.forward(request, response);
-				} else if ( result == 2 ) {
+				} else if ( resultID == -1 ) {                    // unsuccessful login
+					request.setAttribute("errorType", "invalidLoginEmail");
+					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else if ( resultID == -2 ) {
 					request.setAttribute("errorType", "invalidLoginPassword");
-					RequestDispatcher RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				} else {     // SHOULD NOT HAPPEN
 					request.setAttribute("errorType", "???");
-					RequestDispatcher RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				}
 			}

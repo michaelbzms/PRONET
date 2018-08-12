@@ -6,15 +6,15 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.SQLException; 
 
 
 public class DataBaseBridge {
 	
-	/* These fields are better hardcoded only here than all over the playce on the caller's side */
-	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
-	final private String user = "myuser";
-	final private String password = "MYUSERSQL";
+	/* These fields are better hardcoded only here than all over the place on the caller's side */
+	final private String database_url = "jdbc:mysql://localhost:3306/ted?serverTimezone=UTC";   // not using SSL yet
+	final private String user = "root";
+	final private String password = "root";
 	private Connection connection;
 	private boolean connected;
 	
@@ -114,8 +114,8 @@ public class DataBaseBridge {
 				record.ID = resultSet.getInt("idAdministrator");
 				record.email = resultSet.getString("email");         // should be equal to argument 'email'
 				record.password = resultSet.getString("password");
-				record.firstName = resultSet.getString("First Name");
-				record.lastName = resultSet.getString("Last Name");
+				record.firstName = resultSet.getString("firstName");
+				record.lastName = resultSet.getString("lastName");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
