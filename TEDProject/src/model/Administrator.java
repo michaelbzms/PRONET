@@ -20,7 +20,7 @@ public class Administrator {
 	//////////////////////////////////////////////////////////////////////////////
 
 	/* Characteristics */
-	public String ID;   // its database ID
+	public int ID;   // its database ID
 	public String email, password, firstName, lastName;
 	
 	/* Methods */

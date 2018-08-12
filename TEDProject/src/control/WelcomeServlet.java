@@ -90,9 +90,9 @@ public class WelcomeServlet extends HttpServlet {
 			int result = Administrator.login(email, password);
 			if ( result == 0 ) {
 				System.out.println("Login successful for email: " + email);
-				// redirect to logged in page for administrator
-				// TEMP: for now just reload the same page
-				response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
+				// forward HTTP POST to logged in page for administrators
+				RequestDispatcher RequetsDispatcherObj =request.getRequestDispatcher("WEB-INF/JSPs/AdminPage.jsp");
+				RequetsDispatcherObj.forward(request, response);
 			} 
 			else if ( result == 2 ) {                   // if email existed on Administrators table then it cannot exist on Professional's table
 				request.setAttribute("errorType", "invalidLoginPassword");

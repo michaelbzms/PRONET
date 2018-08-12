@@ -41,8 +41,11 @@ public class Professional {
 	//////////////////////////////////////////////////////////////////////////////
 	
 	/* Characteristics */
-	public String ID;   // its database ID
+	public int ID;   // its database ID
 	public String email, password, firstName, lastName, phone, profile_pic_file_path;
+	public String employmentStatus = null, employmentInstitution = null; 
+	public String professionalExperience = null, educationBackground = null, skills = null;
+	public boolean profExpVisibility = true, edBackgroundVisibility = true, skillsVisibility = true;
 	
 	/* Methods */
 	public Professional() {
