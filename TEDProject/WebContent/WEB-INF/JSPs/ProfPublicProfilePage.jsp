@@ -24,7 +24,7 @@
 		<% } %>
 		</p>
 		<p>
-		   <u>Contact Info:</u><br> 
+		   <span style="text-decoration: underline">Contact Info:</span><br> 
 		   email: <%= Prof.email %> <br>
 		   phone number: <%= Prof.phone %> <br> 
 		</p>
