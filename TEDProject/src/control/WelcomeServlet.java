@@ -33,8 +33,9 @@ public class WelcomeServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// if got an HTTP GET request for this servlet's URI then redirect to index.html (home page)
-		response.sendRedirect("");
+		request.setAttribute("errorType", "invalidPageRequest");
+		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+		RequetsDispatcherObj.forward(request, response);
 	}
 
 	/**
@@ -115,10 +116,11 @@ public class WelcomeServlet extends HttpServlet {
 		            }
 		            // generate a new session
 		            HttpSession newSession = request.getSession(true);
+		            newSession.setAttribute("ProfID", resultID);
 		            // set session to expire in 5'
 		            newSession.setMaxInactiveInterval(5*60);
-		            Cookie profIDCookie = new Cookie("ProfID", Integer.toString(resultID));
-		            response.addCookie(profIDCookie);
+//		            Cookie profIDCookie = new Cookie("ProfID", Integer.toString(resultID));
+//		            response.addCookie(profIDCookie);
 					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				} else if ( resultID == -1 ) {                    // unsuccessful login

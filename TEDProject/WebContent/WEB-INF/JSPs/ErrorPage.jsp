@@ -24,12 +24,15 @@
 	<% } else if ( request.getAttribute("errorType").equals("invalidPageRequest") ) { %>
 		<h2>INVALID PAGE REQUEST</h2>
 		<p>The page you requested does not exist.</p>
+	<% } else if ( request.getAttribute("errorType").equals("nullSession") ) { %>
+		<h2>SESSION ENDED</h2>
+		<p>Your session has ended.</p>
 	<% } else { %>
 		<h2>UNKNOWN ERROR</h2>
 		<p>Well, this is embarassing.. An unknown error has occured! :(</p>
 	<% } %>
 		<br>
-		<a style="display: inline-block" href="/TEDProject">back</a>
+		<a style="display: inline-block" href="/TEDProject">Go back to Homepage</a>
 	</div>
 </body>
 </html>
