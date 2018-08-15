@@ -4,9 +4,11 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Professional;
 import model.Administrator;
@@ -106,6 +108,17 @@ public class WelcomeServlet extends HttpServlet {
 					// redirect to logged in page for professional
 					// forward HTTP POST to logged in page for administrators
 					request.setAttribute("ProfID", Integer.toString(resultID));
+					// Invalidate old session, if there is one
+		            HttpSession oldSession = request.getSession(false);
+		            if (oldSession != null) {
+		                oldSession.invalidate();
+		            }
+		            // generate a new session
+		            HttpSession newSession = request.getSession(true);
+		            // set session to expire in 5'
+		            newSession.setMaxInactiveInterval(5*60);
+		            Cookie profIDCookie = new Cookie("ProfID", Integer.toString(resultID));
+		            response.addCookie(profIDCookie);
 					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				} else if ( resultID == -1 ) {                    // unsuccessful login

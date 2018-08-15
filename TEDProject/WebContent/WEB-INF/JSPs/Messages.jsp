@@ -9,22 +9,36 @@
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
 </head>
 <body>
-	<!-- Not safe - need sessions -->
-	<% int ID = Integer.parseInt(request.getAttribute("ProfID").toString()); %>
+	<%  int LoggedProfID = -1;
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("ProfID")) LoggedProfID = Integer.parseInt(cookie.getValue());
+			}
+		}
+		DataBaseBridge db = new DataBaseBridge();
+		Professional loggedProf;
+		if (LoggedProfID < 0) {
+			System.out.println("Failed to retrieve ProfID. Maybe cookies are disabled?");
+			// TODO: error page
+			return;
+		} else {
+			loggedProf = db.getProfessional(LoggedProfID);
+		}
+	%>
 	<div class="main_container">
 		<nav class="navbar">
 			<ul>
-				<!-- NavigationServlet should forward request to the correct JSP along with ProfID Attribute -->
-				<li><a href="/TEDProject/NavigationServlet?page=HomePage&ID=<%= ID %>">Home Page</a></li>
-				<li><a href="/TEDProject/NavigationServlet?page=Network&ID=<%= ID %>">Network</a></li>
-				<li><a href="/TEDProject/NavigationServlet?page=WorkAds&ID=<%= ID %>">Work Ads</a></li>
-				<li><a href="/TEDProject/NavigationServlet?page=Messages&ID=<%= ID %>">Messages</a></li>
-				<li><a href="/TEDProject/NavigationServlet?page=Notifications&ID=<%= ID %>">Notifications</a></li>
-				<li><a href="/TEDProject/NavigationServlet?page=PersonalInformation&ID=<%= ID %>">Personal Information</a></li>
-				<li><a href="/TEDProject/NavigationServlet?page=Settings&ID=<%= ID %>">Settings</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=HomePage">Home Page</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=Network">Network</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=WorkAds">Work Ads</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=Messages">Messages</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=Notifications">Notifications</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=PersonalInformation">Personal Information</a></li>
+				<li><a href="/TEDProject/NavigationServlet?page=Settings">Settings</a></li>
 			</ul>
 		</nav>
-	
+		<h2>Here be messages for <%= loggedProf.firstName %>  <%= loggedProf.lastName %>!</h2>
 	
 	</div>
 </body>

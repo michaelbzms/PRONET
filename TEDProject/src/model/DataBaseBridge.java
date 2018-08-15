@@ -13,8 +13,8 @@ public class DataBaseBridge {
 	
 	/* These fields are better hardcoded only here than all over the playce on the caller's side */
 	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
-	final private String user = "myuser";
-	final private String password = "MYUSERSQL";
+	final private String user = "root";
+	final private String password = "root";
 	private Connection connection;
 	private boolean connected;
 	

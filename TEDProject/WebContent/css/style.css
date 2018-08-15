@@ -64,3 +64,26 @@ body{
 	margin: 5px;
 	padding: 5px;
 }
+
+h3 {
+	text-decoration: underline;
+	margin: 0px 0px 5px 0px;
+}
+
+h6 {
+	margin: 0px 0px 5px 0px;
+}
+
+.cookie_disclaimer{
+    background-color: #a20808;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 0px #8c0000;
+    color: black;
+    padding: 10px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
