@@ -12,7 +12,6 @@
 	<div class="main_container">
 		<nav class="navbar">
 			<ul>
-				<!-- NavigationServlet should forward request to the correct JSP along with ProfID Attribute -->
 				<li><a href="/TEDProject/NavigationServlet?page=HomePage">Home Page</a></li>
 				<li><a href="/TEDProject/NavigationServlet?page=Network">Network</a></li>
 				<li><a href="/TEDProject/NavigationServlet?page=WorkAds">Work Ads</a></li>
@@ -20,6 +19,10 @@
 				<li><a href="/TEDProject/NavigationServlet?page=Notifications">Notifications</a></li>
 				<li><a href="/TEDProject/NavigationServlet?page=PersonalInformation">Personal Information</a></li>
 				<li><a href="/TEDProject/NavigationServlet?page=Settings">Settings</a></li>
+				<li><form action="LogoutServlet" method="post">
+						<input type="submit" value="Logout" >
+					</form>
+				</li>
 			</ul>
 		</nav>
 	

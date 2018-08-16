@@ -29,7 +29,7 @@
 		<p>Your session has ended. Please login again.</p>
 	<% } else { %>
 		<h2>UNKNOWN ERROR</h2>
-		<p>Well, this is embarassing.. An unknown error has occured! :(</p>
+		<p>Well, this is embarassing... An unknown error has occured! :(</p>
 	<% } %>
 		<br>
 		<a style="display: inline-block" href="/TEDProject">Go back to Homepage</a>

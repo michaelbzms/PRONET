@@ -19,6 +19,10 @@
 				<li><a href="/TEDProject/NavigationServlet?page=Notifications">Notifications</a></li>
 				<li><a href="/TEDProject/NavigationServlet?page=PersonalInformation">Personal Information</a></li>
 				<li><a href="/TEDProject/NavigationServlet?page=Settings">Settings</a></li>
+				<li><form action="LogoutServlet" method="post">
+						<input type="submit" value="Logout" >
+					</form>
+				</li>
 			</ul>
 		</nav>
 	

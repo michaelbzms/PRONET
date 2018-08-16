@@ -22,7 +22,7 @@ public class ActiveSessionFilter implements Filter {
 	private ServletContext context;
 	
     public ActiveSessionFilter() {
-        // TODO Auto-generated constructor stub
+    	// TODO Auto-generated method stub
     }
 
 	public void destroy() {

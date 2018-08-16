@@ -29,6 +29,11 @@ public class NavigationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = request.getParameter("page");
 		RequestDispatcher RequetsDispatcherObj;
+		if (page == null) {
+			request.setAttribute("errorType", "invalidPageRequest");
+			RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+			RequetsDispatcherObj.forward(request, response);
+		}
 		switch(page) {
 			case "HomePage":
 				RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
@@ -57,6 +62,18 @@ public class NavigationServlet extends HttpServlet {
 			case "Settings":
 				RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/Settings.jsp");
 				RequetsDispatcherObj.forward(request, response);
+				break;
+			case "Change":
+				String attr = request.getParameter("attr");
+				if (attr != null && (attr.equals("email") || attr.equals("password")) ) {
+					RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/Change.jsp");
+					request.setAttribute("attr", attr);
+					RequetsDispatcherObj.forward(request, response);
+				} else {
+					request.setAttribute("errorType", "invalidPageRequest");
+					RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				}
 				break;
 			default:
 				request.setAttribute("errorType", "invalidPageRequest");

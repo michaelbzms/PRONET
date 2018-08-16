@@ -53,7 +53,7 @@
 				</li>
 			</ul>
 		</nav>
-		<h2>Here be messages for <%= loggedProf.firstName %>  <%= loggedProf.lastName %>!</h2>
+		<h2>Here be messages for <%= loggedProf.getFirstName() %>  <%= loggedProf.getLastName() %>!</h2>
 	
 	</div>
 </body>

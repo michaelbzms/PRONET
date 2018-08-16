@@ -9,7 +9,6 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
   <filter>
     <filter-name>ActiveSessionFilter</filter-name>
     <filter-class>control.ActiveSessionFilter</filter-class>
