@@ -29,7 +29,7 @@
 </head>
 <body>
 	<div class="main_container">
-		<h2>Registered Profesionals:</h2><br>
+		<h2>Registered Professionals:</h2><br>
 		<div id="list_of_professionals">
 			<% DataBaseBridge db = new DataBaseBridge(); %>
 			<% Professional[] professionals = db.getAllProfessionals(); %>

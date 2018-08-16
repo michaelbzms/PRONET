@@ -26,7 +26,7 @@
 		<p>The page you requested does not exist.</p>
 	<% } else if ( request.getAttribute("errorType").equals("nullSession") ) { %>
 		<h2>SESSION ENDED</h2>
-		<p>Your session has ended.</p>
+		<p>Your session has ended. Please login again.</p>
 	<% } else { %>
 		<h2>UNKNOWN ERROR</h2>
 		<p>Well, this is embarassing.. An unknown error has occured! :(</p>

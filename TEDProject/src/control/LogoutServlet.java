@@ -30,7 +30,7 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	HttpSession session = request.getSession(false);
     	if (session != null){
-        	System.out.println("User with ID " + session.getAttribute("ProfID") + " successfully logged out.");
+        	System.out.println("Professional with ID " + session.getAttribute("ProfID") + " successfully logged out.");
     		session.invalidate();
     	}
     	// TODO: Maybe also print a "successful logout" message?
