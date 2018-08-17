@@ -1,28 +1,28 @@
 package model;
 
+
 public class Administrator {
-	
-	/* Static Functions */
-	public static int login(String email, String password) {
-		// check the data base for: 1. if that email exists, 2. if the password is correct
-		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
-		Administrator admin = dbg.recoverAdministratorRecord(email);
-		dbg.close();           // close connection to the database
-		if (admin == null) {    // email does not exist in the database
-			return 1;
-		}
-		else if (!admin.password.equals(password)) {    // password mismatch
-			return 2;
-		}  // else
-		return 0;
-	}
-	
-	//////////////////////////////////////////////////////////////////////////////
 
 	/* Characteristics */
-	public int ID;   // its database ID
-	public String email, password, firstName, lastName;
+	private int ID;   // its database ID
+	private String email, password, firstName, lastName;
 	
+	/* Setters & Getters */
+	public int getID() { return ID; }
+	public void setID(int iD) { ID = iD; }
+
+	public String getEmail() { return email; }
+	public void setEmail(String email) { this.email = email; }
+
+	public String getPassword() { return password; }
+	public void setPassword(String password) { this.password = password; }
+
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String firstName) { this.firstName = firstName; }
+
+	public String getLastName() { return lastName; }
+	public void setLastName(String lastName) { this.lastName = lastName; }
+
 	/* Methods */
 	public Administrator() {
 		

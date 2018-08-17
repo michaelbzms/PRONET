@@ -11,10 +11,10 @@ import java.sql.SQLException;
 
 public class DataBaseBridge {
 	
-	/* These fields are better hardcoded only here than all over the playce on the caller's side */
+	/* These fields are better hardcoded only here than all over the place on the caller's side */
 	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
-	final private String user = "root";
-	final private String password = "root";
+	final private String user = "myuser";
+	final private String password = "MYUSERSQL";
 	private Connection connection;
 	private boolean connected;
 	
@@ -80,13 +80,13 @@ public class DataBaseBridge {
 			} else {                            // else if it returned false then - correctly - only one such record exists
 				resultSet.previous();           // move cursor back to that one record
 				record = new Professional();
-				record.ID = resultSet.getInt("idProfessional");
-				record.email = resultSet.getString("email");         // should be equal to argument 'email'
-				record.password = resultSet.getString("password");
-				record.firstName = resultSet.getString("firstName");
-				record.lastName = resultSet.getString("lastName");
-				record.phone = resultSet.getString("phoneNumber");
-				record.profile_pic_file_path = resultSet.getString("profilePictureFilePath");
+				record.setID(resultSet.getInt("idProfessional"));
+				record.setEmail(resultSet.getString("email"));         // should be equal to argument 'email'
+				record.setPassword(resultSet.getString("password"));
+				record.setFirstName(resultSet.getString("firstName"));
+				record.setLastName(resultSet.getString("lastName"));
+				record.setPhone(resultSet.getString("phoneNumber"));
+				record.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -111,11 +111,11 @@ public class DataBaseBridge {
 			} else {                            // else if it returned false then - correctly - only one such record exists
 				resultSet.previous();           // move cursor back to that one record
 				record = new Administrator();
-				record.ID = resultSet.getInt("idAdministrator");
-				record.email = resultSet.getString("email");         // should be equal to argument 'email'
-				record.password = resultSet.getString("password");
-				record.firstName = resultSet.getString("firstName");
-				record.lastName = resultSet.getString("lastName");
+				record.setID(resultSet.getInt("idAdministrator"));
+				record.setEmail(resultSet.getString("email"));         // should be equal to argument 'email'
+				record.setPassword(resultSet.getString("password"));
+				record.setFirstName(resultSet.getString("firstName"));
+				record.setLastName(resultSet.getString("lastName"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -136,23 +136,23 @@ public class DataBaseBridge {
 				resultSet = statement.executeQuery("SELECT * FROM Professionals;");
 				P = new Professional[count];
 				int i = 0;
-				while (i < count && resultSet.next()) {                // load all professionals onto memory
+				while (i < count && resultSet.next()) {                  // load all professionals onto memory
 					P[i] = new Professional();
-					P[i].ID = resultSet.getInt("idProfessional");
-					P[i].email = resultSet.getString("email");         // should be equal to argument 'email'
-					P[i].password = resultSet.getString("password");
-					P[i].firstName = resultSet.getString("firstName");
-					P[i].lastName = resultSet.getString("lastName");
-					P[i].phone = resultSet.getString("phoneNumber");
-					P[i].profile_pic_file_path = resultSet.getString("profilePictureFilePath");
-					P[i].employmentStatus = resultSet.getString("employmentStatus");
-					P[i].employmentInstitution = resultSet.getString("employmentInstitution");
-					P[i].professionalExperience = resultSet.getString("professionalExperience");
-					P[i].educationBackground = resultSet.getString("educationBackground");
-					P[i].skills = resultSet.getString("skills");
-					P[i].profExpVisibility = resultSet.getBoolean("professionalExperienceVisibility");
-					P[i].edBackgroundVisibility = resultSet.getBoolean("educationBackgroundVisibility");
-					P[i].skillsVisibility = resultSet.getBoolean("skillsVisibility");
+					P[i].setID(resultSet.getInt("idProfessional"));
+					P[i].setEmail(resultSet.getString("email"));
+					P[i].setPassword(resultSet.getString("password"));
+					P[i].setFirstName(resultSet.getString("firstName"));
+					P[i].setLastName(resultSet.getString("lastName"));
+					P[i].setPhone(resultSet.getString("phoneNumber"));
+					P[i].setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+					P[i].setEmploymentStatus(resultSet.getString("employmentStatus"));
+					P[i].setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+					P[i].setProfessionalExperience(resultSet.getString("professionalExperience"));
+					P[i].setEducationBackground(resultSet.getString("educationBackground"));
+					P[i].setSkills(resultSet.getString("skills"));
+					P[i].setProfExpVisibility(resultSet.getBoolean("professionalExperienceVisibility"));
+					P[i].setEdBackgroundVisibility(resultSet.getBoolean("educationBackgroundVisibility"));
+					P[i].setSkillsVisibility(resultSet.getBoolean("skillsVisibility"));
 					i++;
 				}
 				if ( resultSet.next() ) 
@@ -178,21 +178,21 @@ public class DataBaseBridge {
 				return null;
 			} else {
 				prof = new Professional();
-				prof.ID = resultSet.getInt("idProfessional");
-				prof.email = resultSet.getString("email");         // should be equal to argument 'email'
-				prof.password = resultSet.getString("password");
-				prof.firstName = resultSet.getString("firstName");
-				prof.lastName = resultSet.getString("lastName");
-				prof.phone = resultSet.getString("phoneNumber");
-				prof.profile_pic_file_path = resultSet.getString("profilePictureFilePath");
-				prof.employmentStatus = resultSet.getString("employmentStatus");
-				prof.employmentInstitution = resultSet.getString("employmentInstitution");
-				prof.professionalExperience = resultSet.getString("professionalExperience");
-				prof.educationBackground = resultSet.getString("educationBackground");
-				prof.skills = resultSet.getString("skills");
-				prof.profExpVisibility = resultSet.getBoolean("professionalExperienceVisibility");
-				prof.edBackgroundVisibility = resultSet.getBoolean("educationBackgroundVisibility");
-				prof.skillsVisibility = resultSet.getBoolean("skillsVisibility");
+				prof.setID(resultSet.getInt("idProfessional"));
+				prof.setEmail(resultSet.getString("email"));
+				prof.setPassword(resultSet.getString("password"));
+				prof.setFirstName(resultSet.getString("firstName"));
+				prof.setLastName(resultSet.getString("lastName"));
+				prof.setPhone(resultSet.getString("phoneNumber"));
+				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
+				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+				prof.setProfessionalExperience(resultSet.getString("professionalExperience"));
+				prof.setEducationBackground(resultSet.getString("educationBackground"));
+				prof.setSkills(resultSet.getString("skills"));
+				prof.setProfExpVisibility(resultSet.getBoolean("professionalExperienceVisibility"));
+				prof.setEdBackgroundVisibility(resultSet.getBoolean("educationBackgroundVisibility"));
+				prof.setSkillsVisibility(resultSet.getBoolean("skillsVisibility"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

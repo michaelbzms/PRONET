@@ -24,11 +24,14 @@
 	<% } else if ( request.getAttribute("errorType").equals("invalidPageRequest") ) { %>
 		<h2>INVALID PAGE REQUEST</h2>
 		<p>The page you requested does not exist.</p>
+	<% } else if ( request.getAttribute("errorType").equals("illegalTextInput") ) { %>
+		<h2>INVALID TEXT INPUT</h2>
+		<p>It appears that you either gave too big an input for us or you entered one or more illegal input characters at one or more fields of a form. Make sure to avoid super long inputs as well as special characters and try again.</p>
 	<% } else if ( request.getAttribute("errorType").equals("nullSession") ) { %>
 		<h2>SESSION ENDED</h2>
 		<p>Your session has ended. Please login again.</p>
 	<% } else { %>
-		<h2>UNKNOWN ERROR</h2>
+		<h2>UNKNOWN ERROR: <%= request.getAttribute("errorType") %></h2>
 		<p>Well, this is embarassing... An unknown error has occured! :(</p>
 	<% } %>
 		<br>

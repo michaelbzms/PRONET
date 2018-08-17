@@ -37,12 +37,12 @@
 			<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
 				<li>
 					<!-- profile picture here as an <img> element  -->
-					<%= professionals[i].firstName %> <%= professionals[i].lastName %><br>
-					<% if ( professionals[i].employmentStatus != null ) { %>
-						<%= professionals[i].employmentStatus %> <br>
+					<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
+					<% if ( professionals[i].getEmploymentStatus() != null ) { %>
+						<%= professionals[i].getEmploymentStatus() %> <br>
 					<% } %>
 					<!-- The following is a servlet URI which will forward the HTTP GET request to ProfPublicProfilePage.jsp with the correct ID  -->
-					<a href="/TEDProject/ProfileLink?ID=<%= professionals[i].ID %>">View Details</a>
+					<a href="/TEDProject/ProfileLink?ID=<%= professionals[i].getID() %>">View Details</a>
 				</li>
 			<% } %>
 			</ul>
