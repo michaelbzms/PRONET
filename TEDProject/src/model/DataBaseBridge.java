@@ -111,11 +111,8 @@ public class DataBaseBridge {
 			} else {                            // else if it returned false then - correctly - only one such record exists
 				resultSet.previous();           // move cursor back to that one record
 				record = new Administrator();
-				record.setID(resultSet.getInt("idAdministrator"));
 				record.setEmail(resultSet.getString("email"));         // should be equal to argument 'email'
 				record.setPassword(resultSet.getString("password"));
-				record.setFirstName(resultSet.getString("firstName"));
-				record.setLastName(resultSet.getString("lastName"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,6 +144,7 @@ public class DataBaseBridge {
 					P[i].setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
 					P[i].setEmploymentStatus(resultSet.getString("employmentStatus"));
 					P[i].setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+					P[i].setDescription(resultSet.getString("description"));
 					P[i].setProfessionalExperience(resultSet.getString("professionalExperience"));
 					P[i].setEducationBackground(resultSet.getString("educationBackground"));
 					P[i].setSkills(resultSet.getString("skills"));
@@ -187,6 +185,7 @@ public class DataBaseBridge {
 				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
 				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
 				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+				prof.setDescription(resultSet.getString("description"));
 				prof.setProfessionalExperience(resultSet.getString("professionalExperience"));
 				prof.setEducationBackground(resultSet.getString("educationBackground"));
 				prof.setSkills(resultSet.getString("skills"));

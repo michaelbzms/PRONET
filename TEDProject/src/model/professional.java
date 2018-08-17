@@ -4,9 +4,9 @@ package model;
 public class Professional {
 	
 	/* Characteristics */
-	private int ID;   // its database ID
+	private int ID;          // its database ID
 	private String email, password, firstName, lastName, phone, profile_pic_file_path;
-	private String employmentStatus = null, employmentInstitution = null; 
+	private String employmentStatus = null, employmentInstitution = null, description = null; 
 	private String professionalExperience = null, educationBackground = null, skills = null;
 	private boolean profExpVisibility = true, edBackgroundVisibility = true, skillsVisibility = true;
 	
@@ -38,6 +38,9 @@ public class Professional {
 	public String getEmploymentInstitution() { return employmentInstitution; }
 	public void setEmploymentInstitution(String employmentInstitution) { this.employmentInstitution = employmentInstitution; }
 
+	public String getDescription() { return description; }
+	public void setDescription(String description) { this.description = description; }
+	
 	public String getProfessionalExperience() { return professionalExperience; }
 	public void setProfessionalExperience(String professionalExperience) { this.professionalExperience = professionalExperience; }
 

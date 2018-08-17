@@ -17,17 +17,20 @@
 		   if (Prof == null) { %>
 		   	<span style="text-align: center">
 		   		<h2>INVALID PROFILE REQUEST</h2>
-		   		<p>Requested profile does not exist.</p>
+				<p>Requested profile does not exist.</p>
 		   	</span>
 		<% } else { %>   
 			<h1><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<!-- insert image here with  style = "float: right" -->
-			<p style = "font-weight: bold">
+			<p style = "font-weight: bold; text-align: center">
 			<% if ( Prof.getEmploymentStatus() != null ) { %>
 				<%= Prof.getEmploymentStatus() %> <br> 
 			<% } %>
 			<% if ( Prof.getEmploymentInstitution() != null ) { %>
 				<%= Prof.getEmploymentInstitution() %> <br> 
+			<% } %>
+			<% if ( Prof.getDescription() != null ) { %>
+				<%= Prof.getDescription() %> <br> 
 			<% } %>
 			</p>
 			<p>
