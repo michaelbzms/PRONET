@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<title>PRONET - Professional Networking and more</title>
 </head>
 <body>
@@ -33,7 +33,7 @@
 		<p>Well, this is embarassing... An unknown error has occured! :(</p>
 	<% } %>
 		<br>
-		<a style="display: inline-block" href="/TEDProject/NavigationServlet?page=Settings">Go back to Settings</a>
+		<a style="display: inline-block" href="/TEDProject/prof/NavigationServlet?page=Settings">Go back to Settings</a>
 	</div>
 </body>
 </html>

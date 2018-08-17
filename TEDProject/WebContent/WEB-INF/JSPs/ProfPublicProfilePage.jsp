@@ -4,16 +4,16 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<title>PRONET</title>
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
 </head>
 <body>
 	<div class="main_container">
-		<% int ID = Integer.parseInt(request.getAttribute("ProfID").toString()); %>
-		<% DataBaseBridge db = new DataBaseBridge(); %>
-		<% Professional Prof = db.getProfessional(ID); %>
-		<% db.close(); %>
+		<% int ID = Integer.parseInt(request.getAttribute("ProfID").toString());
+		   DataBaseBridge db = new DataBaseBridge();
+		   Professional Prof = db.getProfessional(ID);
+		   db.close(); %>
 		<h1><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 		<!-- insert image here with  style = "float: right" -->
 		<p style = "font-weight: bold">

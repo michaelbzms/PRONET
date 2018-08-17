@@ -19,6 +19,8 @@ import model.SiteFunctionality;
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private int timeout_interval = 5*60;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -31,7 +33,7 @@ public class WelcomeServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("errorType", "invalidPageRequest");
-		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 		RequetsDispatcherObj.forward(request, response);
 	}
 
@@ -39,6 +41,11 @@ public class WelcomeServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Invalidate old session, if there is one
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
 		// check input of form got via HTTP POST
 		if ( request.getParameter("register").equals("true") ) {         // Registration
 			// fetch everything from the form
@@ -61,7 +68,7 @@ public class WelcomeServlet extends HttpServlet {
 				   || !SiteFunctionality.checkInputText(firstName, false, true, 255) || !SiteFunctionality.checkInputText(lastName, false, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32) ) {
 				System.out.println("Form submitted but one or more fields have illegal input characters.");
 				request.setAttribute("errorType", "illegalTextInput");
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			}
 			else {
@@ -79,17 +86,17 @@ public class WelcomeServlet extends HttpServlet {
 						break;
 					case -1:     // password mismatch
 						request.setAttribute("errorType", "notMatchingPasswords");
-						RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 						RequetsDispatcherObj.forward(request, response);
 						break;
 					case -2:      // email already taken
 						request.setAttribute("errorType", "emailTaken");
-						RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 						RequetsDispatcherObj.forward(request, response);
 						break;
 					default:      // should not happen
 						request.setAttribute("errorType", "invalid return code at registration");
-						RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 						RequetsDispatcherObj.forward(request, response);
 						break;
 				}
@@ -101,45 +108,43 @@ public class WelcomeServlet extends HttpServlet {
 			// First try to login as an admin
 			int result = SiteFunctionality.LogIn(email, password);
 			if ( result == -1 ) {                // successful Administrator LogIn
-				System.out.println("Login successful for email: " + email);
+				System.out.println("Admin login successful for email: " + email);
+	            // generate a new admin session
+	            HttpSession newSession = request.getSession(true);
+	            newSession.setAttribute("ProfID", -1);
+	            newSession.setAttribute("isAdmin", true);
+	            // set session to expire
+	            newSession.setMaxInactiveInterval(timeout_interval);
 				// forward HTTP POST to logged in page for administrators
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/AdminPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AdminPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			} else if ( result == -2 ) {         // incorrect password for Administrator
 				request.setAttribute("errorType", "invalidLoginPassword");
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			} else if ( result == -3 ) {         // unregistered email
 				request.setAttribute("errorType", "invalidLoginEmail");
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			} else if ( result == -4 ) {         // incorrect password for Professional
 				request.setAttribute("errorType", "invalidLoginPassword");
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			} else if ( result >= 0 ) {          // successful Professional login
 				System.out.println("Login successful for email: " + email);
-				// redirect to logged in page for professional
-				// forward HTTP POST to logged in page for administrators
-				request.setAttribute("ProfID", Integer.toString(result));
-				// Invalidate old session, if there is one
-	            HttpSession oldSession = request.getSession(false);
-	            if (oldSession != null) {
-	                oldSession.invalidate();
-	            }
-	            // generate a new session
+	            // generate a new prof session
 	            HttpSession newSession = request.getSession(true);
 	            newSession.setAttribute("ProfID", result);
-	            // set session to expire in 5'
-	            newSession.setMaxInactiveInterval(5*60);
-	            //Cookie profIDCookie = new Cookie("ProfID", Integer.toString(resultID));
-	            //response.addCookie(profIDCookie);
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
+	            newSession.setAttribute("isAdmin", false);
+	            // set session to expire
+	            newSession.setMaxInactiveInterval(timeout_interval);
+	            // forward professional to the respective jsp
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			
 			} else {     // SHOULD NOT HAPPEN
 				request.setAttribute("errorType", "???");
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			}
 			

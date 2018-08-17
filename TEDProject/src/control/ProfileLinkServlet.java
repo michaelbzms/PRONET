@@ -29,7 +29,7 @@ public class ProfileLinkServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String ID = request.getParameter("ID");
 		request.setAttribute("ProfID", ID);
-		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ProfPublicProfilePage.jsp");
+		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ProfPublicProfilePage.jsp");
 		RequetsDispatcherObj.forward(request, response);
 	}
 

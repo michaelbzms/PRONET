@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<title>PRONET - Administration Page</title>
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
 	<style>
@@ -31,8 +31,8 @@
 	<div class="main_container">
 		<h2>Registered Professionals:</h2><br>
 		<div id="list_of_professionals">
-			<% DataBaseBridge db = new DataBaseBridge(); %>
-			<% Professional[] professionals = db.getAllProfessionals(); %>
+			<% DataBaseBridge db = new DataBaseBridge();
+			   Professional[] professionals = db.getAllProfessionals(); %>
 			<ul> 
 			<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
 				<li>

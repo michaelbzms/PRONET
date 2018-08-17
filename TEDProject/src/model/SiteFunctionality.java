@@ -1,5 +1,9 @@
 package model;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+
 public class SiteFunctionality {
 	
 	public static int LogIn(String email, String password) {              // as Administrator or Professional
@@ -77,6 +81,28 @@ public class SiteFunctionality {
 		    }
 		}
 		return true;
+	}
+	
+	public static Professional acquireProfFromSession(DataBaseBridge db, HttpServletRequest request) {
+		int LoggedProfID = -1;
+		Professional loggedProf;
+		HttpSession currentSession = request.getSession(false);
+    	if (currentSession != null) {
+    		LoggedProfID = (int) currentSession.getAttribute("ProfID");
+    		if (LoggedProfID < 0) {
+    			System.out.println("Failed to retrieve ProfID.");
+    			return null;
+    		}
+    		loggedProf = db.getProfessional(LoggedProfID);
+    		if (loggedProf == null) {
+    			System.out.println("Failed to retrieve Professional.");
+    			return null;
+    		} 		
+    	} else {
+    		// It should never get here due to filter
+    		return null;
+    	}
+    	return loggedProf;
 	}
 	
 }

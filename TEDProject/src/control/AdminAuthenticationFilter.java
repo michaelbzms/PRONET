@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet Filter implementation class ActiveSessionFilter
+ * Servlet Filter implementation class AdminAuthenticationFilter
  */
-@WebFilter("/ActiveSessionFilter")
-public class ActiveSessionFilter implements Filter {
+@WebFilter("/AdminAuthenticationFilter")
+public class AdminAuthenticationFilter implements Filter {
 
 	private ServletContext context;
 	
-    public ActiveSessionFilter() {
+    public AdminAuthenticationFilter() {
     	// TODO Auto-generated method stub
     }
 
@@ -37,12 +37,16 @@ public class ActiveSessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession(false);
-        String uri = req.getRequestURI();
-    	// Do not filter .html and .css files nor WelcomeServlet
-        if ( session == null && !uri.endsWith("html") && !uri.endsWith("css") && !uri.endsWith("WelcomeServlet") ) {   
+        //String uri = req.getRequestURI();
+        if ( session == null ) {   
             this.context.log("Unauthorized access request - no active session.");
     		request.setAttribute("errorType", "nullSession");
-    		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+    		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+    		RequetsDispatcherObj.forward(request, response);
+        } else if ( ! ((boolean) session.getAttribute("isAdmin")) ) {
+            this.context.log("Unauthorized access request - prof attemted to access admin page.");
+    		request.setAttribute("errorType", "unauthorizedAccess");
+    		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
     		RequetsDispatcherObj.forward(request, response);
         } else {
             // pass the filter

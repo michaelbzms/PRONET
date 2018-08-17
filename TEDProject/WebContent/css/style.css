@@ -102,3 +102,10 @@ h6 {
     border-radius: 15px;
 	text-align: center;
 }
+
+label {
+	display: inline-block;
+	width: 160px;
+	text-align: left;
+	margin-bottom: 3px;
+}

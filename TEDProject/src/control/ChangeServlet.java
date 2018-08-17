@@ -26,23 +26,23 @@ public class ChangeServlet extends HttpServlet {
 		RequestDispatcher RequetsDispatcherObj;
 		if (attr == null) {
 			request.setAttribute("errorType", "invalidPageRequest");
-			RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
 		}
 		switch(attr) {
 			case "email":
 				// Here goes code
-				RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 				break;
 			case "password":
 				// Here also goes code
-				RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/HomePage.jsp");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 				break;
 			default:
 				request.setAttribute("errorType", "invalidPageRequest");
-				RequetsDispatcherObj = request.getRequestDispatcher("WEB-INF/JSPs/ErrorPage.jsp");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 				break;
 		}
