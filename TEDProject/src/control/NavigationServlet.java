@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class NavigationServlet
@@ -27,8 +28,20 @@ public class NavigationServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String page = request.getParameter("page");
 		RequestDispatcher RequetsDispatcherObj;
+		// Save last visited page (aka referer)
+		String referer = request.getHeader("Referer");
+		System.out.println("Refere is " +  referer);
+		HttpSession currentSession = request.getSession(false);
+		if ( currentSession == null ) {
+			request.setAttribute("errorType", "nullSession");
+			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+			RequetsDispatcherObj.forward(request, response);
+		} else {
+			currentSession.setAttribute("lastVisited", referer);
+		}
+		// Figure out requested page
+		String page = request.getParameter("page");
 		if (page == null) {
 			request.setAttribute("errorType", "invalidPageRequest");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

@@ -138,9 +138,11 @@ public class WelcomeServlet extends HttpServlet {
 	            newSession.setAttribute("isAdmin", false);
 	            // set session to expire
 	            newSession.setMaxInactiveInterval(timeout_interval);
-	            // forward professional to the respective jsp
-				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
-				RequetsDispatcherObj.forward(request, response);
+	            // redirect to the correct uri
+	            response.sendRedirect("/TEDProject/prof/NavigationServlet?page=HomePage");
+	            // OLD WAY: forward professional to the respective jsp
+				//RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
+				//RequetsDispatcherObj.forward(request, response);
 			
 			} else {     // SHOULD NOT HAPPEN
 				request.setAttribute("errorType", "???");
