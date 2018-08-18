@@ -105,4 +105,25 @@ public class SiteFunctionality {
     	return loggedProf;
 	}
 	
+	public static int ChangeEmail(int profID, String password, String new_email) {
+		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		String profPassword = dbg.getProfessionalPassword(profID);
+		if ( !password.equals(profPassword) ) {			// invalid current password
+			dbg.close();                               
+			return -1;   
+		}
+		if ( dbg.recoverProfessionalRecord(new_email) != null ) {       // new_email is already taken
+			dbg.close();                               
+			return -2;   
+		} 
+		// Change email:
+		if ( dbg.updateProfessionalEmail(profID, new_email) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close();
+			return -3;
+		}
+	}
+	
 }

@@ -34,6 +34,16 @@
 		<% } else if ( request.getAttribute("errorType").equals("unauthorizedAccess") ) { %>
 			<h2>Unauthorized Access</h2>
 			<p>You are not authorized to access this page.</p>
+		<% } else if ( request.getAttribute("errorType").equals("invalidCurrentPassword") ) { %>
+			<h2>Settings Change Failed</h2>
+			<p>The password you entered does not match your current password.</p>
+		<% } else if ( request.getAttribute("errorType").equals("newEmailTaken") ) { %>
+			<h2>Settings Change Failed</h2>
+			<p>It seems that the email you entered is already registered to an account.</p>
+		<% } else if ( request.getAttribute("errorType").equals("dbError") ) { %>
+			<h2>Database Error</h2>
+			<p>There was an error connecting to the database.<br>
+			If this error persists please contact the site's administrators.</p>
 		<% } else { %>
 			<h2>UNKNOWN ERROR: <%= request.getAttribute("errorType") %></h2>
 			<p>Well, this is embarassing... An unknown error has occured! :(</p>
