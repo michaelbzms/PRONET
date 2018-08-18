@@ -220,12 +220,27 @@ public class DataBaseBridge {
 		return profPasssword;
 	}
 	
-	public boolean updateProfessionalEmail(int profID, String new_email) {
+	public boolean updateProfessionalEmail(int profID, String newEmail) {
 		if (!connected) return false;
 		String updateString = "UPDATE Professionals SET email = ? WHERE idProfessional = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(updateString);
-			statement.setString(1, new_email);
+			statement.setString(1, newEmail);
+			statement.setInt(2, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public boolean updateProfessionalPassword(int profID, String newPassword) {
+		if (!connected) return false;
+		String updateString = "UPDATE Professionals SET password = ? WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(updateString);
+			statement.setString(1, newPassword);
 			statement.setInt(2, profID);
 			statement.executeUpdate();
 		} catch (SQLException e) {

@@ -33,30 +33,30 @@ public class ChangeServlet extends HttpServlet {
 		}
 		switch(attr) {
 			case "email":
-				String password, new_email;
+				String password, newEmail;
 				password = request.getParameter("password");
-				new_email = request.getParameter("new_email");
-				if ( password.isEmpty() || new_email.isEmpty() ) {
-					System.out.println("Form submitted but has unfilled fields. Ignored.");
-					// Notify user
-					// TEMP: for now just reload the same page
-					response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
-				} else if ( false ) {	//!SiteFunctionality.checkInputText(new_email, false, true, 0) ) {
-					System.out.println("|"+new_email+"|");
+				newEmail = request.getParameter("newEmail");
+				if ( password.isEmpty() || newEmail.isEmpty() ) {
+					request.setAttribute("errorType", "emptyFormFields");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else if ( false ) {	//!SiteFunctionality.checkInputText(newEmail, true, true, 0) ) {
+					System.out.println("|"+newEmail+"|");
 					System.out.println("Form submitted but one or more fields have illegal input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				} else {
 					int profID = (int) request.getSession(false).getAttribute("ProfID");
-					int result = SiteFunctionality.ChangeEmail(profID, password, new_email);
+					int result = SiteFunctionality.ChangeEmail(profID, password, newEmail);
 					switch (result) {
 						case 0:     // success
 							System.out.println("Email changed successfully");
 							// "login the user" or toast-notify him and prompt him to log in from the welcome page
 							// ...	
 							// TEMP: for now just reload the same page
-							response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
+							RequetsDispatcherObj.forward(request, response);
 							break;
 						case -1:     // invalid current password
 							request.setAttribute("errorType", "invalidCurrentPassword");
@@ -82,9 +82,56 @@ public class ChangeServlet extends HttpServlet {
 				}
 				break;
 			case "password":
-				// Here also goes code
-				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
-				RequetsDispatcherObj.forward(request, response);
+				String currentPassword, newPassword, reNewPassword;
+				currentPassword = request.getParameter("currentPassword");
+				newPassword = request.getParameter("newPassword");
+				reNewPassword = request.getParameter("reNewPassword");
+				if ( currentPassword.isEmpty() || newPassword.isEmpty() || reNewPassword.isEmpty() ) {
+					request.setAttribute("errorType", "emptyFormFields");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else if ( currentPassword.equals(newPassword) ) {		// current password same as new
+					request.setAttribute("errorType", "unchangedPassword");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else if ( !newPassword.equals(reNewPassword) ) {			// passwords not matching
+					request.setAttribute("errorType", "notMatchingPasswordsChange");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else if ( !SiteFunctionality.checkInputText(newPassword, true, true, 128) ) {
+					System.out.println("Form submitted but one or more fields have illegal input characters.");
+					request.setAttribute("errorType", "illegalTextInput");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else {
+					int profID = (int) request.getSession(false).getAttribute("ProfID");
+					int result = SiteFunctionality.ChangePassword(profID, currentPassword, newPassword);
+					switch (result) {
+						case 0:     // success
+							System.out.println("Password changed successfully");
+							// "login the user" or toast-notify him and prompt him to log in from the welcome page
+							// ...	
+							// TEMP: for now just reload the same page
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						case -1:     // invalid current password
+							request.setAttribute("errorType", "invalidCurrentPassword");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						case -2:      // database error
+							request.setAttribute("errorType", "dbError");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						default:      // should not happen
+							request.setAttribute("errorType", "invalid return code at registration");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+					}
+				}
 				break;
 			default:
 				request.setAttribute("errorType", "invalidPageRequest");

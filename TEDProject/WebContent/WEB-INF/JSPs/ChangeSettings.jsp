@@ -14,7 +14,7 @@
 		<div class="form">
 			<form method="POST" action="/TEDProject/ChangeServlet?attr=email">
 				<label>Password: </label><input type="password" name="password"><br>
-				<label>New Email: </label><input type="email" name="new_email"><br>
+				<label>New Email: </label><input type="email" name="newEmail"><br>
 				<input style="display: inline-block; margin: 0px 0px 0px 160px" type="submit" value="Submit"><br>
 			</form>
 		</div>
@@ -22,9 +22,9 @@
 		<h2>Change Password</h2>
 		<div class="form">
 			<form method="POST" action="/TEDProject/ChangeServlet?attr=password">
-				<label>Current Password: </label><input type="password" name="password"><br>
-				<label>New Password: </label><input type="password" name="new_password"><br>
-				<label>Confirm New Password: </label><input type="password" name="new_password_confirm"><br>
+				<label>Current Password: </label><input type="password" name="currentPassword"><br>
+				<label>New Password: </label><input type="password" name="newPassword"><br>
+				<label>Confirm New Password: </label><input type="password" name="reNewPassword"><br>
 				<input style="display: inline-block; margin: 0px 0px 0px 160px" type="submit" value="Submit"><br>
 			</form>
 		</div>
