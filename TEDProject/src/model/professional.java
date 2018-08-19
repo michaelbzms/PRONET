@@ -5,7 +5,7 @@ public class Professional {
 	
 	/* Characteristics */
 	private int ID;          // its database ID
-	private String email, password, firstName, lastName, phone, profile_pic_file_path;
+	private String email = null, password = null, firstName = null, lastName = null, phone = null, profile_pic_file_path = null;
 	private String employmentStatus = null, employmentInstitution = null, description = null; 
 	private String professionalExperience = null, educationBackground = null, skills = null;
 	private boolean profExpVisibility = true, edBackgroundVisibility = true, skillsVisibility = true;

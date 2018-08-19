@@ -4,6 +4,8 @@ package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +15,8 @@ public class DataBaseBridge {
 	
 	/* These fields are better hardcoded only here than all over the place on the caller's side */
 	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
-	final private String DBUser = "myuser";
-	final private String DBPassword = "MYUSERSQL";
+	final private String user = "myuser";
+	final private String password = "MYUSERSQL";
 	private Connection connection;
 	private boolean connected;
 	
@@ -22,7 +24,7 @@ public class DataBaseBridge {
 		connected = true;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(database_url, DBUser, DBPassword);
+			connection = DriverManager.getConnection(database_url, user, password);
 		} catch (ClassNotFoundException e) {
 			connected = false;
 			System.err.println("Forcing the JDBC Driver to register itself failed!");
@@ -199,57 +201,65 @@ public class DataBaseBridge {
 		}
 		return prof;
 	}
-	
-	public String getProfessionalPassword(int ID) {
+
+	public List<Professional> getConnectedProfessionalsFor(int ID) {
 		if (!connected) return null;
-		String profPasssword = null;
-		String Query = "SELECT password FROM Professionals WHERE idProfessional = ?;";
+		 List<Professional> P = null;
+		// Could also use DISTINCT just in case ConnectedProfessional has the same connection twice but in order to see that mistake if it exists I chose not to
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureFilePath, p.employmentStatus, p.employmentInstitution "
+				     + "FROM Professionals p, ConnectedProfessionals cp "
+				     + "WHERE ( p.idProfessional = cp.idProfessional1 and cp.idProfessional2 = ?) "
+				     +    "or ( p.idProfessional = cp.idProfessional2 and cp.idProfessional1 = ?);";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			statement.setInt(1, ID);
+			statement.setInt(2, ID);
 			ResultSet resultSet = statement.executeQuery();
-			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
-				return null;
-			} else {
-				profPasssword = resultSet.getString("password");
+			P = new ArrayList<Professional>();
+			while (resultSet.next()) {
+				Professional prof = new Professional();
+				prof.setID(resultSet.getInt("idProfessional"));
+				prof.setFirstName(resultSet.getString("firstName"));
+				prof.setLastName(resultSet.getString("lastName"));
+				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
+				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+				P.add(prof);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return profPasssword;
+		return P;
 	}
 	
-	public boolean updateProfessionalEmail(int profID, String newEmail) {
-		if (!connected) return false;
-		String updateString = "UPDATE Professionals SET email = ? WHERE idProfessional = ?;";
+	public List<Professional> getConnectionRequestsFor(int ID){
+		if (!connected) return null;
+		 List<Professional> P = null;
+		// Could also use DISTINCT just in case ConnectedProfessional has the same connection twice but in order to see that mistake if it exists I chose not to
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureFilePath, p.employmentStatus, p.employmentInstitution "
+				     + "FROM Professionals p, ConnectionRequests cr "
+				     + "WHERE p.idProfessional = cr.idAsker and cr.idReceiver = ?;";
 		try {
-			PreparedStatement statement = connection.prepareStatement(updateString);
-			statement.setString(1, newEmail);
-			statement.setInt(2, profID);
-			statement.executeUpdate();
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			P = new ArrayList<Professional>();
+			while (resultSet.next()) {
+				Professional prof = new Professional();
+				prof.setID(resultSet.getInt("idProfessional"));
+				prof.setFirstName(resultSet.getString("firstName"));
+				prof.setLastName(resultSet.getString("lastName"));
+				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
+				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+				P.add(prof);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
-		return true;
-	}
-
-	public boolean updateProfessionalPassword(int profID, String newPassword) {
-		if (!connected) return false;
-		String updateString = "UPDATE Professionals SET password = ? WHERE idProfessional = ?;";
-		try {
-			PreparedStatement statement = connection.prepareStatement(updateString);
-			statement.setString(1, newPassword);
-			statement.setInt(2, profID);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return P;
 	}
 	
 }
-
-

@@ -31,6 +31,7 @@ public class NavigationServlet extends HttpServlet {
 		RequestDispatcher RequetsDispatcherObj;
 		// Save last visited page (aka referer)
 		String referer = request.getHeader("Referer");
+		System.out.println("Refere is " +  referer);
 		HttpSession currentSession = request.getSession(false);
 		if ( currentSession == null ) {
 			request.setAttribute("errorType", "nullSession");
