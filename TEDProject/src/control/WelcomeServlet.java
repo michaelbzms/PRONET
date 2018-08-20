@@ -12,9 +12,6 @@ import javax.servlet.http.HttpSession;
 import model.SiteFunctionality;
 
 
-/**
- * Servlet implementation class WelcomeServlet
- */
 @WebServlet("/WelcomeServlet")
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

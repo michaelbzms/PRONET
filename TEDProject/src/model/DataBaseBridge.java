@@ -239,7 +239,7 @@ public class DataBaseBridge {
 	
 	public List<Professional> getConnectionRequestsFor(int ID){
 		if (!connected) return null;
-		 List<Professional> P = null;
+		List<Professional> P = null;
 		// Could also use DISTINCT just in case ConnectedProfessional has the same connection twice but in order to see that mistake if it exists I chose not to
 		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureFilePath, p.employmentStatus, p.employmentInstitution "
 				     + "FROM Professionals p, ConnectionRequests cr "
@@ -318,8 +318,31 @@ public class DataBaseBridge {
 
 	public  List<Professional> getSearchResultsFor(String searchString) {
 		if (!connected) return null;
-		//TO DO
-		return null;
-	}
-	
+		List<Professional> P = new ArrayList<Professional>();
+		String Query = "SELECT idProfessional, firstName, lastName, profilePictureFilePath, employmentStatus, employmentInstitution "
+				     + "FROM Professionals "
+				     + "WHERE (firstName LIKE ?) or (lastName LIKE ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			for (String word : searchString.split(" ")) {
+				statement.setString(1, "%" + word + "%");
+				statement.setString(2, "%" + word + "%");
+				ResultSet resultSet = statement.executeQuery();
+				while (resultSet.next()) {
+					Professional prof = new Professional();
+					prof.setID(resultSet.getInt("idProfessional"));
+					prof.setFirstName(resultSet.getString("firstName"));
+					prof.setLastName(resultSet.getString("lastName"));
+					prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+					prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
+					prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
+					P.add(prof);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return P;
+	}	
 }

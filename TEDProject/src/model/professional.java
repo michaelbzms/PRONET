@@ -4,7 +4,7 @@ package model;
 public class Professional {
 	
 	/* Characteristics */
-	private int ID;          // its database ID
+	private int ID = -1;          // its database ID
 	private String email = null, password = null, firstName = null, lastName = null, phone = null, profile_pic_file_path = null;
 	private String employmentStatus = null, employmentInstitution = null, description = null; 
 	private String professionalExperience = null, educationBackground = null, skills = null;

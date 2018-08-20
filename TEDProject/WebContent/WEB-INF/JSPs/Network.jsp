@@ -8,7 +8,8 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/network.css"/>
 	<title>PRONET - Network</title>
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!-- Online version: <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge(); 
@@ -61,7 +62,7 @@
 					<input type="text" name="searchString" id="searchString">
 					<input type="submit" value="search">
 				</form>
-				<div class="ajax_target_div">
+				<div id="searchProfessional" class="ajax_target_div">
 				</div>
 			</div>
 			<div class="connections_bar">
@@ -86,6 +87,7 @@
 		</div>
 	<% } 
 	   db.close(); %>
+	<!-- JavaScript scripts declaration: -->
 	<script src="/TEDProject/Javascript/AJAX.js"></script>    
 </body>
 </html>

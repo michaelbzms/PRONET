@@ -10,7 +10,7 @@
 <%  DataBaseBridge db = new DataBaseBridge();
 	List<Professional> matches = db.getSearchResultsFor(searchString);
 	if ( matches == null ){ %>
-		<p>Something went wrong on our side! We apologize for the inconvenience</p>
+		<p>It seems like our database is down. Please contact the site's administrators.</p>
 <%	} else if ( matches.isEmpty() ) { %>
 		<p>No results found.</p>
 <%	} else { %>
