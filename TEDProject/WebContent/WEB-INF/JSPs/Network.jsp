@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/network.css"/>
 	<title>PRONET - Network</title>
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge(); 
@@ -55,31 +56,36 @@
 			</div>
 			<div class="search_bar">
 				<h2>Search for professionals</h2>
-				<form action="/TEDProject/prof/SearchProfessional" method="POST">  <!-- use AJAX for this form! -->
-				<label>Find: </label><input type="text" name="searchString">
-				<input type="submit" value="search">
+				<form id="AJAXform" action="/TEDProject/AJAXServlet?action=searchProfessional" method="post" class="ajax">  <!-- use AJAX for this form! -->
+					<label>Find: </label>
+					<input type="text" name="searchString" id="searchString">
+					<input type="submit" value="search">
 				</form>
-				<!-- AJAX JS code goes here? -->
+				<div class="ajax_target_div">
+				</div>
 			</div>
-			<h2>Connections</h2>
-			<div class="grid_container">
-				<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
-				   if ( Connections != null ) {
-						for (Professional p : Connections) { %>
-							<div class="grid_item">
-								<img src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
-								<%= p.getFirstName() %> <%= p.getLastName() %><br>
-								<%= p.getEmploymentStatus() %><br>
-								<%= p.getEmploymentInstitution() %><br>	
-								<a href="/TEDProject/ProfileLink?ID=<%= p.getID() %>">View details</a>					
-							</div>
-				<% 		} 
-				   } else { %>
-				   		<p>You are not connected with any other professional.</p>
-				<% } %>
+			<div class="connections_bar">
+				<h2>Connections</h2>
+				<div class="grid_container">
+					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
+					   if ( Connections != null ) {
+							for (Professional p : Connections) { %>
+								<div class="grid_item">
+									<img src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+									<%= p.getFirstName() %> <%= p.getLastName() %><br>
+									<%= p.getEmploymentStatus() %><br>
+									<%= p.getEmploymentInstitution() %><br>	
+									<a href="/TEDProject/ProfileLink?ID=<%= p.getID() %>">View details</a>					
+								</div>
+					<% 		} 
+					   } else { %>
+					   		<p>You are not connected with any other professional.</p>
+					<% } %>
+				</div>
 			</div>
 		</div>
 	<% } 
 	   db.close(); %>
+	<script src="/TEDProject/Javascript/AJAX.js"></script>    
 </body>
 </html>

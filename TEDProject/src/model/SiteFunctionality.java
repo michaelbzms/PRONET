@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -127,7 +129,7 @@ public class SiteFunctionality {
 	}
 	
 	public static int ChangePassword(int profID, String currentPassword, String newPassword) {
-		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
 			dbg.close();                               

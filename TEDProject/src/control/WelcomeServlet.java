@@ -41,7 +41,7 @@ public class WelcomeServlet extends HttpServlet {
             oldSession.invalidate();
         }
 		// check input of form got via HTTP POST
-		if ( request.getParameter("register").equals("true") ) {         // Registration
+		if ( request.getParameter("register") != null && request.getParameter("register").equals("true") ) {         // Registration
 			// fetch everything from the form
 			String email, password, re_password, firstName, lastName, phone, profilePicFilePath;
 			password = request.getParameter("password");
@@ -96,7 +96,7 @@ public class WelcomeServlet extends HttpServlet {
 				}
 			}
 		} 
-		else {      // Log In
+		else if ( request.getParameter("register") != null ) {      // Log In
 			String email = request.getParameter("email");
 			String password = request.getParameter("password");
 			// First try to login as an admin
@@ -144,6 +144,11 @@ public class WelcomeServlet extends HttpServlet {
 				RequetsDispatcherObj.forward(request, response);
 			}
 			
+		}
+		else {    // register attribute not sent
+			request.setAttribute("errorType", "???");
+			RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+			RequetsDispatcherObj.forward(request, response);
 		}
 	}
 

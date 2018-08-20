@@ -316,4 +316,10 @@ public class DataBaseBridge {
 		return true;
 	}
 
+	public  List<Professional> getSearchResultsFor(String searchString) {
+		if (!connected) return null;
+		//TO DO
+		return null;
+	}
+	
 }
