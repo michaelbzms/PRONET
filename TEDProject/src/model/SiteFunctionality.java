@@ -51,13 +51,13 @@ public class SiteFunctionality {
 	}
 	
 	public static boolean checkInputText(String input, boolean allowExtras, boolean oneLiner, int sizeRestriction) {    // check for special characters, etc that make a text input unnacceptable
-		if (sizeRestriction > 0 && input.length() > sizeRestriction) {      // input must not be longer than this
+		if (sizeRestriction > 0 && input.length() > sizeRestriction) {       // input must not be longer than this
 			return false;
 		}
 		for (int i = 0, n = input.length(); i < n; i++) {
 		    char c = input.charAt(i);                                        // Each character MUST be:
-		    if ( !(  (c > 'a' && c < 'z') || (c > 'A' && c < 'Z')            // a latin letter
-		    	  || (c > '0' && c < '9')                                    // or a number
+		    if ( !(  (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')        // a latin letter
+		    	  || (c >= '0' && c <= '9')                                  // or a number
 		    	  || c == ' ' || c == '\t'                                   // or white space
 		    	  || (!oneLiner && (c == '\r' || c == '\n'))                 // or, if we allow it, new line
 		    	  || (allowExtras && (c == '@' || c == '.' || c == '!'       // or, if we allow it, extra symbols such as '.'. '@', '!', etc
@@ -71,12 +71,12 @@ public class SiteFunctionality {
 	}
 	
 	public static boolean checkInputNumber(String input, int sizeRestriction) {
-		if (sizeRestriction > 0 && input.length() > sizeRestriction) {      // input must not be longer than this
+		if (sizeRestriction > 0 && input.length() > sizeRestriction) {       // input must not be longer than this
 			return false;
 		}
 		for (int i = 0, n = input.length(); i < n; i++) {
 		    char c = input.charAt(i);                                        // Each character MUST be:
-		    if ( !(c > '0' && c < '9') ) {
+		    if ( !(c >= '0' && c <= '9') ) {
 		    	return false;                                                // if a character does not abide by the above then return false
 		    }
 		}
@@ -103,6 +103,44 @@ public class SiteFunctionality {
     		return null;
     	}
     	return loggedProf;
+	}
+
+	public static int ChangeEmail(int profID, String currentPassword, String newEmail) {
+		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		String profPassword = dbg.getProfessionalPassword(profID);
+		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
+			dbg.close();                               
+			return -1;   
+		}
+		if ( dbg.recoverProfessionalRecord(newEmail) != null ) {       // new_email is already taken
+			dbg.close();                               
+			return -2;   
+		} 
+		// Change email:
+		if ( dbg.updateProfessionalEmail(profID, newEmail) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				
+			// database error
+			return -3;
+		}
+	}
+	
+	public static int ChangePassword(int profID, String currentPassword, String newPassword) {
+		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		String profPassword = dbg.getProfessionalPassword(profID);
+		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
+			dbg.close();                               
+			return -1;   
+		}
+		// Change password:
+		if ( dbg.updateProfessionalPassword(profID, newPassword) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close();
+			return -2;
+		}
 	}
 	
 }

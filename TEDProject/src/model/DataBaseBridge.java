@@ -15,8 +15,8 @@ public class DataBaseBridge {
 	
 	/* These fields are better hardcoded only here than all over the place on the caller's side */
 	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
-	final private String user = "myuser";
-	final private String password = "MYUSERSQL";
+	final private String DBUser = "myuser";
+	final private String DBPassword = "MYUSERSQL";
 	private Connection connection;
 	private boolean connected;
 	
@@ -24,7 +24,7 @@ public class DataBaseBridge {
 		connected = true;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(database_url, user, password);
+			connection = DriverManager.getConnection(database_url, DBUser, DBPassword);
 		} catch (ClassNotFoundException e) {
 			connected = false;
 			System.err.println("Forcing the JDBC Driver to register itself failed!");
@@ -43,6 +43,10 @@ public class DataBaseBridge {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean checkIfConnected() {
+		return connected;
 	}
 	
 	/* DataBaseBridge services: (using prepared statements in order to be safe from SQL Injection) */
@@ -261,5 +265,55 @@ public class DataBaseBridge {
 		}
 		return P;
 	}
+
+	public String getProfessionalPassword(int ID) {
+		if (!connected) return null;
+		String profPasssword = null;
+		String Query = "SELECT password FROM Professionals WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				profPasssword = resultSet.getString("password");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return profPasssword;
+	}
 	
+	public boolean updateProfessionalEmail(int profID, String newEmail) {
+		if (!connected) return false;
+		String updateString = "UPDATE Professionals SET email = ? WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(updateString);
+			statement.setString(1, newEmail);
+			statement.setInt(2, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean updateProfessionalPassword(int profID, String newPassword) {
+		if (!connected) return false;
+		String updateString = "UPDATE Professionals SET password = ? WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(updateString);
+			statement.setString(1, newPassword);
+			statement.setInt(2, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -18,28 +18,22 @@ import model.SiteFunctionality;
 @WebServlet("/WelcomeServlet")
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	
 	private int timeout_interval = 5*60;
 	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public WelcomeServlet() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("errorType", "invalidPageRequest");
 		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 		RequetsDispatcherObj.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Invalidate old session, if there is one
         HttpSession oldSession = request.getSession(false);

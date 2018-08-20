@@ -16,16 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 public class ProfileLinkServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public ProfileLinkServlet() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String ID = request.getParameter("ID");
 		request.setAttribute("ProfID", ID);
@@ -33,9 +29,7 @@ public class ProfileLinkServlet extends HttpServlet {
 		RequetsDispatcherObj.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
