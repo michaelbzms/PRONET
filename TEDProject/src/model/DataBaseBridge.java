@@ -266,13 +266,13 @@ public class DataBaseBridge {
 		return P;
 	}
 
-	public String getProfessionalPassword(int ID) {
+	public String getProfessionalPassword(int profID) {
 		if (!connected) return null;
 		String profPasssword = null;
 		String Query = "SELECT password FROM Professionals WHERE idProfessional = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
-			statement.setInt(1, ID);
+			statement.setInt(1, profID);
 			ResultSet resultSet = statement.executeQuery();
 			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
 				return null;
@@ -345,4 +345,25 @@ public class DataBaseBridge {
 		}
 		return P;
 	}	
+	
+	public boolean areProfessionalsConnected(int profID1, int profID2) {
+		if (profID1 == profID2) return true;		// one should be considered connected to themselves, right?
+		if (profID1 < 0 || profID2 < 0) return false;
+		if (!connected) return false;
+		String Query = "SELECT * FROM ConnectedProfessionals WHERE (idProfessional1 = ? AND idProfessional2 = ?) "
+				+ "OR (idProfessional1 = ? AND idProfessional2 = ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID1);
+			statement.setInt(2, profID2);
+			statement.setInt(3, profID2);
+			statement.setInt(4, profID1);
+			ResultSet resultSet = statement.executeQuery();
+			return resultSet.next();            // false if empty set, true otherwise
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 }

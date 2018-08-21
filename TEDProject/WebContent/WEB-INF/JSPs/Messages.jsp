@@ -23,7 +23,7 @@
 					<li><a href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=PersonalInformation">Personal Information</a></li>
+					<li><a href="/TEDProject/ProfileLink">Personal Information</a></li>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
 					<li><form action="/TEDProject/LogoutServlet" method="post">
 						<input type="submit" value="Logout" >

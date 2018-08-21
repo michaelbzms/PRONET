@@ -50,13 +50,13 @@ public class Professional {
 	public String getSkills() { return skills; }
 	public void setSkills(String skills) { this.skills = skills; }
 
-	public boolean isProfExpVisibility() { return profExpVisibility; }
+	public boolean getProfExpVisibility() { return profExpVisibility; }
 	public void setProfExpVisibility(boolean profExpVisibility) { this.profExpVisibility = profExpVisibility; }
 
-	public boolean isEdBackgroundVisibility() { return edBackgroundVisibility; }
+	public boolean getEdBackgroundVisibility() { return edBackgroundVisibility; }
 	public void setEdBackgroundVisibility(boolean edBackgroundVisibility) { this.edBackgroundVisibility = edBackgroundVisibility; }
 
-	public boolean isSkillsVisibility() { return skillsVisibility; }
+	public boolean getSkillsVisibility() { return skillsVisibility; }
 	public void setSkillsVisibility(boolean skillsVisibility) { this.skillsVisibility = skillsVisibility; }
 
 	

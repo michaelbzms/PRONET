@@ -42,7 +42,7 @@
 						<%= professionals[i].getEmploymentStatus() %> <br>
 					<% } %>
 					<!-- The following is a servlet URI which will forward the HTTP GET request to ProfPublicProfilePage.jsp with the correct ID  -->
-					<a href="/TEDProject/ProfileLink?ID=<%= professionals[i].getID() %>">View Details</a>
+					<a href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">View Details</a>
 				</li>
 			<% } %>
 			</ul>

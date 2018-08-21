@@ -64,10 +64,6 @@ public class NavigationServlet extends HttpServlet {
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Notifications.jsp");
 				RequetsDispatcherObj.forward(request, response);
 				break;
-			case "PersonalInformation":
-				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/PersonalInformation.jsp");
-				RequetsDispatcherObj.forward(request, response);
-				break;
 			case "Settings":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
 				RequetsDispatcherObj.forward(request, response);

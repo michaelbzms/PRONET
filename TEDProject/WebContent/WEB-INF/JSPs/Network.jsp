@@ -26,7 +26,7 @@
 					<li><a href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=PersonalInformation">Personal Information</a></li>
+					<li><a href="/TEDProject/ProfileLink">Personal Information</a></li>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
 					<li><form action="/TEDProject/LogoutServlet" method="post">
 							<input type="submit" value="Logout" >
@@ -41,7 +41,7 @@
 					   	<ul>
 				     <%	for ( Professional asker : RequestedBy ) { %>
 					   		<li>
-					   			<a href="/TEDProject/ProfileLink?ID=<%= asker.getID() %>"><%= asker.getFirstName() %> <%= asker.getLastName() %></a>
+					   			<a href="/TEDProject/ProfileLink?ProfID=<%= asker.getID() %>"><%= asker.getFirstName() %> <%= asker.getLastName() %></a>
 					   			<form action="/TEDProject/prof/AcceptRequest" method="POST" style="float:right">    <!-- use AJAX for this form! -->
 					   				<input type="submit" value="accept">
 					   				<input type="submit" value="decline">
