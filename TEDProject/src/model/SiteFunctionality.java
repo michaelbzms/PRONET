@@ -1,6 +1,5 @@
 package model;
 
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -10,6 +9,10 @@ public class SiteFunctionality {
 	
 	public static int LogIn(String email, String password) {              // as Administrator or Professional
 		DataBaseBridge dbg = new DataBaseBridge();                        // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -404;
+		}
 		// First try to login as an administrator
 		Administrator admin = dbg.recoverAdministratorRecord(email);
 		if ( admin != null && !admin.getPassword().equals(password)) {    // email exists as administrator but password mismatch!
@@ -38,6 +41,10 @@ public class SiteFunctionality {
 			return -1;       // code for mismatching passwords
 		} else {	
 			DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+			if ( !dbg.checkIfConnected() ) {
+				System.out.println("> Database error: database down");
+				return -404;
+			}
 			Professional prof = dbg.recoverProfessionalRecord(email);   // check email with the database
 			if ( prof != null ) {                          // email is already taken
 				dbg.close();                               // close connection to the database
@@ -86,6 +93,10 @@ public class SiteFunctionality {
 	}
 	
 	public static Professional acquireProfFromSession(DataBaseBridge db, HttpServletRequest request) {
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return null;
+		}
 		int LoggedProfID = -1;
 		Professional loggedProf;
 		HttpSession currentSession = request.getSession(false);
@@ -109,6 +120,10 @@ public class SiteFunctionality {
 
 	public static int ChangeEmail(int profID, String currentPassword, String newEmail) {
 		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -404;
+		}
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
 			dbg.close();                               
@@ -130,6 +145,10 @@ public class SiteFunctionality {
 	
 	public static int ChangePassword(int profID, String currentPassword, String newPassword) {
 		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -404;
+		}
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
 			dbg.close();                               
@@ -143,6 +162,24 @@ public class SiteFunctionality {
 			dbg.close();
 			return -2;
 		}
+	}
+	
+	public static int updateConnectionRequest(int AskerID, int ReceiverID, boolean decision) {
+		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -404;
+		}
+		boolean success;
+		if (decision) {        // if receiver accepted the asker's request to connect
+			success = db.addConnectedProfessionals(AskerID, ReceiverID);
+			if (!success) { System.out.println("> Database error: Server could not connect professionals!"); }   // should not happen
+		}
+		// remove connection request as a request in the data base
+		success = db.removeConnectionRequest(AskerID, ReceiverID);
+		if (!success) { System.out.println("> Database error: Server could not remove connection request!"); }   // should not happen	
+		db.close();
+		return 0;
 	}
 	
 }

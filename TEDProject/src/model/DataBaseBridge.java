@@ -266,13 +266,13 @@ public class DataBaseBridge {
 		return P;
 	}
 
-	public String getProfessionalPassword(int profID) {
+	public String getProfessionalPassword(int ID) {
 		if (!connected) return null;
 		String profPasssword = null;
 		String Query = "SELECT password FROM Professionals WHERE idProfessional = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
-			statement.setInt(1, profID);
+			statement.setInt(1, ID);
 			ResultSet resultSet = statement.executeQuery();
 			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
 				return null;
@@ -316,7 +316,7 @@ public class DataBaseBridge {
 		return true;
 	}
 
-	public  List<Professional> getSearchResultsFor(String searchString) {
+	public List<Professional> getSearchResultsFor(String searchString) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
 		String Query = "SELECT idProfessional, firstName, lastName, profilePictureFilePath, employmentStatus, employmentInstitution "
@@ -336,7 +336,9 @@ public class DataBaseBridge {
 					prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
 					prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
 					prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
-					P.add(prof);
+					if ( !P.contains(prof) ) {
+						P.add(prof);
+					}
 				}
 			}
 		} catch (SQLException e) {
@@ -345,6 +347,36 @@ public class DataBaseBridge {
 		}
 		return P;
 	}	
+
+	public boolean removeConnectionRequest(int AskerID, int ReceiverID) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM ConnectionRequests WHERE idAsker = ? and idReceiver = ?";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, AskerID);
+			statement.setInt(2, ReceiverID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean addConnectedProfessionals(int prof1ID, int prof2ID) {
+		if (!connected) return false;
+		String insertString = "INSERT INTO ConnectedProfessionals (idProfessional1, idProfessional2) VALUES (?, ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(insertString);
+			statement.setInt(1, prof1ID);
+			statement.setInt(2, prof2ID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
 	public boolean areProfessionalsConnected(int profID1, int profID2) {
 		if (profID1 == profID2) return true;		// one should be considered connected to themselves, right?

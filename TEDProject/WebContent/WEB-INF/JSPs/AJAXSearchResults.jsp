@@ -21,7 +21,7 @@
 			<%= p.getFirstName() %> <%= p.getLastName() %><br>
 			<%= p.getEmploymentStatus() %><br>
 			<%= p.getEmploymentInstitution() %><br>	
-			<a href="/TEDProject/ProfileLink?ID=<%= p.getID() %>">View details</a>
+			<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>
 		</div>
 	<%	} %>
 	</div>

@@ -10,9 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class ProfileLinkServlet
- */
+
 @WebServlet("/ProfileLink")
 public class ProfileLinkServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,6 +30,9 @@ public class ProfileLinkServlet extends HttpServlet {
 			profID = Integer.parseInt(profIDstr);
 		} else if (currentSession != null) {					// else use the ProfID of the currently logged in professional
 			profID = (int) currentSession.getAttribute("ProfID");
+			// update lastVisited
+			String referer = request.getHeader("Referer");
+			currentSession.setAttribute("lastVisited", referer);
 		} else {
 			request.setAttribute("errorType", "invalidPageRequest");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

@@ -40,12 +40,39 @@
 				   if ( RequestedBy != null ){ %>
 					   	<ul>
 				     <%	for ( Professional asker : RequestedBy ) { %>
-					   		<li>
+					   		<li id="request">
 					   			<a href="/TEDProject/ProfileLink?ProfID=<%= asker.getID() %>"><%= asker.getFirstName() %> <%= asker.getLastName() %></a>
-					   			<form action="/TEDProject/prof/AcceptRequest" method="POST" style="float:right">    <!-- use AJAX for this form! -->
-					   				<input type="submit" value="accept">
-					   				<input type="submit" value="decline">
-					   			</form>
+					   			<div style="float:right">    <!-- use AJAX for this form! -->
+					   				<button id="accept" value="accept">accept</button>
+					   				<button id="decline" value="decline">decline</button>
+					   				<script> <!-- JS script for accepting/rejecting friend requests -->
+					   					$("#accept").on("click", function(){
+					   						// send AJAX post information to server
+					   						$.ajax({
+					   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
+					   							type: "post",
+					   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"accept" },
+					   							success: function(response){
+					   								console.log(response);
+					   								$("#request").fadeOut();
+					   							}
+					   						});
+					   					});
+					   					
+					   					$("#decline").on("click", function(){
+					   						// send AJAX post information to server
+					   						$.ajax({
+					   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
+					   							type: "post",
+					   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"decline" },
+					   							success: function(response){
+					   								console.log(response);
+					   								$("#request").fadeOut();
+					   							}
+					   						});
+					   					});
+					   				</script>
+					   			</div>
 					   			<br>
 					   		</li>
 					   		<!-- AJAX JS code goes here? -->
@@ -76,7 +103,7 @@
 									<%= p.getFirstName() %> <%= p.getLastName() %><br>
 									<%= p.getEmploymentStatus() %><br>
 									<%= p.getEmploymentInstitution() %><br>	
-									<a href="/TEDProject/ProfileLink?ID=<%= p.getID() %>">View details</a>					
+									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
 								</div>
 					<% 		} 
 					   } else { %>

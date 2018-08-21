@@ -64,8 +64,16 @@ public class Professional {
 	public Professional() {
 		
 	}
-
 	
-	
-	
+	// Overide '==' operator
+	@Override public boolean equals(Object obj) {
+		if (obj == null) {
+            return false;
+        }
+        if (!Professional.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Professional other = (Professional) obj;
+		return (this.getID() == other.getID() && this.getID() != -1 && other.getID() != -1);
+	}
 }
