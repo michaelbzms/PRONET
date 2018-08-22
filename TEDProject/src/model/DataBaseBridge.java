@@ -398,4 +398,30 @@ public class DataBaseBridge {
 		}
 	}
 	
+	public boolean updateProfessionalProfile(int profID, Professional tempProf) {
+		if (!connected) return false;
+		String updateString = "UPDATE Professionals SET phoneNumber = ?, employmentStatus = ?, employmentInstitution = ?, description = ?, "
+				+ "professionalExperience = ?, educationBackground = ?, skills = ?, professionalExperienceVisibility = ?, "
+				+ "educationBackgroundVisibility = ?, skillsVisibility = ? WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(updateString);
+			statement.setString(1, tempProf.getPhone());
+			statement.setString(2, tempProf.getEmploymentStatus());
+			statement.setString(3, tempProf.getEmploymentInstitution());
+			statement.setString(4, tempProf.getDescription());
+			statement.setString(5, tempProf.getProfessionalExperience());
+			statement.setString(6, tempProf.getEducationBackground());
+			statement.setString(7, tempProf.getSkills());
+			statement.setBoolean(8, tempProf.getProfExpVisibility());
+			statement.setBoolean(9, tempProf.getEdBackgroundVisibility());
+			statement.setBoolean(10, tempProf.getSkillsVisibility());
+			statement.setInt(11, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 }

@@ -91,17 +91,11 @@
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<script>
 		var profExp = document.getElementById("profExp");
-		if (profExp) {
-			profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience()%>`);
-		}
+		if (profExp) profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience()%>`);
 		var edBackground = document.getElementById("edBackground");
-		if (edBackground) {
-			edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground()%>`);
-		}
+		if (edBackground) edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground()%>`);
 		var skills = document.getElementById("skills");
-		if (skills) {
-			skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills()%>`);
-		}
+		if (skills) skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills()%>`);
 	</script>
 </body>
 </html>

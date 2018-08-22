@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Professional;
 import model.SiteFunctionality;
 
 
@@ -38,7 +39,6 @@ public class ChangeServlet extends HttpServlet {
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				} else if ( !SiteFunctionality.checkInputText(newEmail, true, true, 0) ) {
-					System.out.println("|"+newEmail+"|");
 					System.out.println("Form submitted but one or more fields have illegal input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
@@ -116,6 +116,59 @@ public class ChangeServlet extends HttpServlet {
 							RequetsDispatcherObj.forward(request, response);
 							break;
 						case -2:      // database error
+							request.setAttribute("errorType", "dbError");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						default:      // should not happen
+							request.setAttribute("errorType", "invalid return code at registration");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+					}
+				}
+				break;
+			case "profile":
+//				String employmentStatus, employmentInstitution, description, phoneNumber, profExp, edBackground, skills;
+//				boolean profExpVisibility, edBackgroundVisibility, skillsVisibility;
+//				employmentStatus = request.getParameter("employmentStatus");
+//				employmentInstitution = request.getParameter("employmentInstitution");
+//				description = request.getParameter("description");
+//				phoneNumber = request.getParameter("phoneNumber");
+//				profExpVisibility = request.getParameter("profExpVisibility") != null;
+//				profExp = request.getParameter("profExp");
+//				edBackgroundVisibility = request.getParameter("edBackgroundVisibility") != null;
+//				edBackground = request.getParameter("edBackground");
+//				skillsVisibility = request.getParameter("skillsVisibility") != null;
+//				skills = request.getParameter("skills");
+				
+				// Instead of carrying 10+ variables as function arguments, we use a temporary Professional instead
+				Professional tempProf = new Professional();
+				tempProf.setEmploymentStatus(request.getParameter("employmentStatus"));
+				tempProf.setEmploymentInstitution(request.getParameter("employmentInstitution"));
+				tempProf.setDescription(request.getParameter("description"));
+				tempProf.setPhone(request.getParameter("phoneNumber"));
+				tempProf.setProfExpVisibility(request.getParameter("profExpVisibility") != null);
+				tempProf.setProfessionalExperience(request.getParameter("profExp"));
+				tempProf.setEdBackgroundVisibility(request.getParameter("edBackgroundVisibility") != null);
+				tempProf.setEducationBackground(request.getParameter("edBackground"));
+				tempProf.setSkillsVisibility(request.getParameter("skillsVisibility") != null);
+				tempProf.setSkills(request.getParameter("skills"));
+				if ( false ) {		// TODO: do we want to check any of the inputs here?
+					System.out.println("Form submitted but one or more fields have illegal input characters.");
+					request.setAttribute("errorType", "illegalTextInput");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else {
+					int profID = (int) request.getSession(false).getAttribute("ProfID");
+					int result = SiteFunctionality.EditProfile(profID, tempProf);
+					switch (result) {
+						case 0:     // success
+							System.out.println("Profile updated successfully");
+							// notify user for success and reload settings page	
+							response.sendRedirect("/TEDProject/ProfileLink");
+							break;
+						case -1:      // database error
 							request.setAttribute("errorType", "dbError");
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 							RequetsDispatcherObj.forward(request, response);

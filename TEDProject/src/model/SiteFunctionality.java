@@ -11,7 +11,7 @@ public class SiteFunctionality {
 		DataBaseBridge dbg = new DataBaseBridge();                        // create a connection to the database
 		if ( !dbg.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
-			return -404;
+			return -503;
 		}
 		// First try to login as an administrator
 		Administrator admin = dbg.recoverAdministratorRecord(email);
@@ -43,7 +43,7 @@ public class SiteFunctionality {
 			DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
 			if ( !dbg.checkIfConnected() ) {
 				System.out.println("> Database error: database down");
-				return -404;
+				return -503;
 			}
 			Professional prof = dbg.recoverProfessionalRecord(email);   // check email with the database
 			if ( prof != null ) {                          // email is already taken
@@ -122,7 +122,7 @@ public class SiteFunctionality {
 		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
 		if ( !dbg.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
-			return -404;
+			return -503;
 		}
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
@@ -137,8 +137,8 @@ public class SiteFunctionality {
 		if ( dbg.updateProfessionalEmail(profID, newEmail) ) {		// Successful update
 			dbg.close(); 
 			return 0;	
-		} else {				
-			// database error
+		} else {				// database error
+			dbg.close(); 
 			return -3;
 		}
 	}
@@ -147,7 +147,7 @@ public class SiteFunctionality {
 		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
 		if ( !dbg.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
-			return -404;
+			return -503;
 		}
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
@@ -168,7 +168,7 @@ public class SiteFunctionality {
 		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
 		if ( !db.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
-			return -404;
+			return -503;
 		}
 		boolean success;
 		if (decision) {        // if receiver accepted the asker's request to connect
@@ -180,6 +180,21 @@ public class SiteFunctionality {
 		if (!success) { System.out.println("> Database error: Server could not remove connection request!"); }   // should not happen	
 		db.close();
 		return 0;
+	}
+	
+	public static int EditProfile(int profID, Professional tempProf) {
+		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( dbg.updateProfessionalProfile(profID, tempProf) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -1;
+		}
 	}
 	
 }
