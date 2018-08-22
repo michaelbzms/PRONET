@@ -40,13 +40,13 @@
 				   if ( RequestedBy != null ){ %>
 					   	<ul>
 				     <%	for ( Professional asker : RequestedBy ) { %>
-					   		<li id="request">
+					   		<li id="request<%= asker.getID() %>">
 					   			<a href="/TEDProject/ProfileLink?ProfID=<%= asker.getID() %>"><%= asker.getFirstName() %> <%= asker.getLastName() %></a>
-					   			<div style="float:right">    <!-- use AJAX for this form! -->
-					   				<button id="accept" value="accept">accept</button>
-					   				<button id="decline" value="decline">decline</button>
+					   			<div style="float:right">
+					   				<button id="accept<%= asker.getID() %>" value="accept">accept</button>
+					   				<button id="decline<%= asker.getID() %>" value="decline">decline</button>
 					   				<script> <!-- JS script for accepting/rejecting friend requests -->
-					   					$("#accept").on("click", function(){
+					   					$("#accept<%= asker.getID() %>").on("click", function(){
 					   						// send AJAX post information to server
 					   						$.ajax({
 					   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
@@ -54,12 +54,22 @@
 					   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"accept" },
 					   							success: function(response){
 					   								console.log(response);
-					   								$("#request").fadeOut();
+					   								$("#request<%= asker.getID() %>").fadeOut();
+					   							 	// append new connection to list of Connections below
+					   								$("#connections_grid").append(
+				   										  "<div class=\"grid_item\">"
+					   								  	+     "<img src=\"<%= asker.getProfile_pic_file_path() %>\" alt=\"Profile picture\"><br>"
+														+     "<%= asker.getFirstName() %> <%= asker.getLastName() %><br>"
+														+     "<%= asker.getEmploymentStatus() %><br>"
+														+     "<%= asker.getEmploymentInstitution() %><br>"	
+														+     "<a href=\"/TEDProject/ProfileLink?ProfID=\"<%= Integer.toString(asker.getID()) %>\">View details</a>"
+					   								    + "</div>"		
+					   								);
 					   							}
 					   						});
 					   					});
 					   					
-					   					$("#decline").on("click", function(){
+					   					$("#decline<%= asker.getID() %>").on("click", function(){
 					   						// send AJAX post information to server
 					   						$.ajax({
 					   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
@@ -67,7 +77,7 @@
 					   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"decline" },
 					   							success: function(response){
 					   								console.log(response);
-					   								$("#request").fadeOut();
+					   								$("#request<%= asker.getID() %>").fadeOut();
 					   							}
 					   						});
 					   					});
@@ -75,16 +85,16 @@
 					   			</div>
 					   			<br>
 					   		</li>
-					   		<!-- AJAX JS code goes here? -->
 				     <% } %>
 				   		</ul>
 				<% } else { %>
-				   		<p>You have no connection requests pending.</p>
+				   		<p>Ooops! It appears that we cannot load your connection requests from our database.<br>
+				   		Please contact our administrators.</p>
 				<% } %>
 			</div>
 			<div class="search_bar">
 				<h2>Search for professionals</h2>
-				<form id="AJAXform" action="/TEDProject/AJAXServlet?action=searchProfessional" method="post" class="ajax">  <!-- use AJAX for this form! -->
+				<form id="AJAXform" action="/TEDProject/AJAXServlet?action=searchProfessional" method="post" class="ajax">
 					<label>Find: </label>
 					<input type="text" name="searchString" id="searchString">
 					<input type="submit" value="search">
@@ -94,7 +104,7 @@
 			</div>
 			<div class="connections_bar">
 				<h2>Connections</h2>
-				<div class="grid_container">
+				<div id="connections_grid" class="grid_container">
 					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
 					   if ( Connections != null ) {
 							for (Professional p : Connections) { %>
@@ -105,7 +115,7 @@
 									<%= p.getEmploymentInstitution() %><br>	
 									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
 								</div>
-					<% 		} 
+					<%		} 
 					   } else { %>
 					   		<p>You are not connected with any other professional.</p>
 					<% } %>

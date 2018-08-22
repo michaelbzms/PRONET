@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class DataBaseBridge {
 	
 	/* These fields are better hardcoded only here than all over the place on the caller's side */
-	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
+	final private String database_url = "jdbc:mysql://localhost:3306/TED?useSSL=false&serverTimezone=UTC";   // not using SSL yet
 	final private String DBUser = "myuser";
 	final private String DBPassword = "MYUSERSQL";
 	private Connection connection;
