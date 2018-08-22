@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+.my_h1 {
+	color: white;
+	text-align: center;
+	font-size: 300%;
+	text-shadow:
+   	-2px -2px 0 #0e1956,
+  	2px -2px 0 #0e1956,
+   	-2px 2px 0 #0e1956,
+   	2px 2px 0 #0e1956; 
+}
+
+.my_h2 {
+	border-bottom-style: solid;
+	border-bottom-color: #162787;
+	color: #162787;
+	text-shadow: 1px 1px #0e1956;
+	margin: 0px 0px 10px 0px;
+}
+
+body{
+	background: radial-gradient(#5b96ff, #3161b7, #1b3a72);
+	background-size: cover;
+	background-attachment: fixed;
+	font-family: Oswald, sans-serif;
+}
+		
+.main_container{
+	background: radial-gradient(#e2ecff, #c9dcff, #afccff);
+	/* width: 800px; */
+	width: 80%;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px 30px 20px 30px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 30px 3px #6397ff;
+}
+
+.form{
+	background-color: #3c74d8;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px 0px #0e1956;
+	color: #e5eeff;
+	padding: 10px;
+	margin: 16px 0px 16px 0px;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px;
+	width: 400px;
+	margin:0 auto;
+}​
+
+
+.navbar li{
+	display: inline-grid;
+	list-style-type: none;
+}
+
+.navbar ul li{
+	display: inline-block;
+	border-style: solid;
+	border-width: 2px;
+	margin: 5px;
+	padding: 5px;
+	background-color: #3581fd;
+}
+
+.navbar ul li a{
+	color: white;
+	text-decoration: none;
+}
+
+.navbar ul :hover{
+	background-color: #93c6ff;
+}
+
+.my_h3 {
+	text-decoration: underline;
+	margin: 0px 0px 5px 0px;
+}
+
+.my_h6 {
+	margin: 0px 0px 5px 0px;
+}
+
+.cookie_disclaimer{
+    background-color: #a20808;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 0px #8c0000;
+    color: black;
+    padding: 10px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.buttonContainer {
+	padding: 15px; 
+	text-align: center;
+}
+
+.changeButton {
+    padding: 10px 25px; 
+    background: lightgray; 
+    cursor: pointer;
+    border: solid;
+    border-color: black;
+    border-radius: 15px;
+	text-align: center;
+}
+
+label {
+	display: inline-block;
+	width: 160px;
+	text-align: left;
+	margin-bottom: 3px;
+}

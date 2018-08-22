@@ -79,6 +79,10 @@ public class NavigationServlet extends HttpServlet {
 					RequetsDispatcherObj.forward(request, response);
 				}
 				break;
+			case "EditProfile":
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/EditProfile.jsp");
+				RequetsDispatcherObj.forward(request, response);
+				break;
 			default:
 				request.setAttribute("errorType", "invalidPageRequest");
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

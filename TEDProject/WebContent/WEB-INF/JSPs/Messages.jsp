@@ -9,13 +9,13 @@
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 </head>
 <body>
+	<div class="main_container">
 	<% 	DataBaseBridge db = new DataBaseBridge(); 
 		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
 		if ( prof == null ) {  %>
 			<h2>INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
-		<div class="main_container">
 			<nav class="navbar">
 				<ul>
 					<li><a href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
@@ -33,7 +33,7 @@
 			</nav>
 			<h2>Here be messages for <%= prof.getFirstName() %>  <%= prof.getLastName() %>!</h2>
 		
-		</div>
+	</div>
 	<% } %>
 	<% db.close(); %>
 </body>

@@ -16,7 +16,7 @@ import model.SiteFunctionality;
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private int timeout_interval = 5*60;
+	private int timeout_interval = 50*60;		// TODO: something smaller
 	
     
     public WelcomeServlet() {

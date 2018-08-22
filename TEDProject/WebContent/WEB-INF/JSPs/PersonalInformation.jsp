@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<title>PRONET - Personal Information</title>
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
 </head>
@@ -14,7 +14,7 @@
 		   DataBaseBridge db = new DataBaseBridge();
 		   Professional Prof = db.getProfessional(profID);
 		   if (Prof == null) { %>
-		   		<h2>INVALID PROFILE REQUEST</h2>
+		   		<h2 class="my_h2">INVALID PROFILE REQUEST</h2>
 				<p>Requested profile does not exist.</p>
 		<% } else { 
 			HttpSession currentSession = request.getSession(false);
@@ -44,7 +44,7 @@
 					</ul>
 				</nav>
 		<% } %>
-			<h1><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
+			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<!-- insert image here with  style = "float: right" -->
 			<p style = "font-weight: bold; text-align: center">
 			<% if ( Prof.getEmploymentStatus() != null ) { %>
@@ -57,22 +57,29 @@
 				<%= Prof.getDescription() %> <br> 
 			<% } %>
 			</p>
+			<% if (isSelf) { %>
+				<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="changeButton">Edit Profile</a>
+			<% } %>
 			<p>
 			   <span style="text-decoration: underline">Contact Info:</span><br> 
-			   email: <%= Prof.getEmail() %> <br>
-			   phone number: <%= Prof.getPhone() %> <br> 
+			   Email: <%= Prof.getEmail() %> <br>
+			   Phone Number: <%= Prof.getPhone() %> <br> 
+			   <br>
 			</p>
 			<% if ( Prof.getProfessionalExperience() != null && (Prof.getProfExpVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID))) ) { %>
-					<h2>Professional Experience</h2>
-					<p><%= Prof.getProfessionalExperience() %></p>
+					<h2 class="my_h2">Professional Experience</h2>
+					<p id="profExp"><%= Prof.getProfessionalExperience() %></p>
+					<br>
 			<% } %>
 			<% if ( Prof.getEducationBackground() != null && (Prof.getEdBackgroundVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
-					<h2>Education Background</h2>
-					<p><%= Prof.getEducationBackground() %></p>
+					<h2 class="my_h2">Education Background</h2>
+					<p id="edBackground"><%= Prof.getEducationBackground() %></p>
+					<br>
 			<% } %>
 			<% if ( Prof.getSkills() != null && (Prof.getSkillsVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
-					<h2>Skills</h2>
-					<p><%= Prof.getSkills() %></p>
+					<h2 class="my_h2">Skills</h2>
+					<p id="skills"><%= Prof.getSkills() %></p>
+					<br>
 			<% } %>
 			<!-- Back button only for admin -->
 			<% if (isAdmin) { %>
@@ -81,5 +88,20 @@
 		<% } 
 		   db.close(); %>
 	</div>
+	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+	<script>
+		var profExp = document.getElementById("profExp");
+		if (profExp) {
+			profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience()%>`);
+		}
+		var edBackground = document.getElementById("edBackground");
+		if (edBackground) {
+			edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground()%>`);
+		}
+		var skills = document.getElementById("skills");
+		if (skills) {
+			skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills()%>`);
+		}
+	</script>
 </body>
 </html>
