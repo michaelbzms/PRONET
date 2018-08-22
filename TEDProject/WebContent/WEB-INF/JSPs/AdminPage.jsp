@@ -1,41 +1,29 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<meta charset="UTF-8">
 	<title>PRONET - Administration Page</title>
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
-	<style>
-		
-		#list_of_professionals ul{
-			list-style-type: none;
-			display: inline-grid;
-		}
-		
-		#list_of_professionals ul li{
-			text-align: center;
-			display: inline-block;
-			margin: 5px;
-		    background-color: #e2ecff;
-			border-style: solid;
-		    border-color: black;
-		   	border-width: 2px;
-		    padding: 5px;
-		}
-		
-	</style>
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<!-- JS -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
+	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
 		<h2>Registered Professionals:</h2><br>
-		<div id="list_of_professionals">
+		<div>
 			<% DataBaseBridge db = new DataBaseBridge();
 			   Professional[] professionals = db.getAllProfessionals(); %>
-			<ul> 
+			<ul class="grid_container"> 
 			<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
-				<li>
+				<li class="grid_item">
 					<!-- profile picture here as an <img> element  -->
 					<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
 					<% if ( professionals[i].getEmploymentStatus() != null ) { %>

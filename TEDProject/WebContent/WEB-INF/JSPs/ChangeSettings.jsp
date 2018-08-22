@@ -1,11 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<title>PRONET - Professional Networking and more</title>
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<!-- JS -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
+	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="main_container" style="align: center">

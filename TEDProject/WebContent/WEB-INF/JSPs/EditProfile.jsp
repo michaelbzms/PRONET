@@ -1,13 +1,30 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<!-- JS -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
+	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<style>
+	
+	.mylabel{
+		display: inline-block;
+		font-weight: 600;
+		font-size: 110%;
+		width: 220px;
+		text-align: left;
+		margin-bottom: 3px;
+	}
+	
+	</style>
 </head>
 <body>
 	<div class="main_container">
@@ -18,33 +35,38 @@
 			<h2>INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
-			<nav class="navbar">
-				<ul>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-					<li><a href="/TEDProject/ProfileLink">Personal Information</a></li>
-					<li><a href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-					<li><form action="/TEDProject/LogoutServlet" method="post">
-							<input type="submit" value="Logout" >
-						</form>
-					</li>
-				</ul>
+			<nav class="navbar navbar-expand-xl bg-light justify-content-center">
+				<div class="container-fluid">
+				    <div class="navbar-header">
+				      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
+				    </div>
+					<ul class="navbar-nav"  role="navigation">
+						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
+						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
+						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
+						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
+						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
+						<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
+						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
+						<li class="nav-item">
+							<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
+								<input class="btn btn-primary" type="submit" value="Logout" >
+							</form>
+						</li>
+					</ul>
+				</div>
 			</nav>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<!-- insert image here with  style = "float: right" -->
 			<form method=POST action="/TEDProject/ChangeServlet?attr=profile">		
-				<h3>Employment Status: <input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"></h3>
-				<h3>Employment Institution: <input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"></h3>
-				<h3>Description: <textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea></h3>
-				<p>
-				   <span style="text-decoration: underline">Contact Info:</span><br> 
-				   Email: <%= Prof.getEmail() %> <br>
-				   Phone Number: <input type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"> <br> 
-				   <br>
-				</p>
+				<div id="edit_input" style="margin-left: 32%">
+					<div class="mylabel">Employment Status:</div><input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"><br>
+					<div class="mylabel">Employment Institution: </div><input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"><br>
+					<div class="mylabel">Description: </div><textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea><br>
+					<div class="mylabel">Email: </div><%= Prof.getEmail() %> <br>
+					<div class="mylabel">Phone Number: </div><input type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"><br> 
+					<br>
+				</div>
 				<h2 class="my_h2">Professional Experience</h2>
 				<input type="checkbox" name="profExpVisibility" <% if (Prof.getProfExpVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="profExp" name="profExp"><%= Prof.getProfessionalExperience() != null ? Prof.getProfessionalExperience().replace("\\`", "`") : "" %></textarea><br>
@@ -55,8 +77,8 @@
 				<input type="checkbox" name="skillsVisibility" <% if (Prof.getSkillsVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="skills" name="skills"><%= Prof.getSkills() != null ? Prof.getSkills().replace("\\`", "`") : "" %></textarea><br>
 			    <div class="buttonContainer">
-					<input type="submit" value="Save" class="changeButton">
-					<a href="/TEDProject/ProfileLink" class="changeButton">Cancel</a>
+					<input type="submit" value="Save" class="btn btn-primary">
+					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>
 				</div>
 			</form>
 		<% } %>

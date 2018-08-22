@@ -106,7 +106,6 @@ public class ChangeServlet extends HttpServlet {
 							System.out.println("Password changed successfully");
 							// "login the user" or toast-notify him and prompt him to log in from the welcome page
 							// ...	
-							// TEMP: for now just reload the same page
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
 							RequetsDispatcherObj.forward(request, response);
 							break;
@@ -128,20 +127,7 @@ public class ChangeServlet extends HttpServlet {
 					}
 				}
 				break;
-			case "profile":
-//				String employmentStatus, employmentInstitution, description, phoneNumber, profExp, edBackground, skills;
-//				boolean profExpVisibility, edBackgroundVisibility, skillsVisibility;
-//				employmentStatus = request.getParameter("employmentStatus");
-//				employmentInstitution = request.getParameter("employmentInstitution");
-//				description = request.getParameter("description");
-//				phoneNumber = request.getParameter("phoneNumber");
-//				profExpVisibility = request.getParameter("profExpVisibility") != null;
-//				profExp = request.getParameter("profExp");
-//				edBackgroundVisibility = request.getParameter("edBackgroundVisibility") != null;
-//				edBackground = request.getParameter("edBackground");
-//				skillsVisibility = request.getParameter("skillsVisibility") != null;
-//				skills = request.getParameter("skills");
-				
+			case "profile":				
 				// Instead of carrying 10+ variables as function arguments, we use a temporary Professional instead
 				Professional tempProf = new Professional();
 				tempProf.setEmploymentStatus(request.getParameter("employmentStatus"));
@@ -154,8 +140,14 @@ public class ChangeServlet extends HttpServlet {
 				tempProf.setEducationBackground(request.getParameter("edBackground").replace("`", "\\`"));
 				tempProf.setSkillsVisibility(request.getParameter("skillsVisibility") != null);
 				tempProf.setSkills(request.getParameter("skills").replace("`", "\\`"));
-				if ( false ) {		// TODO: do we want to check any of the inputs here?
-					System.out.println("Form submitted but one or more fields have illegal input characters.");
+				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), false, true, 255)
+				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), false, true, 255)
+				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, false, 4096) 
+				   || !SiteFunctionality.checkInputNumber(tempProf.getPhone(), 32) 
+				   || !SiteFunctionality.checkInputText(tempProf.getProfessionalExperience(), false, false, 0) 
+				   || !SiteFunctionality.checkInputText(tempProf.getEducationBackground(), false, false, 0) 
+				   || !SiteFunctionality.checkInputText(tempProf.getSkills(), false, false, 0) ) {
+					System.out.println("Form to change profile submitted but one or more fields have illegal (or too big) input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
@@ -190,7 +182,6 @@ public class ChangeServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

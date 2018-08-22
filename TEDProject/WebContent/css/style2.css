@@ -53,30 +53,6 @@ body{
 	margin:0 auto;
 }​
 
-
-.navbar li{
-	display: inline-grid;
-	list-style-type: none;
-}
-
-.navbar ul li{
-	display: inline-block;
-	border-style: solid;
-	border-width: 2px;
-	margin: 5px;
-	padding: 5px;
-	background-color: #3581fd;
-}
-
-.navbar ul li a{
-	color: white;
-	text-decoration: none;
-}
-
-.navbar ul :hover{
-	background-color: #93c6ff;
-}
-
 .my_h3 {
 	text-decoration: underline;
 	margin: 0px 0px 5px 0px;
@@ -100,24 +76,46 @@ body{
     text-align: center;
 }
 
+
 .buttonContainer {
-	padding: 15px; 
+	padding: 10px; 
 	text-align: center;
+	margin: 10px;
 }
 
-.changeButton {
-    padding: 10px 25px; 
-    background: lightgray; 
-    cursor: pointer;
-    border: solid;
-    border-color: black;
-    border-radius: 15px;
-	text-align: center;
-}
 
 label {
 	display: inline-block;
 	width: 160px;
 	text-align: left;
 	margin-bottom: 3px;
+}
+
+/* add over any bootstrap changes: */
+nav{
+	border-style: solid; 
+	border-width: 1px; 
+	border-color: #b2cdff; 
+	box-shadow: 0px 0px 3px 0px #6397ff;
+	margin-bottom: 30px;
+}
+
+nav li a:hover{
+	color: white;
+	background-color: #b2cdff;
+	border-style: solid;
+	border-width: 0px;
+	border-radius: 5px;
+}
+
+nav a:active{
+	color: white;
+	background-color: #b2cdff;
+}
+
+nav #active_page{
+	border-style: solid; 
+	border-width: 1px; 
+	border-color: #b2cdff;
+	border-radius: 5px;
 }

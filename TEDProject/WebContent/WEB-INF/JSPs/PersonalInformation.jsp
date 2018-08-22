@@ -1,12 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<!-- JS -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
+	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -28,20 +34,26 @@
 			boolean isAdmin = ( currentSession != null && ((boolean) currentSession.getAttribute("isAdmin")) );
 			// Navbar only for professionals
 			if (currentSession != null && !isAdmin) { %>
-				<nav class="navbar">
-					<ul>
-						<li><a href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-						<li><a href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-						<li><a href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-						<li><a href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-						<li><a href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-						<li><a href="/TEDProject/ProfileLink">Personal Information</a></li>
-						<li><a href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-						<li><form action="/TEDProject/LogoutServlet" method="post">
-								<input type="submit" value="Logout" >
-							</form>
-						</li>
-					</ul>
+				<nav class="navbar navbar-expand-xl bg-light justify-content-center">
+					<div class="container-fluid">
+					    <div class="navbar-header">
+					      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
+					    </div>
+						<ul class="navbar-nav"  role="navigation">
+							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
+							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
+							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
+							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
+							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
+							<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
+							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
+							<li class="nav-item">
+								<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
+									<input class="btn btn-primary" type="submit" value="Logout" >
+								</form>
+							</li>
+						</ul>
+					</div>
 				</nav>
 		<% } %>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
@@ -58,14 +70,16 @@
 			<% } %>
 			</p>
 			<% if (isSelf) { %>
-				<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="changeButton">Edit Profile</a>
+				<div class="buttonContainer">
+					<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary btn-lg">Edit Profile</a>
+				</div>
 			<% } %>
-			<p>
-			   <span style="text-decoration: underline">Contact Info:</span><br> 
+			<p style="text-align: center">
+			   <u>Contact Info:</u><br> 
 			   Email: <%= Prof.getEmail() %> <br>
 			   Phone Number: <%= Prof.getPhone() %> <br> 
-			   <br>
 			</p>
+			<br>
 			<% if ( Prof.getProfessionalExperience() != null && !Prof.getProfessionalExperience().isEmpty() && 
 						(Prof.getProfExpVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID))) ) { %>
 					<h2 class="my_h2">Professional Experience</h2>

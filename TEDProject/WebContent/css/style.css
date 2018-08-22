@@ -1,23 +1,5 @@
 @charset "UTF-8";
 
-h1 {
-	color: white;
-	text-align: center;
-	font-size: 300%;
-	text-shadow:
-   	-2px -2px 0 #0e1956,
-  	2px -2px 0 #0e1956,
-   	-2px 2px 0 #0e1956,
-   	2px 2px 0 #0e1956; 
-}
-
-h2 {
-	border-bottom-style: solid;
-	border-bottom-color: #162787;
-	color: #162787;
-	text-shadow: 1px 1px #0e1956;
-	margin: 0px 0px 10px 0px;
-}
 
 body{
 	background: radial-gradient(#5b96ff, #3161b7, #1b3a72);
@@ -28,7 +10,6 @@ body{
 		
 .main_container{
 	background: radial-gradient(#e2ecff, #c9dcff, #afccff);
-	/* width: 800px; */
 	width: 80%;
 	margin-top: 16px;
 	margin-bottom: 16px;
@@ -39,7 +20,35 @@ body{
 	box-shadow: 0px 0px 30px 3px #6397ff;
 }
 
-.form{
+.main_container h1 {
+	color: white;
+	text-align: center;
+	font-size: 300%;
+	text-shadow:
+   	-2px -2px 0 #0e1956,
+  	2px -2px 0 #0e1956,
+   	-2px 2px 0 #0e1956,
+   	2px 2px 0 #0e1956; 
+}
+
+.main_container h2 {
+	border-bottom-style: solid;
+	border-bottom-color: #162787;
+	color: #162787;
+	text-shadow: 1px 1px #0e1956;
+	margin: 0px 0px 10px 0px;
+}
+
+.main_container h3 {
+	text-decoration: underline;
+	margin: 0px 0px 5px 0px;
+}
+
+.main_container h6 {
+	margin: 0px 0px 5px 0px;
+}
+
+.main_container .form{
 	background-color: #3c74d8;
 	border-radius: 5px;
 	box-shadow: 2px 2px 5px 0px #0e1956;
@@ -52,39 +61,6 @@ body{
 	width: 400px;
 	margin:0 auto;
 }​
-
-
-.navbar li{
-	display: inline-grid;
-	list-style-type: none;
-}
-
-.navbar ul li{
-	display: inline-block;
-	border-style: solid;
-	border-width: 2px;
-	margin: 5px;
-	padding: 5px;
-	background-color: #3581fd;
-}
-
-.navbar ul li a{
-	color: white;
-	text-decoration: none;
-}
-
-.navbar ul :hover{
-	background-color: #93c6ff;
-}
-
-h3 {
-	text-decoration: underline;
-	margin: 0px 0px 5px 0px;
-}
-
-h6 {
-	margin: 0px 0px 5px 0px;
-}
 
 .cookie_disclaimer{
     background-color: #a20808;
@@ -100,24 +76,46 @@ h6 {
     text-align: center;
 }
 
+
 .buttonContainer {
-	padding: 15px; 
+	padding: 10px; 
 	text-align: center;
+	margin: 10px;
 }
 
-.changeButton {
-    padding: 10px 25px; 
-    background: lightgray; 
-    cursor: pointer;
-    border: solid;
-    border-color: black;
-    border-radius: 15px;
-	text-align: center;
-}
 
 label {
 	display: inline-block;
 	width: 160px;
 	text-align: left;
 	margin-bottom: 3px;
+}
+
+/* add over any bootstrap changes: */
+nav{
+	border-style: solid; 
+	border-width: 1px; 
+	border-color: #b2cdff; 
+	box-shadow: 0px 0px 3px 0px #6397ff;
+	margin-bottom: 30px;
+}
+
+nav li a:hover{
+	color: white;
+	background-color: #b2cdff;
+	border-style: solid;
+	border-width: 0px;
+	border-radius: 5px;
+}
+
+nav a:active{
+	color: white;
+	background-color: #b2cdff;
+}
+
+nav #active_page{
+	border-style: solid; 
+	border-width: 1px; 
+	border-color: #b2cdff;
+	border-radius: 5px;
 }
