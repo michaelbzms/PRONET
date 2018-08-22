@@ -149,11 +149,11 @@ public class ChangeServlet extends HttpServlet {
 				tempProf.setDescription(request.getParameter("description"));
 				tempProf.setPhone(request.getParameter("phoneNumber"));
 				tempProf.setProfExpVisibility(request.getParameter("profExpVisibility") != null);
-				tempProf.setProfessionalExperience(request.getParameter("profExp"));
+				tempProf.setProfessionalExperience(request.getParameter("profExp").replace("`", "\\`"));
 				tempProf.setEdBackgroundVisibility(request.getParameter("edBackgroundVisibility") != null);
-				tempProf.setEducationBackground(request.getParameter("edBackground"));
+				tempProf.setEducationBackground(request.getParameter("edBackground").replace("`", "\\`"));
 				tempProf.setSkillsVisibility(request.getParameter("skillsVisibility") != null);
-				tempProf.setSkills(request.getParameter("skills"));
+				tempProf.setSkills(request.getParameter("skills").replace("`", "\\`"));
 				if ( false ) {		// TODO: do we want to check any of the inputs here?
 					System.out.println("Form submitted but one or more fields have illegal input characters.");
 					request.setAttribute("errorType", "illegalTextInput");

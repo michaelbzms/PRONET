@@ -66,17 +66,20 @@
 			   Phone Number: <%= Prof.getPhone() %> <br> 
 			   <br>
 			</p>
-			<% if ( Prof.getProfessionalExperience() != null && (Prof.getProfExpVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID))) ) { %>
+			<% if ( Prof.getProfessionalExperience() != null && !Prof.getProfessionalExperience().isEmpty() && 
+						(Prof.getProfExpVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID))) ) { %>
 					<h2 class="my_h2">Professional Experience</h2>
 					<p id="profExp"><%= Prof.getProfessionalExperience() %></p>
 					<br>
 			<% } %>
-			<% if ( Prof.getEducationBackground() != null && (Prof.getEdBackgroundVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
+			<% if ( Prof.getEducationBackground() != null && !Prof.getEducationBackground().isEmpty() && 
+						(Prof.getEdBackgroundVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
 					<h2 class="my_h2">Education Background</h2>
 					<p id="edBackground"><%= Prof.getEducationBackground() %></p>
 					<br>
 			<% } %>
-			<% if ( Prof.getSkills() != null && (Prof.getSkillsVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
+			<% if ( Prof.getSkills() != null && !Prof.getSkills().isEmpty() && 
+						(Prof.getSkillsVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
 					<h2 class="my_h2">Skills</h2>
 					<p id="skills"><%= Prof.getSkills() %></p>
 					<br>

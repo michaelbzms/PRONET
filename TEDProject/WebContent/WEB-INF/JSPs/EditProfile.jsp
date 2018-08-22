@@ -36,7 +36,7 @@
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<!-- insert image here with  style = "float: right" -->
 			<form method=POST action="/TEDProject/ChangeServlet?attr=profile">		
-				<h3>Employment Status: <input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : ""%>"></h3>
+				<h3>Employment Status: <input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"></h3>
 				<h3>Employment Institution: <input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"></h3>
 				<h3>Description: <textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea></h3>
 				<p>
@@ -47,13 +47,13 @@
 				</p>
 				<h2 class="my_h2">Professional Experience</h2>
 				<input type="checkbox" name="profExpVisibility" <% if (Prof.getProfExpVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
-			    <textarea id="profExp" name="profExp"><%= Prof.getProfessionalExperience() %></textarea><br>
+			    <textarea id="profExp" name="profExp"><%= Prof.getProfessionalExperience() != null ? Prof.getProfessionalExperience().replace("\\`", "`") : "" %></textarea><br>
 				<h2 class="my_h2">Education Background</h2>
 				<input type="checkbox" name="edBackgroundVisibility" <% if (Prof.getEdBackgroundVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
-			    <textarea id="edBackground" name="edBackground"><%= Prof.getEducationBackground() %></textarea><br>
+			    <textarea id="edBackground" name="edBackground"><%= Prof.getEducationBackground() != null ? Prof.getEducationBackground().replace("\\`", "`") : "" %></textarea><br>
 				<h2 class="my_h2">Skills</h2>
 				<input type="checkbox" name="skillsVisibility" <% if (Prof.getSkillsVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
-			    <textarea id="skills" name="skills"><%= Prof.getSkills() %></textarea><br>
+			    <textarea id="skills" name="skills"><%= Prof.getSkills() != null ? Prof.getSkills().replace("\\`", "`") : "" %></textarea><br>
 			    <div class="buttonContainer">
 					<input type="submit" value="Save" class="changeButton">
 					<a href="/TEDProject/ProfileLink" class="changeButton">Cancel</a>
