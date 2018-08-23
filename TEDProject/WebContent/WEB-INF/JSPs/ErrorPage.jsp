@@ -63,12 +63,16 @@
 	<% } %>
 		<br>
 	<%  HttpSession currentSession = request.getSession(false);
-		if ( currentSession == null ) { %>
+		if ( currentSession == null || (request.getAttribute("errorType") != null && 
+				 (  request.getAttribute("errorType").equals("invalidLoginEmail")    || request.getAttribute("errorType").equals("invalidLoginPassword")
+				 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
+		   ) ) ) { %>
 			<a style="display: inline-block" href="/TEDProject">Go back to welcome page</a>
+	<% } else  if ( currentSession != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
+			<a style="display: inline-block" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
 	<% } else { %>
 			<a style="display: inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>
-	<% } %>
-		
+	<% } %>	
 	</div>
 </body>
 </html>

@@ -52,7 +52,8 @@ public class SiteFunctionality {
 			} 
 			else {           // registration successful					
 				// insert a corresponding Professional record in the database
-				dbg.registerNewProfessional(email, password, firstName, lastName, phone, profilePicFilePath);	
+				boolean success = dbg.registerNewProfessional(email, password, firstName, lastName, phone, profilePicFilePath);	
+				if (!success) { dbg.close(); return -3; }
 			}
 			dbg.close();     // close connection to the database
 		}
@@ -66,8 +67,9 @@ public class SiteFunctionality {
 		for (int i = 0, n = input.length(); i < n; i++) {
 		    char c = input.charAt(i);                                        // Each character MUST be:
 		    if ( c == '<' || c == '>'                                        // Do not allow tags on text input (HTML Injection?)
-		         || (!oneLiner && (c == '\r' || c == '\n'))                  // do not allow new line on text input unless oneLiner is false                 
+		         || (oneLiner && (c == '\r' || c == '\n'))                  // do not allow new line on text input unless oneLiner is false                 
 		        ) {
+		    	System.out.println("Found illegal: " + input);
 		    	return false;
 		    }
 		}
@@ -86,7 +88,7 @@ public class SiteFunctionality {
 		}
 		return true;
 	}
-	
+		
 	public static Professional acquireProfFromSession(DataBaseBridge db, HttpServletRequest request) {
 		if ( !db.checkIfConnected() ) {
 			System.out.println("> Database error: database down");

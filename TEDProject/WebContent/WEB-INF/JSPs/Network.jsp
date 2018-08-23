@@ -68,10 +68,20 @@
 					   							 	// append new connection to list of Connections below
 					   								$("#connections_grid").append(
 				   										  "<li class=\"grid_item\">"
-					   								  	+     "<img src=\"<%= asker.getProfile_pic_file_path() %>\" alt=\"Profile picture\"><br>"
+					   								  	+     "<img class=\"img-thumbnail\" src=\"<%= asker.getProfile_pic_file_path() %>\" alt=\"Profile picture\"><br>"
 														+     "<b><%= asker.getFirstName() %> <%= asker.getLastName() %></b><br>"
-														+     "<%= asker.getEmploymentStatus() %><br>"
-														+     "<%= asker.getEmploymentInstitution() %><br>"	
+														+     "<% if (asker.getEmploymentStatus() != null) { %>"
+														+     "<%= asker.getEmploymentStatus() %>"
+														+     "<% } else { %>"
+														+     " N/A "
+														+     "<% } %>"
+														+     "<br>"
+														+     "<% if (asker.getEmploymentInstitution() != null) { %>"
+														+     "<%= asker.getEmploymentInstitution() %>"
+														+     "<% } else { %>"
+														+     " N/A "
+														+     "<% } %>"
+														+     "<br>"
 														+     "<a href=\"/TEDProject/ProfileLink?ProfID=\"<%= Integer.toString(asker.getID()) %>\">View details</a>"
 					   								    + "</li>"		
 					   								);
@@ -119,10 +129,19 @@
 					   if ( Connections != null ) { 
 						   for (Professional p : Connections) { %>
 								<li class="grid_item">
-									<img src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+									<img class="img-thumbnail" src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
 									<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-									<%= p.getEmploymentStatus() %><br>
-									<%= p.getEmploymentInstitution() %><br>	
+									<% if (p.getEmploymentStatus() != null) { %> 
+										<%= p.getEmploymentStatus() %> 
+									<% } else { %> 
+										N/A  
+									<% } %>
+									<br> 
+									<% if (p.getEmploymentInstitution() != null) { %> <%= p.getEmploymentInstitution() %> 
+									<% } else { %> 
+										N/A
+									<% } %>
+									<br>
 									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
 								</li>
 						<%	} %>

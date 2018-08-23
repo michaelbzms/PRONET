@@ -76,4 +76,11 @@ public class Professional {
         final Professional other = (Professional) obj;
 		return (this.getID() == other.getID() && this.getID() != -1 && other.getID() != -1);
 	}
+	
+	public String getProfile_pic_name(){
+		String profilePicUrlPath = getProfile_pic_file_path(), name = null;
+		int i = profilePicUrlPath.lastIndexOf('/');
+		if (i > 0) { name = profilePicUrlPath.substring(i+1); }
+		return name;
+	}
 }

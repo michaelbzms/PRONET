@@ -62,21 +62,6 @@ body{
 	margin:0 auto;
 }​
 
-.cookie_disclaimer{
-    background-color: #a20808;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px 0px #8c0000;
-    color: black;
-    padding: 10px;
-    border-style: solid;
-    border-color: black;
-    border-width: 2px;
-    width: 600px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-
 .buttonContainer {
 	padding: 10px; 
 	text-align: center;
@@ -89,6 +74,12 @@ label {
 	width: 160px;
 	text-align: left;
 	margin-bottom: 3px;
+}
+
+
+.ProfileOptions{
+	margin: 15px;
+	display: block;
 }
 
 /* add over any bootstrap changes: */

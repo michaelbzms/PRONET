@@ -57,7 +57,6 @@ public class ConnectionServlet extends HttpServlet {
 		}
 		switch (result) {
 			case 0:     // success
-				System.out.println(action + " success!");
 				response.sendRedirect("/TEDProject/ProfileLink?ProfID=" + profID);
 				break;
 			case -1:      // database error

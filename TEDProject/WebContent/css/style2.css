@@ -91,6 +91,12 @@ label {
 	margin-bottom: 3px;
 }
 
+.ProfileOptions{
+	margin: 15px;
+	display: block;
+	text-align: center;
+}
+
 /* add over any bootstrap changes: */
 nav{
 	border-style: solid; 

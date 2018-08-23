@@ -1,21 +1,34 @@
 package control;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
+import model.DataBaseBridge;
 import model.Professional;
 import model.SiteFunctionality;
 
 
 @WebServlet("/ChangeServlet")
+@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)
 public class ChangeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static final String MultipartConfigLocation = "D:/eclipse-workspace/TEDProject/WebContent/images";   // CONFIG: hardcoded here and in the annotation above
+
        
     public ChangeServlet() {
         super();
@@ -141,6 +154,16 @@ public class ChangeServlet extends HttpServlet {
 				tempProf.setEducationBackground(request.getParameter("edBackground").replace("`", "\\`"));
 				tempProf.setSkillsVisibility(request.getParameter("skillsVisibility") != null);
 				tempProf.setSkills(request.getParameter("skills").replace("`", "\\`"));
+				// get image Part if it exists
+				Part filePart = request.getPart("profile_picture"); // Retrieves <input type="file" name="profile_picture">
+				if (filePart == null) {
+					request.setAttribute("errorType", "TroubleFetchingUploadedImage");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+					return;
+				}
+				String profilePicFilePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix
+				// Chenk input
 				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, 4096) 
@@ -154,6 +177,56 @@ public class ChangeServlet extends HttpServlet {
 					RequetsDispatcherObj.forward(request, response);
 				} else {
 					int profID = (int) request.getSession(false).getAttribute("ProfID");
+					////////////////////// UNDER TESTING ///////////////////////
+					// update Profile Picture
+					boolean profilePicOk = true;
+					if ( !profilePicFilePath.isEmpty() ) {         // if professional submitted a new profile picture 
+						DataBaseBridge db = new DataBaseBridge();
+						Professional prof = db.getProfessional(profID);
+						db.close();
+						if ( prof.getProfile_pic_file_path() == null || prof.getProfile_pic_file_path().equals("http://localhost:8080/TEDProject/images/defaultProfilePic.png") ) {
+							// if previous picture was the default picture then must choose a new unique name and save the picture under it
+							String unique_name = "", extension = "";
+							int i = profilePicFilePath.lastIndexOf('.');
+							if (i > 0) { extension = profilePicFilePath.substring(i+1); }
+							int min = 0, max = 999999; 
+							File f;
+							do {	
+								unique_name = "img" + Integer.toString(ThreadLocalRandom.current().nextInt(min, max + 1)) ;
+								f = new File(MultipartConfigLocation + "/" + unique_name + "." + extension);
+							} while (f.exists() && !f.isDirectory());          // assure it's unique
+							// update tempProf to reflect changes. Later he will be flushed to the database
+							tempProf.setProfile_pic_file_path("http://localhost:8080/TEDProject/images/" + unique_name + "." + extension);
+							try {
+				    			filePart.write(unique_name + "." + extension);
+				    		} catch (IOException x) {
+				    			System.err.println("Could not save new profile picture!");
+				    		}
+						} else {
+							// else if a picture already existed first delete the old profile picture file
+							Path filepath = FileSystems.getDefault().getPath(MultipartConfigLocation, prof.getProfile_pic_name());
+				    		try {
+				    		    Files.delete(filepath);
+				    		} catch (NoSuchFileException x) {
+				    		    System.err.format("Tried to delete %s but no such file or directory%n", filepath);
+				    		} catch (IOException x) {    // File permission problems are caught here.
+				    		    System.err.println("Do not have permission to delete previous profile picture!");
+				    		}
+				    		// and then save the new one under the same name, so tempProf.profile_picture_file_path shall remain the same as prof's
+				    		tempProf.setProfile_pic_file_path(prof.getProfile_pic_file_path());
+				    		try {
+				    			filePart.write(prof.getProfile_pic_name());
+				    		} catch (IOException x) {
+				    			System.err.println("Could not save new profile picture (with old name)!");
+				    		}
+						}
+					}
+					if (!profilePicOk) {   // should not happen
+						request.setAttribute("errorType", "ChangeProfilePicError");   //TODO: make such error page?
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj.forward(request, response);
+					}
+					///////////////////////////////////////////////
 					int result = SiteFunctionality.EditProfile(profID, tempProf);
 					switch (result) {
 						case 0:     // success

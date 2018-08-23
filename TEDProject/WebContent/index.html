@@ -28,13 +28,16 @@
 		<br>
 		<div class="form">
 			<h2>SIGN UP</h2>
-			<form method=POST action="/TEDProject/WelcomeServlet?register=true">
+			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data">
 				<label>First name: </label><input type="text" name="firstname"><br>
 				<label>Last name: </label><input type="text" name="lastname"><br>
 				<label>Email: </label><input type="email" name="email"><br>
 				<label>Password: </label><input type="password" name="password"><br>
 				<label>Repeat Password: </label><input type="password" name="repeat_password"><br>
 				<label>Phone Number: </label><input type="text" name="phone_number"><br>
+				Profile Img:   
+				<input style="display: inline-block; cursor: pointer; margin-bottom: 15px; float: right" 
+					   type="file" name="profile_picture" accept="image/*"><br>
 				<input class="btn btn-light" style="display: inline-block; margin: 0px 0px 0px 160px" type="submit" value="Sign up"><br>
 			</form>
 		</div>

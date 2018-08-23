@@ -29,7 +29,12 @@ li.grid_item{
 	padding: 10px;
 	margin: 5px;
 	text-align: center;
-	background-color: #edf3ff;
+	background-color: #edf3ff;\
+}
+
+.grid_item img{
+	width: 80px; 
+	height: 80px;
 }
 
 .grid_item:hover{

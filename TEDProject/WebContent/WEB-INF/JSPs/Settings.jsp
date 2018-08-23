@@ -37,10 +37,10 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="buttonContainer">
+		<div class="buttonContainer" style="padding: 10px; text-align: center; margin: 10px">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change Email</a>
 		</div>
-		<div class="buttonContainer">
+		<div class="buttonContainer" style="padding: 10px; text-align: center; margin: 10px">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=password" class="btn btn-primary btn-lg">Change Password</a>
 		</div>
 	</div>

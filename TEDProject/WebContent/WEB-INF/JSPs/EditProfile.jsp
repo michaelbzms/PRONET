@@ -21,7 +21,7 @@
 		font-size: 110%;
 		width: 220px;
 		text-align: left;
-		margin-bottom: 3px;
+		margin-bottom: 5px;
 	}
 	
 	</style>
@@ -57,16 +57,22 @@
 				</div>
 			</nav>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
-			<!-- insert image here with  style = "float: right" -->
-			<form method=POST action="/TEDProject/ChangeServlet?attr=profile">		
+			<br>
+			<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 38px; float: left" src="<%= Prof.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+			<form method=POST action="/TEDProject/ChangeServlet?attr=profile" enctype="multipart/form-data">
+				<!-- Change basic information  -->		
 				<div id="edit_input" style="margin-left: 32%">
 					<div class="mylabel">Employment Status:</div><input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"><br>
 					<div class="mylabel">Employment Institution: </div><input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"><br>
 					<div class="mylabel">Description: </div><textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea><br>
 					<div class="mylabel">Email: </div><%= Prof.getEmail() %> <br>
 					<div class="mylabel">Phone Number: </div><input type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"><br> 
+					<!-- Change image -->
+					<div class="mylabel">New Profile Picture: </div><input type="file" name="profile_picture" accept="image/*"><br>
 					<br>
 				</div>
+				
+				<!-- Markup editor for text fields -->
 				<h2 class="my_h2">Professional Experience</h2>
 				<input type="checkbox" name="profExpVisibility" <% if (Prof.getProfExpVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="profExp" name="profExp"><%= Prof.getProfessionalExperience() != null ? Prof.getProfessionalExperience() : "" %></textarea><br>
@@ -76,6 +82,7 @@
 				<h2 class="my_h2">Skills</h2>
 				<input type="checkbox" name="skillsVisibility" <% if (Prof.getSkillsVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="skills" name="skills"><%= Prof.getSkills() != null ? Prof.getSkills() : "" %></textarea><br>
+			    <!-- Save/Cance changes -->
 			    <div class="buttonContainer">
 					<input type="submit" value="Save" class="btn btn-primary">
 					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>

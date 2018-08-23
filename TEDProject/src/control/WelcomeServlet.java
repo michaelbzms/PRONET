@@ -1,22 +1,31 @@
 package control;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.concurrent.ThreadLocalRandom;
+
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import model.SiteFunctionality;
 
 
 @WebServlet("/WelcomeServlet")
+@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static final String MultipartConfigLocation = "D:/eclipse-workspace/TEDProject/WebContent/images";   // CONFIG: hardcoded here and in the annotation above
 	
-	private int timeout_interval = 50*60;		// TODO: something smaller
+	private final int timeout_interval = 50*60;		// TODO: something smaller
 	
     
     public WelcomeServlet() {
@@ -47,9 +56,17 @@ public class WelcomeServlet extends HttpServlet {
 			firstName = request.getParameter("firstname");
 			lastName = request.getParameter("lastname");
 			phone = request.getParameter("phone_number");
-			profilePicFilePath = "C:/defaultpicpath/defaultpic.jpeg";    // example
+			// get image Part if it exists
+			Part filePart = request.getPart("profile_picture"); // Retrieves <input type="file" name="profile_picture">
+			if (filePart == null) {
+				request.setAttribute("errorType", "TroubleFetchingUploadedImage");
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+				RequetsDispatcherObj.forward(request, response);
+				return;
+			}
+			profilePicFilePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix
 			// check if any field was empty:
-			if ( email.isEmpty() || password.isEmpty() || re_password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || profilePicFilePath.isEmpty() ) {
+			if ( email.isEmpty() || password.isEmpty() || re_password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() /*|| profilePicFilePath.isEmpty() */ ) {   //TODO : Profile picture optional or not?
 				System.out.println("Form submitted but has unfilled fields. Ignored.");
 				// Notify user
 				// TEMP: for now just reload the same page
@@ -63,12 +80,34 @@ public class WelcomeServlet extends HttpServlet {
 				RequetsDispatcherObj.forward(request, response);
 			}
 			else {
+				// Figure out under which file name his uploaded profile picture SHOULD be saved - if it exists, else use the default -
+				boolean should_save_image = false;
+				String unique_name = "", extension = "", diskFilePath = "";
+				if (profilePicFilePath.isEmpty()) {      // use default
+					profilePicFilePath = "http://localhost:8080/TEDProject/images/defaultProfilePic.png";
+				} else {                                 // save image (part) to server's images under a unique name
+					int i = profilePicFilePath.lastIndexOf('.');
+					if (i > 0) { extension = profilePicFilePath.substring(i+1); }
+					int min = 0, max = 999999; 
+					File f;
+					do {	
+						unique_name = "img" + Integer.toString(ThreadLocalRandom.current().nextInt(min, max + 1)) ;
+						f = new File(MultipartConfigLocation + "/" + unique_name + "." + extension);
+					} while (f.exists() && !f.isDirectory());          // assure it's unique
+					diskFilePath = MultipartConfigLocation + "/" + unique_name + "." + extension;
+					profilePicFilePath = "http://localhost:8080/TEDProject/images/" + unique_name + "." + extension;
+					should_save_image = true;
+				}
 				// call register function from the model
 				int result = SiteFunctionality.Register(email, password, re_password, firstName, lastName, phone, profilePicFilePath);
 				// handle the result appropriately
 				RequestDispatcher RequetsDispatcherObj;
 				switch (result) {
 					case 0:     // success
+						if (should_save_image) {
+							filePart.write(unique_name + "." + extension);     // actually save image to disk
+							System.out.println("File " + diskFilePath + " saved to disk!");
+						}
 						System.out.println("Register successful for email: " + email);
 						// "login the user" or toast-notify him and prompt him to log in from the welcome page
 						// ...	
@@ -85,6 +124,10 @@ public class WelcomeServlet extends HttpServlet {
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 						RequetsDispatcherObj.forward(request, response);
 						break;
+					case -3:      // database problem
+						request.setAttribute("errorType", "dbError");
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj.forward(request, response);		
 					default:      // should not happen
 						request.setAttribute("errorType", "invalid return code at registration");
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
@@ -131,16 +174,11 @@ public class WelcomeServlet extends HttpServlet {
 	            newSession.setMaxInactiveInterval(timeout_interval);
 	            // redirect to the correct uri
 	            response.sendRedirect("/TEDProject/prof/NavigationServlet?page=HomePage");
-	            // OLD WAY: forward professional to the respective jsp
-				//RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
-				//RequetsDispatcherObj.forward(request, response);
-			
 			} else {     // SHOULD NOT HAPPEN
 				request.setAttribute("errorType", "???");
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			}
-			
 		}
 		else {    // register attribute not sent
 			request.setAttribute("errorType", "???");

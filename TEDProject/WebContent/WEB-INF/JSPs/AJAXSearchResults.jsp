@@ -19,10 +19,19 @@
 	<%	for ( Professional p : matches ) { 
 			if ( prof == null || p.getID() != prof.getID() ) {  // Should not be able to search for yourself %>
 				<li class="grid_item">
-					<img src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+					<img class="img-thumbnail" src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
 					<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-					<%= p.getEmploymentStatus() %><br>
-					<%= p.getEmploymentInstitution() %><br>	
+					<% if (p.getEmploymentStatus() != null) { %> 
+						<%= p.getEmploymentStatus() %> 
+					<% } else { %> 
+						N/A  
+					<% } %>
+					<br> 
+					<% if (p.getEmploymentInstitution() != null) { %> <%= p.getEmploymentInstitution() %> 
+					<% } else { %> 
+						N/A
+					<% } %>
+					<br>
 					<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>
 				</li>
 	<%		} 

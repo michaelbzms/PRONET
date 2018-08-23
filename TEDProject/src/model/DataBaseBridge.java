@@ -402,7 +402,7 @@ public class DataBaseBridge {
 		if (!connected) return false;
 		String updateString = "UPDATE Professionals SET phoneNumber = ?, employmentStatus = ?, employmentInstitution = ?, description = ?, "
 				+ "professionalExperience = ?, educationBackground = ?, skills = ?, professionalExperienceVisibility = ?, "
-				+ "educationBackgroundVisibility = ?, skillsVisibility = ? WHERE idProfessional = ?;";
+				+ "educationBackgroundVisibility = ?, skillsVisibility = ?, profilePictureFilePath = ? WHERE idProfessional = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(updateString);
 			statement.setString(1, tempProf.getPhone());
@@ -415,7 +415,8 @@ public class DataBaseBridge {
 			statement.setBoolean(8, tempProf.getProfExpVisibility());
 			statement.setBoolean(9, tempProf.getEdBackgroundVisibility());
 			statement.setBoolean(10, tempProf.getSkillsVisibility());
-			statement.setInt(11, profID);
+			statement.setString(11, tempProf.getProfile_pic_file_path());
+			statement.setInt(12, profID);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
