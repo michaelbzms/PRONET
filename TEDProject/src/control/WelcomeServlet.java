@@ -55,8 +55,8 @@ public class WelcomeServlet extends HttpServlet {
 				// TEMP: for now just reload the same page
 				response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
 			}
-			else if ( !SiteFunctionality.checkInputText(email, true, true, 0) || !SiteFunctionality.checkInputText(password, true, true, 128) || !SiteFunctionality.checkInputText(re_password, true, true, 128) 
-				   || !SiteFunctionality.checkInputText(firstName, false, true, 255) || !SiteFunctionality.checkInputText(lastName, false, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32) ) {
+			else if ( !SiteFunctionality.checkInputText(email, true, 0) || !SiteFunctionality.checkInputText(password, true, 128) || !SiteFunctionality.checkInputText(re_password, true, 128) 
+				   || !SiteFunctionality.checkInputText(firstName, true, 255) || !SiteFunctionality.checkInputText(lastName, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32) ) {
 				System.out.println("Form submitted but one or more fields have illegal input characters.");
 				request.setAttribute("errorType", "illegalTextInput");
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

@@ -59,21 +59,16 @@ public class SiteFunctionality {
 		return 0;
 	}
 	
-	public static boolean checkInputText(String input, boolean allowExtras, boolean oneLiner, int sizeRestriction) {    // check for special characters, etc that make a text input unnacceptable
+	public static boolean checkInputText(String input, boolean oneLiner, int sizeRestriction) {    // check for special characters, etc that make a text input unnacceptable
 		if (sizeRestriction > 0 && input.length() > sizeRestriction) {       // input must not be longer than this
 			return false;
 		}
 		for (int i = 0, n = input.length(); i < n; i++) {
 		    char c = input.charAt(i);                                        // Each character MUST be:
-		    if ( !(  (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')        // a latin letter
-		    	  || (c >= '0' && c <= '9')                                  // or a number
-		    	  || c == ' ' || c == '\t'                                   // or white space
-		    	  || (!oneLiner && (c == '\r' || c == '\n'))                 // or, if we allow it, new line
-		    	  || (allowExtras && (c == '@' || c == '.' || c == '!'       // or, if we allow it, extra symbols such as '.'. '@', '!', etc
-		    	                   || c == '?' || c == ':' || c == ';'
-		    	                   || c == '~' || c == '/' || c == '\\') )                 
-		        ) ) {
-		    	return false;                                                // if a character does not abide by the above then return false
+		    if ( c == '<' || c == '>'                                        // Do not allow tags on text input (HTML Injection?)
+		         || (!oneLiner && (c == '\r' || c == '\n'))                  // do not allow new line on text input unless oneLiner is false                 
+		        ) {
+		    	return false;
 		    }
 		}
 		return true;

@@ -38,7 +38,7 @@ public class ChangeServlet extends HttpServlet {
 					request.setAttribute("errorType", "emptyFormFields");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
-				} else if ( !SiteFunctionality.checkInputText(newEmail, true, true, 0) ) {
+				} else if ( !SiteFunctionality.checkInputText(newEmail, true, 0) ) {
 					System.out.println("Form submitted but one or more fields have illegal input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
@@ -93,7 +93,7 @@ public class ChangeServlet extends HttpServlet {
 					request.setAttribute("errorType", "notMatchingPasswordsChange");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
-				} else if ( !SiteFunctionality.checkInputText(newPassword, true, true, 128) ) {
+				} else if ( !SiteFunctionality.checkInputText(newPassword, true, 128) ) {
 					System.out.println("Form submitted but one or more fields have illegal input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
@@ -140,13 +140,13 @@ public class ChangeServlet extends HttpServlet {
 				tempProf.setEducationBackground(request.getParameter("edBackground").replace("`", "\\`"));
 				tempProf.setSkillsVisibility(request.getParameter("skillsVisibility") != null);
 				tempProf.setSkills(request.getParameter("skills").replace("`", "\\`"));
-				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), false, true, 255)
-				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), false, true, 255)
-				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, false, 4096) 
+				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), true, 255)
+				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), true, 255)
+				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, 4096) 
 				   || !SiteFunctionality.checkInputNumber(tempProf.getPhone(), 32) 
-				   || !SiteFunctionality.checkInputText(tempProf.getProfessionalExperience(), false, false, 0) 
-				   || !SiteFunctionality.checkInputText(tempProf.getEducationBackground(), false, false, 0) 
-				   || !SiteFunctionality.checkInputText(tempProf.getSkills(), false, false, 0) ) {
+				   || !SiteFunctionality.checkInputText(tempProf.getProfessionalExperience(), false, 0) 
+				   || !SiteFunctionality.checkInputText(tempProf.getEducationBackground(), false, 0) 
+				   || !SiteFunctionality.checkInputText(tempProf.getSkills(), false, 0) ) {
 					System.out.println("Form to change profile submitted but one or more fields have illegal (or too big) input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

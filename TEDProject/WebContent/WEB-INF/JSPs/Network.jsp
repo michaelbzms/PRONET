@@ -114,10 +114,10 @@
 			</div>
 			<div class="connections_bar">
 				<h2>Connections</h2>
+					<ul id="connections_grid" class="grid_container">
 					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
-					   if ( Connections != null ) { %>
-							<ul id="connections_grid" class="grid_container">
-						<%	for (Professional p : Connections) { %>
+					   if ( Connections != null ) { 
+						   for (Professional p : Connections) { %>
 								<li class="grid_item">
 									<img src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
 									<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
@@ -126,10 +126,8 @@
 									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
 								</li>
 						<%	} %>
-							</ul>
-					<%  } else { %>
-					   		<p>You are not connected with any other professional.</p>
 					<% } %>
+					</ul>
 			</div>
 		</div>
 	<% } 

@@ -62,7 +62,13 @@
 			<p>How did you get here?!</p>
 	<% } %>
 		<br>
-		<a style="display: inline-block" href="/TEDProject">Go back to Homepage</a>
+	<%  HttpSession currentSession = request.getSession(false);
+		if ( currentSession == null ) { %>
+			<a style="display: inline-block" href="/TEDProject">Go back to welcome page</a>
+	<% } else { %>
+			<a style="display: inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>
+	<% } %>
+		
 	</div>
 </body>
 </html>
