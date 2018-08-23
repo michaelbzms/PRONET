@@ -28,6 +28,7 @@ public class ChangeServlet extends HttpServlet {
 			request.setAttribute("errorType", "invalidPageRequest");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
+			return;
 		}
 		switch(attr) {
 			case "email":

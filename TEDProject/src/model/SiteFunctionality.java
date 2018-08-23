@@ -192,4 +192,34 @@ public class SiteFunctionality {
 		}
 	}
 	
+	public static int sendConnectionRequest(int askerID, int receiverID) {
+		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( dbg.createConnectionRequest(askerID, receiverID) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -1;
+		}
+	}
+	
+	public static int removeConnection(int profID1, int profID2) {
+		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( dbg.deleteConnection(profID1, profID2) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -1;
+		}
+	}
+	
 }

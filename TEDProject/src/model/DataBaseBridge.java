@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class DataBaseBridge {
 	
 	/* These fields are better hardcoded only here than all over the place on the caller's side */
-	final private String database_url = "jdbc:mysql://localhost:3306/TED?serverTimezone=UTC";   // not using SSL yet
+	final private String database_url = "jdbc:mysql://localhost:3306/TED?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";   // not using SSL yet
 	final private String DBUser = "myuser";
 	final private String DBPassword = "MYUSERSQL";
 	private Connection connection;
@@ -422,6 +422,54 @@ public class DataBaseBridge {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean createConnectionRequest(int askerID, int receiverID) {
+		if (!connected) return false;
+		String insertString = "INSERT INTO ConnectionRequests (idAsker, idReceiver) VALUES (?, ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(insertString);
+			statement.setInt(1, askerID);
+			statement.setInt(2, receiverID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean deleteConnection(int profID1, int profID2) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM ConnectedProfessionals WHERE (idProfessional1 = ? AND idProfessional2 = ?) " + 
+				"OR (idProfessional1 = ? AND idProfessional2 = ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, profID1);
+			statement.setInt(2, profID2);
+			statement.setInt(3, profID2);
+			statement.setInt(4, profID1);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean pendingConnectionRequest(int askerID, int receiverID) {
+		if (!connected) return false;
+		String Query = "SELECT * FROM ConnectionRequests WHERE idAsker = ? and idReceiver = ?";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, askerID);
+			statement.setInt(2, receiverID);
+			ResultSet resultSet = statement.executeQuery();
+			return resultSet.next();            // false if empty set, true otherwise
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 }

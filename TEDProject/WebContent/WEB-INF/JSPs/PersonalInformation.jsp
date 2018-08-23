@@ -68,12 +68,21 @@
 			<% if ( Prof.getDescription() != null ) { %>
 				<%= Prof.getDescription() %> <br> 
 			<% } %>
-			</p>
-			<% if (isSelf) { %>
-				<div class="buttonContainer">
-					<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary btn-lg">Edit Profile</a>
-				</div>
-			<% } %>
+			</p>	
+			<% if (currentSession != null && !isAdmin) { 
+				if (isSelf) { %>
+					<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
+				<% } else if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
+					<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
+				<% } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
+					<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
+					<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
+				<% } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
+					<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
+				<% } else {		// Any other not connected prof %>		
+					<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-success">Connect</a>
+				<% }
+			} %>
 			<p style="text-align: center">
 			   <u>Contact Info:</u><br> 
 			   Email: <%= Prof.getEmail() %> <br>
@@ -108,11 +117,11 @@
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<script>
 		var profExp = document.getElementById("profExp");
-		if (profExp) profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience()%>`);
+		if (profExp) profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience().replace("\\", "\\\\").replace("`", "\\`") %>`);
 		var edBackground = document.getElementById("edBackground");
-		if (edBackground) edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground()%>`);
+		if (edBackground) edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground().replace("\\", "\\\\").replace("`", "\\`") %>`);
 		var skills = document.getElementById("skills");
-		if (skills) skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills()%>`);
+		if (skills) skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills().replace("\\", "\\\\").replace("`", "\\`") %>`);
 	</script>
 </body>
 </html>
