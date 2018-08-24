@@ -19,19 +19,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import model.DataBaseBridge;
+import model.FileManager;
 import model.Professional;
 import model.SiteFunctionality;
 
 
 @WebServlet("/ChangeServlet")
-@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)
+@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)      // this location is only a temporary save location in case we ran out of memory
 public class ChangeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String MultipartConfigLocation = "D:/eclipse-workspace/TEDProject/WebContent/images";   // CONFIG: hardcoded here and in the annotation above
-
+	private static final String UploadSaveDirectory = FileServlet.SaveDirectory;   // CONFIG: hardcoded here and in the annotation above
+	private File Uploads = new File(UploadSaveDirectory);
        
     public ChangeServlet() {
         super();
+        if (!Uploads.exists()){
+        	Uploads.mkdirs();
+        }
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -162,7 +166,7 @@ public class ChangeServlet extends HttpServlet {
 					RequetsDispatcherObj.forward(request, response);
 					return;
 				}
-				String profilePicFilePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix
+				String profilePicFilePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();   // get the path of the user's input file (MSIE fix)
 				// Chenk input
 				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), true, 255)
@@ -177,56 +181,21 @@ public class ChangeServlet extends HttpServlet {
 					RequetsDispatcherObj.forward(request, response);
 				} else {
 					int profID = (int) request.getSession(false).getAttribute("ProfID");
-					////////////////////// UNDER TESTING ///////////////////////
-					// update Profile Picture
-					boolean profilePicOk = true;
-					if ( !profilePicFilePath.isEmpty() ) {         // if professional submitted a new profile picture 
+					// update Profile Picture if changed
+					if ( !profilePicFilePath.isEmpty() ) {                       // if professional submitted a new profile picture 
+						boolean success = FileManager.editProfilePicture(tempProf, filePart, UploadSaveDirectory, profilePicFilePath, profID);
+						if (!success) {        // should not happen
+							request.setAttribute("errorType", "EditingProfilePictureError");    // should not happen. TODO: make such a page?
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							return;
+						}
+					} else {      // else leave the profilePicFilePath as is (== reset it to the same value)
 						DataBaseBridge db = new DataBaseBridge();
 						Professional prof = db.getProfessional(profID);
 						db.close();
-						if ( prof.getProfile_pic_file_path() == null || prof.getProfile_pic_file_path().equals("http://localhost:8080/TEDProject/images/defaultProfilePic.png") ) {
-							// if previous picture was the default picture then must choose a new unique name and save the picture under it
-							String unique_name = "", extension = "";
-							int i = profilePicFilePath.lastIndexOf('.');
-							if (i > 0) { extension = profilePicFilePath.substring(i+1); }
-							int min = 0, max = 999999; 
-							File f;
-							do {	
-								unique_name = "img" + Integer.toString(ThreadLocalRandom.current().nextInt(min, max + 1)) ;
-								f = new File(MultipartConfigLocation + "/" + unique_name + "." + extension);
-							} while (f.exists() && !f.isDirectory());          // assure it's unique
-							// update tempProf to reflect changes. Later he will be flushed to the database
-							tempProf.setProfile_pic_file_path("http://localhost:8080/TEDProject/images/" + unique_name + "." + extension);
-							try {
-				    			filePart.write(unique_name + "." + extension);
-				    		} catch (IOException x) {
-				    			System.err.println("Could not save new profile picture!");
-				    		}
-						} else {
-							// else if a picture already existed first delete the old profile picture file
-							Path filepath = FileSystems.getDefault().getPath(MultipartConfigLocation, prof.getProfile_pic_name());
-				    		try {
-				    		    Files.delete(filepath);
-				    		} catch (NoSuchFileException x) {
-				    		    System.err.format("Tried to delete %s but no such file or directory%n", filepath);
-				    		} catch (IOException x) {    // File permission problems are caught here.
-				    		    System.err.println("Do not have permission to delete previous profile picture!");
-				    		}
-				    		// and then save the new one under the same name, so tempProf.profile_picture_file_path shall remain the same as prof's
-				    		tempProf.setProfile_pic_file_path(prof.getProfile_pic_file_path());
-				    		try {
-				    			filePart.write(prof.getProfile_pic_name());
-				    		} catch (IOException x) {
-				    			System.err.println("Could not save new profile picture (with old name)!");
-				    		}
-						}
+						tempProf.setProfile_pic_file_path(prof.getProfile_pic_file_path());
 					}
-					if (!profilePicOk) {   // should not happen
-						request.setAttribute("errorType", "ChangeProfilePicError");   //TODO: make such error page?
-						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
-						RequetsDispatcherObj.forward(request, response);
-					}
-					///////////////////////////////////////////////
 					int result = SiteFunctionality.EditProfile(profID, tempProf);
 					switch (result) {
 						case 0:     // success
@@ -254,6 +223,8 @@ public class ChangeServlet extends HttpServlet {
 				break;
 		}
 	}
+
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);

@@ -83,7 +83,7 @@
 				<input type="checkbox" name="skillsVisibility" <% if (Prof.getSkillsVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="skills" name="skills"><%= Prof.getSkills() != null ? Prof.getSkills() : "" %></textarea><br>
 			    <!-- Save/Cance changes -->
-			    <div class="buttonContainer">
+			    <div class="buttonContainer" style="text-align: center">
 					<input type="submit" value="Save" class="btn btn-primary">
 					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>
 				</div>

@@ -53,6 +53,9 @@
 		<% } else if ( request.getAttribute("errorType").equals("unchangedPassword") ) { %>
 			<h2>Password Change Failed</h2>
 			<p>The new password you entered is identical to your current one.</p>
+		<% } else if ( request.getAttribute("errorType").equals("404Request") ) { %>
+			<h2>Error 404</h2>
+			<p>The file you requested does not exists.</p>
 		<% } else { %>
 			<h2>UNKNOWN ERROR: <%= request.getAttribute("errorType") %></h2>
 			<p>Well, this is embarassing... An unknown error has occured! :(</p>
@@ -62,17 +65,19 @@
 			<p>How did you get here?!</p>
 	<% } %>
 		<br>
-	<%  HttpSession currentSession = request.getSession(false);
-		if ( currentSession == null || (request.getAttribute("errorType") != null && 
-				 (  request.getAttribute("errorType").equals("invalidLoginEmail")    || request.getAttribute("errorType").equals("invalidLoginPassword")
-				 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
-		   ) ) ) { %>
-			<a style="display: inline-block" href="/TEDProject">Go back to welcome page</a>
-	<% } else  if ( currentSession != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
-			<a style="display: inline-block" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
-	<% } else { %>
-			<a style="display: inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>
-	<% } %>	
+	<%  if ( request != null ) {
+			HttpSession currentSession = request.getSession(false);
+			if ( currentSession == null || (request.getAttribute("errorType") != null && 
+					 (  request.getAttribute("errorType").equals("invalidLoginEmail")    || request.getAttribute("errorType").equals("invalidLoginPassword")
+					 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
+			   ) ) ) { %>
+				<a style="display: inline-block" href="/TEDProject">Go back to welcome page</a>
+		<% } else  if ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
+				<a style="display: inline-block" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
+		<% } else { %>
+				<a style="display: inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>
+		<% } 
+	   } %>	
 	</div>
 </body>
 </html>

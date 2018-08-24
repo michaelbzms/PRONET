@@ -77,10 +77,28 @@ public class Professional {
 		return (this.getID() == other.getID() && this.getID() != -1 && other.getID() != -1);
 	}
 	
-	public String getProfile_pic_name(){
-		String profilePicUrlPath = getProfile_pic_file_path(), name = null;
-		int i = profilePicUrlPath.lastIndexOf('/');
-		if (i > 0) { name = profilePicUrlPath.substring(i+1); }
+	public String getProfile_pic_name(){            // not the most elegant function but it works as long as there is no other parameter ending in "file" (!)
+		String profilePicUrlPath = getProfile_pic_file_path(), name = "NOTFOUND";
+		int i = profilePicUrlPath.lastIndexOf('?');
+		if (i > 0) {
+			i++;
+			while( i + 4 < profilePicUrlPath.length() ) {   // repeatedly read the first five characters
+				char c1 = profilePicUrlPath.charAt(i), 
+					 c2 = profilePicUrlPath.charAt(i+1), 
+					 c3 = profilePicUrlPath.charAt(i+2),
+					 c4 = profilePicUrlPath.charAt(i+3),
+					 c5 = profilePicUrlPath.charAt(i+4);
+				if ( c1 == 'f' && c2 == 'i' && c3 == 'l' && c4 == 'e' && c5 == '=' ) {   // until reached "file=" or end of String
+					i += 5;
+					int start = i;
+					while ( i < profilePicUrlPath.length() && profilePicUrlPath.charAt(i) != '&' && (profilePicUrlPath.charAt(i) != '/' || i < profilePicUrlPath.length() - 1)  ) i++;
+					int end = i;
+					name = profilePicUrlPath.substring(start, end);
+					break;
+				}
+				i++;
+			}
+		}
 		return name;
 	}
 }

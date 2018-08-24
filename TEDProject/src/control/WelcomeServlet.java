@@ -2,6 +2,8 @@ package control;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -20,16 +22,21 @@ import model.SiteFunctionality;
 
 
 @WebServlet("/WelcomeServlet")
-@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)
+@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)    // this location is only a temporary save location if we ran out of memory!
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String MultipartConfigLocation = "D:/eclipse-workspace/TEDProject/WebContent/images";   // CONFIG: hardcoded here and in the annotation above
+	private static final String UploadSaveDirectory = FileServlet.SaveDirectory;   // CONFIG: hardcoded here and in the annotation above
+	private File ProfileUploads = new File(UploadSaveDirectory + "/profile");
+	
 	
 	private final int timeout_interval = 50*60;		// TODO: something smaller
 	
     
     public WelcomeServlet() {
         super();
+        if (!ProfileUploads.exists()){
+        	ProfileUploads.mkdirs();
+        }
     }
 
 	
@@ -49,7 +56,7 @@ public class WelcomeServlet extends HttpServlet {
 		// check input of form got via HTTP POST
 		if ( request.getParameter("register") != null && request.getParameter("register").equals("true") ) {         // Registration
 			// fetch everything from the form
-			String email, password, re_password, firstName, lastName, phone, profilePicFilePath;
+			String email, password, re_password, firstName, lastName, phone, profilePicFileURL;
 			password = request.getParameter("password");
 			re_password = request.getParameter("repeat_password");
 			email = request.getParameter("email");
@@ -64,13 +71,13 @@ public class WelcomeServlet extends HttpServlet {
 				RequetsDispatcherObj.forward(request, response);
 				return;
 			}
-			profilePicFilePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix
+			profilePicFileURL = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();     // get the path of the user's input file (MSIE fix)
 			// check if any field was empty:
 			if ( email.isEmpty() || password.isEmpty() || re_password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() /*|| profilePicFilePath.isEmpty() */ ) {   //TODO : Profile picture optional or not?
 				System.out.println("Form submitted but has unfilled fields. Ignored.");
 				// Notify user
 				// TEMP: for now just reload the same page
-				response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
+				response.sendRedirect("/TEDProject/");
 			}
 			else if ( !SiteFunctionality.checkInputText(email, true, 0) || !SiteFunctionality.checkInputText(password, true, 128) || !SiteFunctionality.checkInputText(re_password, true, 128) 
 				   || !SiteFunctionality.checkInputText(firstName, true, 255) || !SiteFunctionality.checkInputText(lastName, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32) ) {
@@ -83,30 +90,35 @@ public class WelcomeServlet extends HttpServlet {
 				// Figure out under which file name his uploaded profile picture SHOULD be saved - if it exists, else use the default -
 				boolean should_save_image = false;
 				String unique_name = "", extension = "", diskFilePath = "";
-				if (profilePicFilePath.isEmpty()) {      // use default
-					profilePicFilePath = "http://localhost:8080/TEDProject/images/defaultProfilePic.png";
+				if (profilePicFileURL.isEmpty()) {      // use default
+					profilePicFileURL = "http://localhost:8080/TEDProject/images/defaultProfilePic.png";
 				} else {                                 // save image (part) to server's images under a unique name
-					int i = profilePicFilePath.lastIndexOf('.');
-					if (i > 0) { extension = profilePicFilePath.substring(i+1); }
+					int i = profilePicFileURL.lastIndexOf('.');
+					if (i > 0) { extension = profilePicFileURL.substring(i+1); }
 					int min = 0, max = 999999; 
 					File f;
 					do {	
 						unique_name = "img" + Integer.toString(ThreadLocalRandom.current().nextInt(min, max + 1)) ;
-						f = new File(MultipartConfigLocation + "/" + unique_name + "." + extension);
+						f = new File(UploadSaveDirectory + "/profile/" + unique_name + "." + extension);
 					} while (f.exists() && !f.isDirectory());          // assure it's unique
-					diskFilePath = MultipartConfigLocation + "/" + unique_name + "." + extension;
-					profilePicFilePath = "http://localhost:8080/TEDProject/images/" + unique_name + "." + extension;
+					diskFilePath = UploadSaveDirectory + "/profile/" + unique_name + "." + extension;
+					profilePicFileURL = "http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "." + extension + "&type=profile";
 					should_save_image = true;
 				}
 				// call register function from the model
-				int result = SiteFunctionality.Register(email, password, re_password, firstName, lastName, phone, profilePicFilePath);
+				int result = SiteFunctionality.Register(email, password, re_password, firstName, lastName, phone, profilePicFileURL);
 				// handle the result appropriately
 				RequestDispatcher RequetsDispatcherObj;
 				switch (result) {
 					case 0:     // success
 						if (should_save_image) {
-							filePart.write(unique_name + "." + extension);     // actually save image to disk
-							System.out.println("File " + diskFilePath + " saved to disk!");
+							File newfile = new File(ProfileUploads, unique_name + "." + extension);
+							try (InputStream input = filePart.getInputStream()) {
+							    Files.copy(input, newfile.toPath());
+							    System.out.println("File " + diskFilePath + " saved to disk at registration!");
+							} catch ( IOException e ) {
+								System.err.println("Could not save file " + diskFilePath + " to disk during registration!");
+							}		
 						}
 						System.out.println("Register successful for email: " + email);
 						// "login the user" or toast-notify him and prompt him to log in from the welcome page
