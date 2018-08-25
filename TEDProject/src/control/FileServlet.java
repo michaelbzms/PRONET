@@ -36,11 +36,13 @@ public class FileServlet extends HttpServlet {
 		} else {
 				switch (type) {
 					case "profile":
-						boolean success = serveImage("profile", requestedFile, response);
+						boolean success = serveFile("profile", requestedFile, response);
 						if (!success) {
-							request.setAttribute("errorType", "404Request");
-							RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
-							RequetsDispatcherObj.forward(request, response);
+							if ( !serveErrorFile(response, "/images/errorImage.png") ) {
+								request.setAttribute("errorType", "404Request");
+								RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+								RequetsDispatcherObj.forward(request, response);
+							}	
 						}
 						break;
 					// case "image"  //TODO
@@ -61,7 +63,55 @@ public class FileServlet extends HttpServlet {
 	}
 
 	
-	private boolean serveImage(String fileFolder, String fileName,  HttpServletResponse response) {
+	private boolean serveErrorFile(HttpServletResponse response, String errorFilePath) {
+		// Get the absolute path of the image
+		ServletContext sc = getServletContext();
+		String filepath = sc.getRealPath(errorFilePath);
+		
+		// check if file exists
+		File f = new File(filepath);
+		if(!f.exists()) { 
+			System.out.println("Requested file that doesn't exist: " + filepath);
+		    return false;
+		}
+		
+		// Get the MIME type of the image
+		String mimeType = sc.getMimeType(filepath);
+		if (mimeType == null) {
+			sc.log("Could not get MIME type of "+ filepath);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return false;
+		}
+	
+		// Set content type
+		response.setContentType(mimeType);
+	
+		// Set content size
+		File file = new File(filepath);
+		response.setContentLength((int)file.length());
+	
+		// write image to output
+		try {
+			FileInputStream in = new FileInputStream(file);
+			OutputStream out;
+			out = response.getOutputStream();
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[1024];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			System.err.println("FileServlet could NOT fetch requested image!");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean serveFile(String fileFolder, String fileName,  HttpServletResponse response) {
 		// Get the absolute path of the image
 		ServletContext sc = getServletContext();
 		String filepath = SaveDirectory + "/" + fileFolder + "/" + fileName;
@@ -102,7 +152,7 @@ public class FileServlet extends HttpServlet {
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			System.err.println("FileServlet could NOT fetch requested image!");
+			System.err.println("FileServlet could NOT fetch requested file!");
 			e.printStackTrace();
 			return false;
 		}
