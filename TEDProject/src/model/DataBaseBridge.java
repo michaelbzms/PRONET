@@ -52,7 +52,7 @@ public class DataBaseBridge {
 	/* DataBaseBridge services: (using prepared statements in order to be safe from SQL Injection) */
 	public boolean registerNewProfessional(String email, String password, String firstName, String lastName, String phone, String profilePicFilePath) {
 		if (!connected) return false;
-		String registerInsert = "INSERT INTO Professionals (idProfessional, email, password, firstName, lastName, phoneNumber, profilePictureFilePath, employmentStatus, employmentInstitution,professionalExperience, educationBackground, skills, professionalExperienceVisibility, educationBackgroundVisibility, skillsVisibility) "
+		String registerInsert = "INSERT INTO Professionals (idProfessional, email, password, firstName, lastName, phoneNumber, profilePictureURI, employmentStatus, employmentInstitution,professionalExperience, educationBackground, skills, professionalExperienceVisibility, educationBackgroundVisibility, skillsVisibility) "
 				              + " VALUES (default, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, default, default, default); ";
 		try {
 			PreparedStatement statement = connection.prepareStatement(registerInsert);
@@ -73,7 +73,7 @@ public class DataBaseBridge {
 	public Professional recoverProfessionalRecord(String email) {
 		if (!connected) return null;
 		Professional record = null;
-		String Query = "SELECT idProfessional, email, password, firstName, lastName, phoneNumber, profilePictureFilePath FROM Professionals WHERE email = ?;";
+		String Query = "SELECT idProfessional, email, password, firstName, lastName, phoneNumber, profilePictureURI FROM Professionals WHERE email = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			statement.setString(1, email);
@@ -92,7 +92,7 @@ public class DataBaseBridge {
 				record.setFirstName(resultSet.getString("firstName"));
 				record.setLastName(resultSet.getString("lastName"));
 				record.setPhone(resultSet.getString("phoneNumber"));
-				record.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				record.setProfilePicURI(resultSet.getString("profilePictureURI"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,7 +147,7 @@ public class DataBaseBridge {
 					P[i].setFirstName(resultSet.getString("firstName"));
 					P[i].setLastName(resultSet.getString("lastName"));
 					P[i].setPhone(resultSet.getString("phoneNumber"));
-					P[i].setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+					P[i].setProfilePicURI(resultSet.getString("profilePictureURI"));
 					P[i].setEmploymentStatus(resultSet.getString("employmentStatus"));
 					P[i].setEmploymentInstitution(resultSet.getString("employmentInstitution"));
 					P[i].setDescription(resultSet.getString("description"));
@@ -188,7 +188,7 @@ public class DataBaseBridge {
 				prof.setFirstName(resultSet.getString("firstName"));
 				prof.setLastName(resultSet.getString("lastName"));
 				prof.setPhone(resultSet.getString("phoneNumber"));
-				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
 				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
 				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
 				prof.setDescription(resultSet.getString("description"));
@@ -210,7 +210,7 @@ public class DataBaseBridge {
 		if (!connected) return null;
 		 List<Professional> P = null;
 		// Could also use DISTINCT just in case ConnectedProfessional has the same connection twice but in order to see that mistake if it exists I chose not to
-		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureFilePath, p.employmentStatus, p.employmentInstitution "
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureURI, p.employmentStatus, p.employmentInstitution "
 				     + "FROM Professionals p, ConnectedProfessionals cp "
 				     + "WHERE ( p.idProfessional = cp.idProfessional1 and cp.idProfessional2 = ?) "
 				     +    "or ( p.idProfessional = cp.idProfessional2 and cp.idProfessional1 = ?);";
@@ -225,7 +225,7 @@ public class DataBaseBridge {
 				prof.setID(resultSet.getInt("idProfessional"));
 				prof.setFirstName(resultSet.getString("firstName"));
 				prof.setLastName(resultSet.getString("lastName"));
-				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
 				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
 				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
 				P.add(prof);
@@ -241,7 +241,7 @@ public class DataBaseBridge {
 		if (!connected) return null;
 		List<Professional> P = null;
 		// Could also use DISTINCT just in case ConnectedProfessional has the same connection twice but in order to see that mistake if it exists I chose not to
-		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureFilePath, p.employmentStatus, p.employmentInstitution "
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureURI, p.employmentStatus, p.employmentInstitution "
 				     + "FROM Professionals p, ConnectionRequests cr "
 				     + "WHERE p.idProfessional = cr.idAsker and cr.idReceiver = ?;";
 		try {
@@ -254,7 +254,7 @@ public class DataBaseBridge {
 				prof.setID(resultSet.getInt("idProfessional"));
 				prof.setFirstName(resultSet.getString("firstName"));
 				prof.setLastName(resultSet.getString("lastName"));
-				prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+				prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
 				prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
 				prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
 				P.add(prof);
@@ -319,7 +319,7 @@ public class DataBaseBridge {
 	public List<Professional> getSearchResultsFor(String searchString) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
-		String Query = "SELECT idProfessional, firstName, lastName, profilePictureFilePath, employmentStatus, employmentInstitution "
+		String Query = "SELECT idProfessional, firstName, lastName, profilePictureURI, employmentStatus, employmentInstitution "
 				     + "FROM Professionals "
 				     + "WHERE (firstName LIKE ?) or (lastName LIKE ?)";
 		try {
@@ -333,7 +333,7 @@ public class DataBaseBridge {
 					prof.setID(resultSet.getInt("idProfessional"));
 					prof.setFirstName(resultSet.getString("firstName"));
 					prof.setLastName(resultSet.getString("lastName"));
-					prof.setProfile_pic_file_path(resultSet.getString("profilePictureFilePath"));
+					prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
 					prof.setEmploymentStatus(resultSet.getString("employmentStatus"));
 					prof.setEmploymentInstitution(resultSet.getString("employmentInstitution"));
 					if ( !P.contains(prof) ) {
@@ -402,7 +402,7 @@ public class DataBaseBridge {
 		if (!connected) return false;
 		String updateString = "UPDATE Professionals SET phoneNumber = ?, employmentStatus = ?, employmentInstitution = ?, description = ?, "
 				+ "professionalExperience = ?, educationBackground = ?, skills = ?, professionalExperienceVisibility = ?, "
-				+ "educationBackgroundVisibility = ?, skillsVisibility = ?, profilePictureFilePath = ? WHERE idProfessional = ?;";
+				+ "educationBackgroundVisibility = ?, skillsVisibility = ?, profilePictureURI = ? WHERE idProfessional = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(updateString);
 			statement.setString(1, tempProf.getPhone());
@@ -415,7 +415,7 @@ public class DataBaseBridge {
 			statement.setBoolean(8, tempProf.getProfExpVisibility());
 			statement.setBoolean(9, tempProf.getEdBackgroundVisibility());
 			statement.setBoolean(10, tempProf.getSkillsVisibility());
-			statement.setString(11, tempProf.getProfile_pic_file_path());
+			statement.setString(11, tempProf.getProfilePicURI());
 			statement.setInt(12, profID);
 			statement.executeUpdate();
 		} catch (SQLException e) {

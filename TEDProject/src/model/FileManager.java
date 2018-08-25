@@ -17,7 +17,7 @@ public class FileManager {
 		DataBaseBridge db = new DataBaseBridge();
 		Professional prof = db.getProfessional(profID);
 		db.close();
-		if ( prof.getProfile_pic_file_path() == null || !(new File(saveLocation + "/profile/" + prof.getProfile_pic_name())).exists()  || prof.getProfile_pic_file_path().equals("http://localhost:8080/TEDProject/images/defaultProfilePic.png") ) {
+		if ( prof.getProfilePicURI() == null || !(new File(saveLocation + "/profile/" + prof.getProfile_pic_name())).exists()  || prof.getProfilePicURI().equals("http://localhost:8080/TEDProject/images/defaultProfilePic.png") ) {
 			// if previous picture was the default picture (or simply does not exist) then must choose a new unique name and save the picture under it
 			String unique_name = "", extension = "";
 			int i = userUploadFilePath.lastIndexOf('.');
@@ -29,7 +29,7 @@ public class FileManager {
 				f = new File(saveLocation + "/profile/" + unique_name + "." + extension);
 			} while (f.exists() && !f.isDirectory());           // assure it's unique
 			// update tempProf to reflect changes
-			tempProf.setProfile_pic_file_path("http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "." + extension +"&type=profile");
+			tempProf.setProfilePicURI("http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "." + extension +"&type=profile");
 			// save to disk
 			File UploadedProfiles = new File(saveLocation + "/profile");
 			File newfile = new File(UploadedProfiles, unique_name + "." + extension);
@@ -51,7 +51,7 @@ public class FileManager {
 			    System.err.println("Do not have permission to delete previous profile picture!");
 			}
 			// and then save the new one under the SAME name, so tempProf.profile_picture_file_path shall remain the same as prof's
-			tempProf.setProfile_pic_file_path(prof.getProfile_pic_file_path());
+			tempProf.setProfilePicURI(prof.getProfilePicURI());
 			// save to disk
 			File UploadedProfiles = new File(saveLocation + "/profile");
 			File newfile = new File(UploadedProfiles, prof.getProfile_pic_name());

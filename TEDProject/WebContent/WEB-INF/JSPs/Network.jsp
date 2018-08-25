@@ -68,7 +68,7 @@
 					   							 	// append new connection to list of Connections below
 					   								$("#connections_grid").append(
 				   										  "<li class=\"grid_item\">"
-					   								  	+     "<img class=\"img-thumbnail\" src=\"<%= asker.getProfile_pic_file_path() %>\" alt=\"Profile picture\"><br>"
+					   								  	+     "<img class=\"img-thumbnail\" src=\"<%= asker.getProfilePicURI() %>\" alt=\"Profile picture\"><br>"
 														+     "<b><%= asker.getFirstName() %> <%= asker.getLastName() %></b><br>"
 														+     "<% if (asker.getEmploymentStatus() != null) { %>"
 														+     "<%= asker.getEmploymentStatus() %>"
@@ -124,12 +124,13 @@
 			</div>
 			<div class="connections_bar">
 				<h2>Connections</h2>
+				<div class="grid_container_container">
 					<ul id="connections_grid" class="grid_container">
 					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
 					   if ( Connections != null ) { 
 						   for (Professional p : Connections) { %>
 								<li class="grid_item">
-									<img class="img-thumbnail" src="<%= p.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+									<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
 									<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
 									<% if (p.getEmploymentStatus() != null) { %> 
 										<%= p.getEmploymentStatus() %> 
@@ -147,6 +148,7 @@
 						<%	} %>
 					<% } %>
 					</ul>
+				</div>
 			</div>
 		</div>
 	<% } 

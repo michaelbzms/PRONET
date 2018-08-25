@@ -153,11 +153,11 @@ public class ChangeServlet extends HttpServlet {
 				tempProf.setDescription(request.getParameter("description"));
 				tempProf.setPhone(request.getParameter("phoneNumber"));
 				tempProf.setProfExpVisibility(request.getParameter("profExpVisibility") != null);
-				tempProf.setProfessionalExperience(request.getParameter("profExp").replace("`", "\\`"));
+				tempProf.setProfessionalExperience(request.getParameter("profExp"));
 				tempProf.setEdBackgroundVisibility(request.getParameter("edBackgroundVisibility") != null);
-				tempProf.setEducationBackground(request.getParameter("edBackground").replace("`", "\\`"));
+				tempProf.setEducationBackground(request.getParameter("edBackground"));
 				tempProf.setSkillsVisibility(request.getParameter("skillsVisibility") != null);
-				tempProf.setSkills(request.getParameter("skills").replace("`", "\\`"));
+				tempProf.setSkills(request.getParameter("skills"));
 				// get image Part if it exists
 				Part filePart = request.getPart("profile_picture"); // Retrieves <input type="file" name="profile_picture">
 				if (filePart == null) {
@@ -167,7 +167,7 @@ public class ChangeServlet extends HttpServlet {
 					return;
 				}
 				String profilePicFilePath = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();   // get the path of the user's input file (MSIE fix)
-				// Chenk input
+				// Check input
 				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, 4096) 
@@ -194,7 +194,7 @@ public class ChangeServlet extends HttpServlet {
 						DataBaseBridge db = new DataBaseBridge();
 						Professional prof = db.getProfessional(profID);
 						db.close();
-						tempProf.setProfile_pic_file_path(prof.getProfile_pic_file_path());
+						tempProf.setProfilePicURI(prof.getProfilePicURI());
 					}
 					int result = SiteFunctionality.EditProfile(profID, tempProf);
 					switch (result) {

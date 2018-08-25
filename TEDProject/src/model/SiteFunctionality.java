@@ -65,8 +65,8 @@ public class SiteFunctionality {
 			return false;
 		}
 		for (int i = 0, n = input.length(); i < n; i++) {
-		    char c = input.charAt(i);                                        // Each character MUST be:
-		    if ( c == '<' || c == '>'                                        // Do not allow tags on text input (HTML Injection?)
+		    char c = input.charAt(i);                                       // Each character MUST be:
+		    if ( c == '<' 		 	                                        // Do not allow tags on text input (HTML Injection?)
 		         || (oneLiner && (c == '\r' || c == '\n'))                  // do not allow new line on text input unless oneLiner is false                 
 		        ) {
 		    	System.out.println("Found illegal: " + input);

@@ -7,8 +7,9 @@
 	<title>PRONET - Personal Information</title>
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
@@ -58,7 +59,7 @@
 			</nav>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<br>
-			<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 38px; float: left" src="<%= Prof.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+			<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 38px; float: left" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
 			<form method=POST action="/TEDProject/ChangeServlet?attr=profile" enctype="multipart/form-data">
 				<!-- Change basic information  -->		
 				<div id="edit_input" style="margin-left: 32%">
@@ -72,7 +73,7 @@
 					<br>
 				</div>
 				
-				<!-- Markup editor for text fields -->
+				<!-- Markdown editor for text fields -->
 				<h2 class="my_h2">Professional Experience</h2>
 				<input type="checkbox" name="profExpVisibility" <% if (Prof.getProfExpVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="profExp" name="profExp"><%= Prof.getProfessionalExperience() != null ? Prof.getProfessionalExperience() : "" %></textarea><br>
@@ -82,7 +83,7 @@
 				<h2 class="my_h2">Skills</h2>
 				<input type="checkbox" name="skillsVisibility" <% if (Prof.getSkillsVisibility()) { %> checked <% } %>> Visible to non-connected professionals <br>
 			    <textarea id="skills" name="skills"><%= Prof.getSkills() != null ? Prof.getSkills() : "" %></textarea><br>
-			    <!-- Save/Cance changes -->
+			    <!-- Save/Cancel changes -->
 			    <div class="buttonContainer" style="text-align: center">
 					<input type="submit" value="Save" class="btn btn-primary">
 					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>

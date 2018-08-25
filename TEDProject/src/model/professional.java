@@ -5,7 +5,7 @@ public class Professional {
 	
 	/* Characteristics */
 	private int ID = -1;          // its database ID
-	private String email = null, password = null, firstName = null, lastName = null, phone = null, profile_pic_file_path = null;
+	private String email = null, password = null, firstName = null, lastName = null, phone = null, profilePicURI = null;
 	private String employmentStatus = null, employmentInstitution = null, description = null; 
 	private String professionalExperience = null, educationBackground = null, skills = null;
 	private boolean profExpVisibility = true, edBackgroundVisibility = true, skillsVisibility = true;
@@ -29,8 +29,8 @@ public class Professional {
 	public String getPhone() { return phone; }
 	public void setPhone(String phone) { this.phone = phone; }
 
-	public String getProfile_pic_file_path() { return profile_pic_file_path; }
-	public void setProfile_pic_file_path(String profile_pic_file_path) { this.profile_pic_file_path = profile_pic_file_path; }
+	public String getProfilePicURI() { return profilePicURI; }
+	public void setProfilePicURI(String profilePicURI) { this.profilePicURI = profilePicURI; }
 
 	public String getEmploymentStatus() { return employmentStatus; }
 	public void setEmploymentStatus(String employmentStatus) { this.employmentStatus = employmentStatus; }
@@ -65,7 +65,7 @@ public class Professional {
 		
 	}
 	
-	// Overide '==' operator
+	// Override '==' operator
 	@Override public boolean equals(Object obj) {
 		if (obj == null) {
             return false;
@@ -78,7 +78,7 @@ public class Professional {
 	}
 	
 	public String getProfile_pic_name(){            // not the most elegant function but it works as long as there is no other parameter ending in "file" (!)
-		String profilePicUrlPath = getProfile_pic_file_path(), name = "NOTFOUND";
+		String profilePicUrlPath = getProfilePicURI(), name = "NOTFOUND";
 		int i = profilePicUrlPath.lastIndexOf('?');
 		if (i > 0) {
 			i++;

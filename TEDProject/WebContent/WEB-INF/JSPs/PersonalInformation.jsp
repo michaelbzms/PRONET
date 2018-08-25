@@ -58,7 +58,7 @@
 		<% } %>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<p style = "font-weight: bold; text-align: center">
-				<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 10px" src="<%= Prof.getProfile_pic_file_path() %>" alt="Profile picture"><br>
+				<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 10px" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
 				<% if ( Prof.getEmploymentStatus() != null ) { %>
 					<%= Prof.getEmploymentStatus() %><br> 
 				<% } %>
