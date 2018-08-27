@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -473,7 +475,7 @@ public class DataBaseBridge {
 		}
 	}
 	
-	public  List<Professional> getProfsMessagingWith(int profID) {
+	public List<Professional> getProfsMessagingWith(int profID) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
 		String Query = "SELECT p.idProfessional, p.firstName, p.lastName "
@@ -503,4 +505,96 @@ public class DataBaseBridge {
 		return P;
 	}
 	
+	public String getProfessionalFullName(int ID) {
+		if (!connected) return null;
+		String profFullName = null;
+		String Query = "SELECT firstName, lastName FROM Professionals WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				profFullName = resultSet.getString("firstName") + " " + resultSet.getString("lastName");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return profFullName;
+	}
+
+	public List<WorkAd> getWorkAds(int profID, int mode) {		// mode: 0 for own ads, 1 for ads from connected profs, 2 from others
+		if (!connected || mode < 0 || mode > 2) return null;
+		List<WorkAd> ads = null;
+		String Query;
+		if (mode == 0) {
+			Query = "SELECT idAd, idPublishedBy, title, postedDate FROM Ads WHERE idPublishedBy = ?;";
+		} else if (mode == 1) {
+			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, Professionals p, ConnectedProfessionals cp "
+				  + "WHERE a.idPublishedBy != ? AND a.idPublishedBy = p.idProfessional AND "
+				  + "((cp.idProfessional1 = p.idProfessional AND cp.idProfessional2 = ?) OR "
+				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = p.idProfessional));";
+		} else {
+			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, Professionals p, ConnectedProfessionals cp "
+				  + "WHERE a.idPublishedBy != ? AND a.idPublishedBy = p.idProfessional AND "
+				  + "NOT((cp.idProfessional1 = p.idProfessional AND cp.idProfessional2 = ?) OR "
+				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = p.idProfessional));";
+		}
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			if (mode == 1 || mode == 2) {
+				statement.setInt(2, profID);
+				statement.setInt(3, profID);
+			}
+			ResultSet resultSet = statement.executeQuery();
+			ads = new ArrayList<WorkAd>();
+			java.util.Calendar cal = Calendar.getInstance();
+			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+			while (resultSet.next()) {
+				WorkAd ad = new WorkAd();
+				ad.setID(resultSet.getInt("idAd"));
+				ad.setPublishedByID(resultSet.getInt("idPublishedBy"));
+				ad.setTitle(resultSet.getString("title"));
+				ad.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				ads.add(ad);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return ads;
+	}
+	
+	public WorkAd getWorkAd(int ID) {
+		if (!connected) return null;
+		WorkAd ad = null;
+		String Query = "SELECT * FROM Ads WHERE idAd = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				ad = new WorkAd();
+				ad.setID(resultSet.getInt("idAd"));
+				ad.setPublishedByID(resultSet.getInt("idPublishedBy"));
+				ad.setTitle(resultSet.getString("title"));
+				java.util.Calendar cal = Calendar.getInstance();
+				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+				ad.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				ad.setDescription(resultSet.getString("description"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return ad;
+	}
+	
 }
+
+

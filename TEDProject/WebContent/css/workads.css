@@ -1,0 +1,6 @@
+@charset "UTF-8";
+
+.ad_list_container {	
+ 	overflow-y: auto;
+    max-height: 500px;
+}
