@@ -5,19 +5,23 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Messages</title>
-	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/messanger.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 </head>
 <body>
-	<% 	DataBaseBridge db = new DataBaseBridge(); 
+	<% 	DataBaseBridge db = new DataBaseBridge();
 		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
-		if ( prof == null ) {  %>
+		if ( !db.checkIfConnected() ) { %>
+			<h2>DATABASE ERROR</h2>	
+			<p>It appears that our database is down. Please contact the site's administrators.</p>
+	<%	} else if ( prof == null ) {  %>
 			<h2>INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
@@ -44,6 +48,48 @@
 					</div>
 				</nav>
 				<h2>Here be messages for <%= prof.getFirstName() %>  <%= prof.getLastName() %>!</h2>
+				<div id="messanger">
+					<div class="conversations_list">		
+						<% List<Professional> messagedProfs = db.getProfsMessagingWith(prof.getID());
+						   if ( messagedProfs == null ) { %> <p>DATABASE DOWN!</p> <% }   // should not happen
+						   else { %>
+						   		<ul>
+					    <% 		for (Professional p : messagedProfs) { %>
+									<li id="conv<%= p.getID() %>"> <%= p.getFirstName() %> <%= p.getLastName() %> </li>
+									<script>
+					    				$("#conv<%= p.getID() %>").on("click", function(){
+					    					// Make the corresponding conversation active and the rest hidden
+					    					$(".conversation").hide();
+					    					$("#conversation<%= p.getID() %>").show();
+					    				});
+					    			</script>
+					    <% 		} %>
+					    		</ul>
+					    <%  } %>
+					</div>
+					<div class="conversation_box">
+						<div class="conversation_container">
+							<div id="NOCONVSELECTED" class="conversation">
+								<p>No conversation is selected.</p>
+							</div>
+							<!-- Prof's conversation divs but only one active at a time, the rest are hidden -->
+						<% if ( messagedProfs == null ) { %> <p>DATABASE DOWN!</p> <% }   // should not happen
+						   else { %>
+						<% 		for (Professional p : messagedProfs) { %>
+									<div id="conversation<%= p.getID() %>" class="conversation" style="display: none">  <!-- start as hidden -->
+										<p>This is your conversation with <%= p.getFirstName() %> <%= p.getLastName() %></p>
+									</div>
+						<% 		} %>
+						<% } %>
+						</div>
+						<div class="conversation_input">
+							<form class="ajax" method="post">
+								<textarea id="msg_input" name="msg"></textarea>
+								<input id="msg_submit" type="submit" value="send">
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 	<% } %>
 	<% db.close(); %>

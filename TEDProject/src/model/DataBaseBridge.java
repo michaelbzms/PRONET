@@ -473,4 +473,34 @@ public class DataBaseBridge {
 		}
 	}
 	
+	public  List<Professional> getProfsMessagingWith(int profID) {
+		if (!connected) return null;
+		List<Professional> P = new ArrayList<Professional>();
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName "
+				     + "FROM Professionals p, Conversations c "
+				     + "WHERE (p.idProfessional = c.idProfessional1 AND c.idProfessional2 = ?) OR "
+				     +       "(p.idProfessional = c.idProfessional2 AND c.idProfessional1 = ?) "
+				     + "ORDER BY c.lastMessageSent DESC;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			P = new ArrayList<Professional>();
+			while (resultSet.next()) {
+				Professional prof = new Professional();
+				prof.setID(resultSet.getInt("idProfessional"));
+				prof.setFirstName(resultSet.getString("firstName"));
+				prof.setLastName(resultSet.getString("lastName"));
+				if ( !P.contains(prof) ) {
+					P.add(prof);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return P;
+	}
+	
 }
