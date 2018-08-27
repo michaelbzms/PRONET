@@ -39,7 +39,7 @@
 }
 
 .conversations_list ul li:hover{
-	background-color: #b2cdff;
+	background-color: #b2cdff!important;
 	cursor: pointer;
 }
 

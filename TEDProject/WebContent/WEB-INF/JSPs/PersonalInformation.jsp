@@ -31,7 +31,7 @@
 				sessionProfID = -1;
 			}
 			boolean isSelf = (sessionProfID == profID); 
-			boolean isAdmin = ( currentSession != null && ((boolean) currentSession.getAttribute("isAdmin")) );
+			boolean isAdmin = ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
 			// Navbar only for professionals
 			if (currentSession != null && !isAdmin) { %>
 				<nav class="navbar navbar-expand-xl bg-light justify-content-center">
@@ -73,16 +73,20 @@
 			<% if (currentSession != null && !isAdmin) { 
 				   if (isSelf) { %>
 					<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
-				<% } else if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
-					<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
-				<% } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
-					<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
-					<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
-				<% } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
-					<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
-				<% } else {		// Any other not connected prof %>		
-					<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
-				<% }
+				<% } else { %>
+						<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary" style="margin-bottom: 15px">Message</a>
+						<br>
+					<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
+							<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
+					<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
+							<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
+							<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
+					<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
+							<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
+					<%  } else {		// Any other not connected prof %>		
+							<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
+					<%  } %>
+				<%	}
 			   } %>
 			</div>
 		  	<h2 class="my_h2">Contact Info:</h2> 

@@ -48,19 +48,42 @@
 					</div>
 				</nav>
 				<h2>Here be messages for <%= prof.getFirstName() %>  <%= prof.getLastName() %>!</h2>
+			<%  String chatWith = request.getParameter("chatWith"); 
+			    Professional chatWithProf = null;
+				if (chatWith != null) {
+					chatWithProf = db.getProfessional(Integer.parseInt(chatWith));  
+				} %>			
 				<div id="messanger">
 					<div class="conversations_list">		
 						<% List<Professional> messagedProfs = db.getProfsMessagingWith(prof.getID());
 						   if ( messagedProfs == null ) { %> <p>DATABASE DOWN!</p> <% }   // should not happen
-						   else { %>
+						   else {  %>
 						   		<ul>
+						<%	   	if ( chatWith != null && chatWithProf == null ){ %>
+							   		<li id="404prof" class=conv_li style="background-color: #b2cdff">Unknown professional</li>
+							   		<script>
+					    				$("#404prof").on("click", function(){
+					    					// Make the corresponding conversation active and the rest hidden
+					    					$(".conversation").hide();
+					    					$(".conv_li").css("background-color", "#fbfcff");
+					    					$("#404CHATWITH").show();
+					    					$("#404prof").css("background-color", "#b2cdff");
+					    				});
+					    			</script>
+						<%	   	} else if ( chatWith != null && chatWithProf.getID() != prof.getID() && !messagedProfs.contains(chatWithProf)) {
+						   			messagedProfs.add(0, chatWithProf);   // add at start
+							   	} %>	
 					    <% 		for (Professional p : messagedProfs) { %>
-									<li id="conv<%= p.getID() %>"> <%= p.getFirstName() %> <%= p.getLastName() %> </li>
+									<li id="conv<%= p.getID() %>" class="conv_li" <% if ( chatWith != null && chatWithProf!= null && chatWithProf.getID() == p.getID() ) { %> style="background-color: #b2cdff" <% } %> > 
+										<%= p.getFirstName() %> <%= p.getLastName() %> 
+									</li>
 									<script>
 					    				$("#conv<%= p.getID() %>").on("click", function(){
 					    					// Make the corresponding conversation active and the rest hidden
 					    					$(".conversation").hide();
+					    					$(".conv_li").css("background-color", "#fbfcff");
 					    					$("#conversation<%= p.getID() %>").show();
+					    					$("#conv<%= p.getID() %>").css("background-color", "#b2cdff");
 					    				});
 					    			</script>
 					    <% 		} %>
@@ -69,14 +92,20 @@
 					</div>
 					<div class="conversation_box">
 						<div class="conversation_container">
-							<div id="NOCONVSELECTED" class="conversation">
-								<p>No conversation is selected.</p>
-							</div>
+						<%  if ( chatWith != null && chatWithProf == null ){ %>
+								<div id="404CHATWITH" class="conversation">
+									<p>The professional you are attempting to message does not exist.</p>
+								</div>
+						<%  } else if ( chatWith == null || chatWithProf.getID() == prof.getID() ) { %>
+								<div id="NOCONVSELECTED" class="conversation">
+									<p>No conversation is selected.</p>
+								</div>
+						<%  } %>
 							<!-- Prof's conversation divs but only one active at a time, the rest are hidden -->
 						<% if ( messagedProfs == null ) { %> <p>DATABASE DOWN!</p> <% }   // should not happen
 						   else { %>
 						<% 		for (Professional p : messagedProfs) { %>
-									<div id="conversation<%= p.getID() %>" class="conversation" style="display: none">  <!-- start as hidden -->
+									<div id="conversation<%= p.getID() %>" class="conversation" <% if ( chatWithProf == null || chatWithProf.getID() != p.getID() ) { %> style="display: none" <% } %> >
 										<p>This is your conversation with <%= p.getFirstName() %> <%= p.getLastName() %></p>
 									</div>
 						<% 		} %>
