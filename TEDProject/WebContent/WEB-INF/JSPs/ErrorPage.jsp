@@ -53,6 +53,9 @@
 		<% } else if ( request.getAttribute("errorType").equals("unchangedPassword") ) { %>
 			<h2>Password Change Failed</h2>
 			<p>The new password you entered is identical to your current one.</p>
+		<% } else if ( request.getAttribute("errorType").equals("noPermission") ) { %>
+			<h2>Permission Error</h2>
+			<p>You don't have permission to perform this action.</p>
 		<% } else if ( request.getAttribute("errorType").equals("404Request") ) { %>
 			<h2>Error 404</h2>
 			<p>The file you requested does not exists.</p>

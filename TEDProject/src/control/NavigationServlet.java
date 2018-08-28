@@ -42,53 +42,66 @@ public class NavigationServlet extends HttpServlet {
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
 		}
+		String attr;
 		switch(page) {
 			case "HomePage":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/HomePage.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
+				return;
 			case "Network":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Network.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
+				return;
 			case "WorkAds":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/WorkAds.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
+				return;
 			case "Messages":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Messages.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
+				return;
 			case "Notifications":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Notifications.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
+				return;
 			case "Settings":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
+				return;
 			case "ChangeSettings":
-				String attr = request.getParameter("attr");
+				attr = request.getParameter("attr");
 				if (attr != null && (attr.equals("email") || attr.equals("password")) ) {
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ChangeSettings.jsp");
 					request.setAttribute("attr", attr);
 					RequetsDispatcherObj.forward(request, response);
-				} else {
-					request.setAttribute("errorType", "invalidPageRequest");
-					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
-					RequetsDispatcherObj.forward(request, response);
-				}
+					return;
+				} 
 				break;
 			case "EditProfile":
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/EditProfile.jsp");
 				RequetsDispatcherObj.forward(request, response);
-				break;
-			default:
-				request.setAttribute("errorType", "invalidPageRequest");
-				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+				return;
+			case "EditWorkAd":
+				attr = request.getParameter("AdID");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/EditWorkAd.jsp");
+				if (attr != null) {
+					request.setAttribute("AdID", attr);
+				}
 				RequetsDispatcherObj.forward(request, response);
+				return;
+			case "Application":
+				attr = request.getParameter("AdID");
+				if (attr != null) {
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Application.jsp");
+					request.setAttribute("AdID", attr);
+					RequetsDispatcherObj.forward(request, response);
+					return;
+				}
 				break;
 		}
+		request.setAttribute("errorType", "invalidPageRequest");
+		RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+		RequetsDispatcherObj.forward(request, response);
 	}
 
 	

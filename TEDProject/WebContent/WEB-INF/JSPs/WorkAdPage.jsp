@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
-	<%@ page import="model.Professional, model.DataBaseBridge, model.WorkAd" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
@@ -56,24 +56,26 @@
 				</nav>
 		<% } %>
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
-			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= ad.printDate(false) %></h5>
+			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
 			<div class="ProfileOptions">
 			<% if (profID > -1) { 			// TODO: Admin should be able to delete ads?
-				   if (profID == ad.getPublishedByID()) { 		// ad was published by current prof   %>
-				   	<a href="#" class="btn btn-danger">Delete Work Ad</a>
-				<% } else { 		// current prof may apply 	%>
-					<a href="#" class="btn btn-primary">Apply</a>
+				   if (profID == ad.getPublishedByID()) { 		// ad was published by current prof
+				   		if (!isAdmin) { %>
+							<a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd&AdID=<%= ad.getID() %>" class="btn btn-primary">Edit</a>
+						<% } %>
+				   		<a href="/TEDProject/prof/WorkAdManagementServlet?action=delete&AdID=<%= ad.getID() %>" class="btn btn-danger" 
+				   			onclick="return confirm('Deleting this Work Ad will also delete all the applications that have been made on it. This cannot be undone. Are you sure you want to delete it?')">
+				   			Delete</a>
+				<% } else { 		// current prof can apply 	%>
+						<a href="/TEDProject/prof/NavigationServlet?page=Application&AdID=<%= ad.getID() %>" class="btn btn-primary">Apply</a>
 				<% } 
 			   } %>
 			</div>
 			<br>
 		  	<p id="adDescription"><%= ad.getDescription() %></p>
 		  	<br>
-			<!-- Back button only for admin -->
-			<% if (isAdmin) { %>
-					<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
-			<% } %>
-		<% } 
+
+		  <% } 
 		   db.close(); %>
 	</div>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>

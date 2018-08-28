@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - WorkAds</title>
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/workads.css"/>
@@ -57,7 +57,7 @@
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">
 							  		<div class="d-flex w-100 justify-content-between">
 							  			<h5 class="mb-1"><%= ad.getTitle() %></h5>
-							  			<small><%= ad.getTimeAgo() %></small>
+							  			<small><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
 							  		</div>
 							  		<small>Published by <object><a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a></object></small>
 							  	</a>
@@ -77,7 +77,7 @@
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">
 							  		<div class="d-flex w-100 justify-content-between">
 							  			<h5 class="mb-1"><%= ad.getTitle() %></h5>
-							  			<small><%= ad.getTimeAgo() %></small>
+							  			<small><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
 							  		</div>
 							  		<small>Published by <object><a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a></object></small>
 							  	</a>
@@ -90,7 +90,7 @@
 				<br>
 				<div>
 					<div class="justify-content-between">
-						<h2>My Work Ads <a href="#" class="btn btn-primary float-right">Create New</a></h2>
+						<h2>My Work Ads <a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right">Create New</a></h2>
 					</div>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> myWorkAds = db.getWorkAds(prof.getID(), 0);
@@ -99,7 +99,7 @@
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">
 							  		<div class="d-flex w-100 justify-content-between">
 							  			<h5 class="mb-1"><%= ad.getTitle() %></h5>
-							  			<small><%= ad.getTimeAgo() %></small>
+							  			<small><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
 							  		</div>
 							  	</a>
 						<%	} %>			

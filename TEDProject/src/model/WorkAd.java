@@ -1,9 +1,6 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class WorkAd {
 	
@@ -47,35 +44,6 @@ public class WorkAd {
 	}
 	public void setPostedDate(LocalDateTime postedDate) {
 		this.postedDate = postedDate;
-	}
-	
-	public String printDate(boolean withTime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		if (withTime) {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-		} else {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		}
-		return this.postedDate.format(formatter);
-	}
-	
-	public String getTimeAgo() {		// TODO: remove (s)
-		long secAgo = ChronoUnit.SECONDS.between(this.postedDate, LocalDateTime.now(ZoneOffset.UTC));
-		if (secAgo < 0) {
-			return Long.toString(-secAgo) + " seconds in the future?";
-		} if (secAgo < 60) {
-			return "a few seconds ago";
-		} else if (secAgo < 60*60) {
-			return Long.toString(secAgo/60) + " minute(s) ago";
-		} else if (secAgo < 24*60*60) {
-			return Long.toString(secAgo/(60*60)) + " hour(s) ago";
-		} else if (secAgo < 30*24*60*60) {
-			return Long.toString(secAgo/(24*60*60)) + " day(s) ago";
-		} else if (secAgo < 12*30*24*60*60) {
-			return Long.toString(secAgo/(30*24*60*60)) + " month(s) ago";
-		} else {
-			return "more than a year ago";
-		}
 	}
 	
 }

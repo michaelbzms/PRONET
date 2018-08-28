@@ -224,4 +224,50 @@ public class SiteFunctionality {
 		}
 	}
 	
+	public static int createWorkAd(int profID, String title, String description) {
+		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( db.createWorkAd(profID, title, description) ) {		// Successful update
+			db.close(); 
+			return 0;	
+		} else {				// database error
+			db.close(); 
+			return -1;
+		}
+	}
+	
+	public static int updateWorkAd(int adID, String description) {
+		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( db.updateWorkAd(adID, description) ) {		// Successful update
+			db.close(); 
+			return 0;	
+		} else {				// database error
+			db.close(); 
+			return -1;
+		}
+	}
+	
+	public static int removeWorkAd(int adID) {
+		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( dbg.deleteWorkAd(adID) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -1;
+		}
+	}
+	
+	
 }

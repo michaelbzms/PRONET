@@ -4,6 +4,9 @@ package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -595,6 +598,63 @@ public class DataBaseBridge {
 		return ad;
 	}
 	
+	public boolean createWorkAd(int profID, String title, String description) {
+		if (!connected) return false;
+		String insertString = "INSERT INTO Ads (idAd, idPublishedBy, title, postedDate, description, containsFiles) VALUES (default, ?, ?, ?, ?, 0)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(insertString);
+			statement.setInt(1, profID);
+			statement.setString(2, title);
+			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+			statement.setString(4, description);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean updateWorkAd(int adID, String description) {		// TODO: also update datetime?
+		if (!connected) return false;
+		String updateString = "UPDATE Ads SET description = ? WHERE idAd = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(updateString);
+			statement.setString(1, description);
+			statement.setInt(2, adID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean deleteWorkAd(int adID) {
+		if (!connected) return false;
+		// First delete all applications to that that ad:
+		String deleteString = "DELETE FROM Applications WHERE idAd = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, adID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		// Then delete the ad itself:
+		deleteString = "DELETE FROM Ads WHERE idAd = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, adID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public List<Message> getMessagedForConvo(int profID1, int profID2){
 		if (!connected) return null;
 		List<Message> M = null;
@@ -625,6 +685,8 @@ public class DataBaseBridge {
 		}
 		return M;
 	}
+	
+	
 	
 }
 

@@ -11,42 +11,56 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.SiteFunctionality;
 
-@WebServlet("/prof/ConnectionServlet")
-public class ConnectionServlet extends HttpServlet {
+@WebServlet("/prof/WorkAdManagementServlet")
+public class WorkAdManagementServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public ConnectionServlet() {
+    public WorkAdManagementServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher RequetsDispatcherObj;
 		String action = request.getParameter("action");
-		String profIDstr = request.getParameter("ProfID");
-		if (action == null || profIDstr == null || request.getSession(false) == null || request.getSession(false).getAttribute("ProfID") == null) {	
+		String workdAdIDstr = request.getParameter("AdID");
+		if (action == null || (workdAdIDstr == null && !action.equals("create")) || request.getSession(false) == null || request.getSession(false).getAttribute("ProfID") == null) {	
 			request.setAttribute("errorType", "invalidPageRequest");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
 			return;
 		}
-		int sessionProfID = (int) request.getSession(false).getAttribute("ProfID");
-		int profID = Integer.parseInt(profIDstr);
+		int profID = (int) request.getSession(false).getAttribute("ProfID");
+		int workAdID = -1;
+		if (workdAdIDstr != null) {
+			workAdID = Integer.parseInt(workdAdIDstr);
+		}
 		int result;
+		String title, description;
 		switch(action) {
-			case "connect":
-				result = SiteFunctionality.sendConnectionRequest(sessionProfID, profID);
+			case "create":
+				title = request.getParameter("title");
+				description = request.getParameter("description");
+				if ( title.isEmpty() || description.isEmpty() ) {
+					result = -2;
+				} else if ( !SiteFunctionality.checkInputText(title, true, 127) ) {
+					result = -3;
+				} else {
+					result = SiteFunctionality.createWorkAd(profID, title, description);
+				}
 				break;
-			case "remove":
-				result = SiteFunctionality.removeConnection(sessionProfID, profID);
+			case "edit":
+				description = request.getParameter("description");
+				if ( description.isEmpty() ) {
+					result = -2;
+				} else {
+					result = SiteFunctionality.updateWorkAd(workAdID, description);
+				}
 				break;
-			case "accept":
-				result = SiteFunctionality.updateConnectionRequest(profID, sessionProfID, true);
+			case "delete":
+				result = SiteFunctionality.removeWorkAd(workAdID);
 				break;
-			case "reject":
-				result = SiteFunctionality.updateConnectionRequest(profID, sessionProfID, false);
-				break;
-			case "cancel":
-				result = SiteFunctionality.updateConnectionRequest(sessionProfID, profID, false);
+			case "apply":
+				result = -999;//SiteFunctionality.applyToWorkAd(workAdID);
 				break;
 			default:	
 				request.setAttribute("errorType", "invalidPageRequest");
@@ -56,10 +70,20 @@ public class ConnectionServlet extends HttpServlet {
 		}
 		switch (result) {
 			case 0:     // success
-				response.sendRedirect("/TEDProject/ProfileLink?ProfID=" + profID);
+				response.sendRedirect("/TEDProject/prof/NavigationServlet?page=WorkAds");
 				break;
 			case -1:      // database error
 				request.setAttribute("errorType", "dbError");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+				RequetsDispatcherObj.forward(request, response);
+				break;
+			case -2:
+				request.setAttribute("errorType", "emptyFormFields");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+				RequetsDispatcherObj.forward(request, response);
+				break;
+			case -3:
+				request.setAttribute("errorType", "illegalTextInput");
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 				break;
