@@ -13,14 +13,18 @@
 			awayprofID = Integer.parseInt(awayprofIDstr);
 		} catch ( NumberFormatException e ){ %>
 			<p>Error: the ID of one of the professionals appears to not be a number.</p>
-	<%		return;
+	<%   	return;
 		}
 		DataBaseBridge db = new DataBaseBridge();
-		List<Message> messages = db.getMessagedForConvo(homeprofID, awayprofID);
+		List<Message> messages = db.getMessagesForConvo(homeprofID, awayprofID);
 		if ( messages == null ) { %>
 			<p>Error: DataBase down</p>
 	<%	} else {
 			for ( Message msg : messages ) { %>
+				<span <% if ( msg.getSentByProfID() == homeprofID )  { %> class="home_timestamp" 
+				   	  <% } else if (  msg.getSentByProfID() == awayprofID ) { %> class="away_timestamp" <% } %>>
+					<%= msg.getTimeSent() %>
+				</span>
 				<p <% if ( msg.getSentByProfID() == homeprofID )  { %> class="home_message" 
 				   <% } else if (  msg.getSentByProfID() == awayprofID ) { %> class="away_message" <% } %>> 
 					<% 	if (msg.getText() != null) { %>

@@ -692,7 +692,7 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public List<Message> getMessagedForConvo(int profID1, int profID2){
+	public List<Message> getMessagesForConvo(int profID1, int profID2){
 		if (!connected) return null;
 		List<Message> M = null;
 		String Query = "SELECT text, timeSent, containsFiles, idSentByProf "
@@ -723,7 +723,88 @@ public class DataBaseBridge {
 		return M;
 	}
 	
+	public int existsConversationBetween(int sentById, int sentToId) {
+		if (!connected) return -1;
+		String Query = "SELECT 'exists' FROM Conversations WHERE idProfessional1 = ? AND idProfessional2 = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, sentById);
+			statement.setInt(2, sentToId);
+			ResultSet resultSet = statement.executeQuery();
+			if ( resultSet.next() ) {   // if there exists such a record with order (sentById, sentToId) then return code 1
+				return 1;
+			} else {                    // reverse order and try again
+				statement.setInt(1, sentToId);
+				statement.setInt(2, sentById);
+				resultSet = statement.executeQuery();
+				if ( resultSet.next() ) {
+					return 2;            // if there exists such a record with order (sentToId, sentById) then return code 2
+				} else {
+					return 0;            // no conversation exists between the two professionals
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
+		}
+	}
+
+	public boolean createConversationInOrder(int sentById, int sentToId, String datetime) {
+		if (!connected) return false;
+		String Insert = "INSERT INTO Conversations (`idProfessional1`, `idProfessional2`, `lastMessageSent`) "
+					  + "VALUES (?, ?, ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Insert);
+			statement.setInt(1, sentById);
+			statement.setInt(2, sentToId);
+			statement.setString(3, datetime);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
+	public boolean addMessageToConversationInOrder(int firstId, int secondID, int sentById, String text, String datetime, boolean containsFiles) {
+		if (!connected) return false;
+		String Insert = "INSERT INTO Messages (`idMessage`, `idProfessional1`, `idProfessional2`, `idSentByProf`, `text`, `timeSent`, `containsFiles`) "
+					  + "VALUES (default, ?, ?, ?, ?, ?, ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Insert);
+			statement.setInt(1, firstId);
+			statement.setInt(2, secondID);
+			statement.setInt(3, sentById);
+			statement.setString(4, text);
+			statement.setString(5, datetime);
+			statement.setBoolean(6, containsFiles);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean updateLastSentToConversation(int sentById, int sentToId, String datetime) {
+		if (!connected) return false;
+		String Update = "UPDATE Conversations SET lastMessageSent = ? "
+					  + "WHERE (idProfessional1 = ? and idProfessional2 = ?) OR (idProfessional1 = ? and idProfessional2 = ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Update);
+			statement.setString(1, datetime);
+			statement.setInt(2, sentById);
+			statement.setInt(3, sentToId);
+			statement.setInt(4, sentToId);
+			statement.setInt(5, sentById);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
 }
 

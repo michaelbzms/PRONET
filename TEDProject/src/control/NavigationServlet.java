@@ -32,6 +32,7 @@ public class NavigationServlet extends HttpServlet {
 			request.setAttribute("errorType", "nullSession");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
+			return;
 		} else {
 			currentSession.setAttribute("lastVisited", referer);
 		}
@@ -41,6 +42,7 @@ public class NavigationServlet extends HttpServlet {
 			request.setAttribute("errorType", "invalidPageRequest");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
+			return;
 		}
 		String attr;
 		switch(page) {

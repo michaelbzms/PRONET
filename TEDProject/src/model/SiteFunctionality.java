@@ -295,5 +295,32 @@ public class SiteFunctionality {
 			return -1;
 		}
 	}
+
+	public static int addMessage(String text, int sentById, int sentToId, String datetime, boolean containsFiles) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		int result = db.existsConversationBetween(sentById, sentToId);
+		switch (result) {
+			case 0:   // conversation does not exist
+				db.createConversationInOrder(sentById, sentToId, datetime);
+				db.addMessageToConversationInOrder(sentById, sentToId, sentById, text, datetime, containsFiles);
+				break;
+			case 1:   // conversation exists with order (sentById, sentToId)
+				db.addMessageToConversationInOrder(sentById, sentToId, sentById, text, datetime, containsFiles);
+				db.updateLastSentToConversation(sentById, sentToId, datetime);
+				break;
+			case 2:   // conversation exists with order (sentToId, sentById)
+				db.addMessageToConversationInOrder(sentToId, sentById, sentById, text, datetime, containsFiles);
+				db.updateLastSentToConversation(sentToId, sentById, datetime);
+				break;
+			default:  // should not happen
+				return -1;
+		}
+		db.close();
+		return 0;
+	}
 	
 }

@@ -69,6 +69,27 @@ public class AJAXServlet extends HttpServlet {
 						RequetsDispatcherObj.forward(request, response);
 					}
 					break;
+				case "addMessage":
+					String text = request.getParameter("text");
+					String sentByProfStr = request.getParameter("sentBy");
+					String sentToProfStr = request.getParameter("sentTo");
+					String datetime = request.getParameter("timestamp");
+					String containsFilesStr = request.getParameter("containsFiles");
+					if ( text == null || sentByProfStr == null || sentToProfStr == null || datetime == null || containsFilesStr == null) {
+						out.write("AJAX add message request reached server with invalid parameters");
+					} else {
+						boolean containsFiles = containsFilesStr.equals("true");
+						int sentById, sentToId;
+						try {
+							sentById = Integer.parseInt(sentByProfStr);
+							sentToId = Integer.parseInt(sentToProfStr);
+						} catch ( NumberFormatException e ) {
+							out.write("AJAX add message request reached server with invalid FORMAT parameters");
+							return;
+						}
+						SiteFunctionality.addMessage(text, sentById, sentToId, datetime, containsFiles);
+					}
+					break;
 				default:
 					out.write("Error: Invalid AJAX action!");
 					break;

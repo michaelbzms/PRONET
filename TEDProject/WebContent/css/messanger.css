@@ -15,7 +15,7 @@
 	/*float: left; */
     height: 60vh;
     width: 18vw;
-    overflow-y: auto;
+    overflow-y: scroll;
 	background-color: #fbfcff;
     border-radius: 5px 0px 0px 5px;
     border-style: solid;
@@ -54,7 +54,7 @@
 }
 
 .conversation_container{
-	overflow-y: auto;
+	overflow-y: scroll;
 	height: 50vh;
 	width: 50vw;
 }
@@ -71,7 +71,7 @@
 	border-width: 2px 0px 0px 0px;
 	border-color: #162787;
 	padding: 0.75vh;
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 
 #msg_input{
@@ -103,4 +103,20 @@
 	clear: both;
 	padding: 10px;
 	border-radius: 5px;
+}
+
+.home_timestamp{
+	float: right; 
+	clear: both; 
+	font-size: 80%;
+	margin-right: 3px;
+	color: #3a3c43;
+}
+
+.away_timestamp{
+	float: left; 
+	clear: both; 
+	font-size: 80%;
+	margin-left: 3px;
+	color: #3a3c43;
 }

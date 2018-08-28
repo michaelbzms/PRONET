@@ -47,7 +47,7 @@
 						</ul>
 					</div>
 				</nav>
-				<h2>Here be messages for <%= prof.getFirstName() %>  <%= prof.getLastName() %>!</h2>
+				<h2>Here be messages for <%= prof.getFirstName() %>  <%= prof.getLastName() %>!</h2><br>
 			<%  String chatWith = request.getParameter("chatWith"); 
 			    Professional chatWithProf = null;
 				if (chatWith != null) {
@@ -65,8 +65,10 @@
 					    				$("#404prof").on("click", function(){
 					    					// Make the corresponding conversation active and the rest hidden
 					    					$(".conversation").hide();
+					    					$(".conversation").removeClass("active_conv");
 					    					$(".conv_li").css("background-color", "#fbfcff");
 					    					$("#404CHATWITH").show();
+					    					$("#404CHATWITH").addClass("active_conv");
 					    					$("#404prof").css("background-color", "#b2cdff");
 					    				});
 					    			</script>
@@ -81,8 +83,10 @@
 					    				$("#conv<%= p.getID() %>").on("click", function(){
 					    					// Make the corresponding conversation active and the rest hidden
 					    					$(".conversation").hide();
+					    					$(".conversation").removeClass("active_conv");
 					    					$(".conv_li").css("background-color", "#fbfcff");
 					    					$("#conversation<%= p.getID() %>").show();
+					    					$("#conversation<%= p.getID() %>").addClass("active_conv");
 					    					$("#conv<%= p.getID() %>").css("background-color", "#b2cdff");
 					    					// load the conversation from server using AJAX
 					    					$.ajax({
@@ -114,7 +118,9 @@
 						<% if ( messagedProfs == null ) { %> <p>DATABASE DOWN!</p> <% }   // should not happen
 						   else { %>
 						<% 		for (Professional p : messagedProfs) { %>
-									<div id="conversation<%= p.getID() %>" class="conversation" <% if ( chatWithProf == null || chatWithProf.getID() != p.getID() ) { %> style="display: none" <% } %> >
+									<div id="conversation<%= p.getID() %>" 
+									  <% if (chatWith != null && chatWithProf != null && chatWithProf.getID() == p.getID()) { %>  class="conversation active_conv" <% } else { %> class="conversation" <% } %> 
+									  <% if ( chatWithProf == null || chatWithProf.getID() != p.getID() ) { %> style="display: none" <% } %> >
 										<% if (chatWith != null && chatWithProf != null && chatWithProf.getID() == p.getID() ) { %>
 												<jsp:include page="Conversation.jsp"> 
 												<jsp:param name="homeprof" value="<%= prof.getID() %>" /> 
@@ -126,9 +132,51 @@
 						<% } %>
 						</div>
 						<div class="conversation_input">
-							<form class="ajax" method="post">
+							<form id="send_text">
 								<textarea id="msg_input" name="msg"></textarea>
 								<input id="msg_submit" type="submit" value="send">
+								<script>
+									// function declaration for later
+									
+								
+									$("#send_text").on("submit", function(){
+										
+										if ( $(".active_conv").attr("id") === "404CHATWITH" ){
+											 $("#msg_input").val("");  // reset input value
+											return false;              // dont send anything
+										}
+										
+										// get timestamp		
+										var dt = new Date();
+										var datetime = dt.getUTCFullYear() + "-" + twoDigits(1 + dt.getUTCMonth()) + "-" + twoDigits(dt.getUTCDate()) + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
+										
+										// append text to the (must be only one) active conversation
+										$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val() + "</p><br>");
+										
+										// Parse the id of active_conv to get the conversation's other professional id
+										var other_prof_id = $('.active_conv').attr('id').substring(12);   // TODO: make this more versatile?
+										
+										// update database with AJAX
+										$.ajax({
+					    						url: "/TEDProject/AJAXServlet?action=addMessage",
+					    						type: "post",
+					    						data: { text:  $("#msg_input").val(),
+					    								sentBy: <%= prof.getID() %>,
+					    								sentTo: other_prof_id,
+					    								timestamp: datetime,
+					    								containsFiles: false                 // TODO Change this to support files
+										              },
+					    						success: function(response){
+					    							console.log("Conversation updated successfully");
+					    						}
+					    				});
+										
+										// reset input value
+										 $("#msg_input").val("");
+										
+										return false;    // override default form action
+									});
+								</script>
 							</form>
 						</div>
 					</div>
@@ -136,5 +184,22 @@
 			</div>
 	<% } %>
 	<% db.close(); %>
+	 <!-- JS functions for this page -->
+	<script>
+		//TODO should work but doesn't, at least not in firefox
+		// use this to scroll a conversation to the bottom
+		function updateScroll(){
+			var scroll_box = $('.active_conv');
+		    var height = scroll_box[0].scrollHeight;
+		    scroll_box.scrollTop(height);
+		    console.log($('.active_conv')[0].scrollHeight);
+		}
+		
+		function twoDigits(d) {
+		    if (0 <= d && d < 10) return "0" + d.toString();
+		    if (-10 < d && d < 0) return "-0" + (-1*d).toString();
+		    return d.toString();
+		}
+	</script>
 </body>
 </html>
