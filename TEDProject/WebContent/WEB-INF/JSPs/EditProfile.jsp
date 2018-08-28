@@ -93,7 +93,7 @@
 	</div>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<script>
-		var profExmSMDE = new SimpleMDE({ element: document.getElementById("profExp"), showIcons: ["code", "table"] });
+		var profExpSMDE = new SimpleMDE({ element: document.getElementById("profExp"), showIcons: ["code", "table"] });
 		var edBackgroundSMDE = new SimpleMDE({ element: document.getElementById("edBackground"), showIcons: ["code", "table"] });
 		var skillsSMDE = new SimpleMDE({ element: document.getElementById("skills"), showIcons: ["code", "table"] });
 	</script>

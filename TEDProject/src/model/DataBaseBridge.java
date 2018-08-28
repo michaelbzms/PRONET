@@ -571,13 +571,13 @@ public class DataBaseBridge {
 		return ads;
 	}
 	
-	public WorkAd getWorkAd(int ID) {
+	public WorkAd getWorkAd(int adID) {
 		if (!connected) return null;
 		WorkAd ad = null;
 		String Query = "SELECT * FROM Ads WHERE idAd = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
-			statement.setInt(1, ID);
+			statement.setInt(1, adID);
 			ResultSet resultSet = statement.executeQuery();
 			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
 				return null;
@@ -596,6 +596,26 @@ public class DataBaseBridge {
 			return null;
 		}
 		return ad;
+	}
+	
+	public int getWorkAdPublishedByID(int adID) {
+		if (!connected) return -1;
+		int publishedByID = -1;
+		String Query = "SELECT idPublishedBy FROM Ads WHERE idAd = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, adID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return -1;
+			} else {
+				publishedByID = resultSet.getInt("idPublishedBy");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return publishedByID;
 	}
 	
 	public boolean createWorkAd(int profID, String title, String description) {
@@ -647,6 +667,23 @@ public class DataBaseBridge {
 		try {
 			PreparedStatement statement = connection.prepareStatement(deleteString);
 			statement.setInt(1, adID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean createApplication(int adID, int profID, String applyNote) {
+		if (!connected) return false;
+		String insertString = "INSERT INTO Applications (idApplication, idAd, idApplicant, applyDate, note) VALUES (default, ?, ?, ?, ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(insertString);
+			statement.setInt(1, adID);
+			statement.setInt(2, profID);
+			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+			statement.setString(4, applyNote);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

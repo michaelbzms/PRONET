@@ -8,6 +8,7 @@
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->
@@ -66,22 +67,38 @@
 				   		<a href="/TEDProject/prof/WorkAdManagementServlet?action=delete&AdID=<%= ad.getID() %>" class="btn btn-danger" 
 				   			onclick="return confirm('Deleting this Work Ad will also delete all the applications that have been made on it. This cannot be undone. Are you sure you want to delete it?')">
 				   			Delete</a>
-				<% } else { 		// current prof can apply 	%>
-						<a href="/TEDProject/prof/NavigationServlet?page=Application&AdID=<%= ad.getID() %>" class="btn btn-primary">Apply</a>
-				<% } 
+				<% }
 			   } %>
 			</div>
 			<br>
 		  	<p id="adDescription"><%= ad.getDescription() %></p>
 		  	<br>
+			<% if (isAdmin) { %>
+				<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
+			<% } else if (profID == ad.getPublishedByID()) {	%>
 
-		  <% } 
+			<% } else if (profID > -1) {		// current prof can apply	%>
+				<div class="buttonContainer" style="text-align: center">
+					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Apply</button>
+				</div>
+				<div class="collapse" id="collapseEditor">		
+					<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
+				   		<textarea id="applyNote" name="applyNote"></textarea>
+					   	<div class="buttonContainer" style="text-align: right">
+							<input type="submit" value="Submit" class="btn btn-primary">
+							<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
+						</div>
+				   	</form>
+				</div>
+			<% } 
+		   } 
 		   db.close(); %>
 	</div>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<script>
 		var adDescription = document.getElementById("adDescription");
 		if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
+		var applyNoteSMDE = new SimpleMDE({ element: document.getElementById("applyNote"), showIcons: ["code", "table"] });
 	</script>
 </body>
 </html>

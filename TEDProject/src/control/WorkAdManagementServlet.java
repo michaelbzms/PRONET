@@ -53,14 +53,19 @@ public class WorkAdManagementServlet extends HttpServlet {
 				if ( description.isEmpty() ) {
 					result = -2;
 				} else {
-					result = SiteFunctionality.updateWorkAd(workAdID, description);
+					result = SiteFunctionality.updateWorkAd(workAdID, profID, description);
 				}
 				break;
 			case "delete":
-				result = SiteFunctionality.removeWorkAd(workAdID);
+				result = SiteFunctionality.removeWorkAd(workAdID, profID);
 				break;
 			case "apply":
-				result = -999;//SiteFunctionality.applyToWorkAd(workAdID);
+				description = request.getParameter("applyNote");
+				if ( description.isEmpty() ) {
+					result = -2;
+				} else {
+					result = SiteFunctionality.applyToWorkAd(workAdID, profID, description);
+				}
 				break;
 			default:	
 				request.setAttribute("errorType", "invalidPageRequest");
@@ -84,6 +89,11 @@ public class WorkAdManagementServlet extends HttpServlet {
 				break;
 			case -3:
 				request.setAttribute("errorType", "illegalTextInput");
+				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+				RequetsDispatcherObj.forward(request, response);
+				break;
+			case -4:
+				request.setAttribute("errorType", "noPermission");
 				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 				break;

@@ -239,11 +239,15 @@ public class SiteFunctionality {
 		}
 	}
 	
-	public static int updateWorkAd(int adID, String description) {
+	public static int updateWorkAd(int adID, int profID, String description) {
 		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
 		if ( !db.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
 			return -503;
+		}
+		// Check if profID is the owner of the ad
+		if ( db.getWorkAdPublishedByID(adID) != profID ) {
+			return -4;
 		}
 		if ( db.updateWorkAd(adID, description) ) {		// Successful update
 			db.close(); 
@@ -254,11 +258,15 @@ public class SiteFunctionality {
 		}
 	}
 	
-	public static int removeWorkAd(int adID) {
+	public static int removeWorkAd(int adID, int profID) {
 		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
 		if ( !dbg.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
 			return -503;
+		}
+		// Check if profID is the owner of the ad
+		if ( dbg.getWorkAdPublishedByID(adID) != profID ) {
+			return -4;
 		}
 		if ( dbg.deleteWorkAd(adID) ) {		// Successful update
 			dbg.close(); 
@@ -269,5 +277,23 @@ public class SiteFunctionality {
 		}
 	}
 	
+	public static int applyToWorkAd(int adID, int profID, String applyNote) {
+		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		// The owner of the ad cannot apply to it
+		if ( dbg.getWorkAdPublishedByID(adID) == profID ) {
+			return -4;
+		}
+		if ( dbg.createApplication(adID, profID, applyNote) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -1;
+		}
+	}
 	
 }
