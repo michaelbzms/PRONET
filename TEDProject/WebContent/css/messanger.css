@@ -22,7 +22,7 @@
 	border-width: 0px 2px 0px 0px;
 	border-color: #162787;
     /* general: */
-    font-size: 150%;
+    font-size: 120%;
 }
 
 .conversations_list ul{
@@ -84,4 +84,23 @@
 	width: 5vw;
 	display: inline-block;
 	float: right;
+}
+
+.home_message{
+	max-width: 32vw;
+	background-color: #b2cdff;
+	float: right;
+	clear: both;
+	padding: 10px;
+	border-radius: 5px;
+	
+}
+
+.away_message{
+	max-width: 32vw;
+	background-color: #c1c4d5;
+	float: left;
+	clear: both;
+	padding: 10px;
+	border-radius: 5px;
 }

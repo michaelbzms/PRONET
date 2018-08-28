@@ -41,10 +41,10 @@ public class AJAXServlet extends HttpServlet {
 		if (action == null) {
 			out.write("Error: null action!");
 		} else {
+			RequestDispatcher RequetsDispatcherObj;
 			switch(action) {
 				case "searchProfessional":
-					//out.write("<p style=\"font-weight: bold\">Searched for professional: " + request.getParameter("searchString") + ", successfully</p>");
-					RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AJAXSearchResults.jsp");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AJAXSearchResults.jsp");
 					RequetsDispatcherObj.forward(request, response);		
 					break;
 				case "connectionRequest":
@@ -52,12 +52,21 @@ public class AJAXServlet extends HttpServlet {
 					String askerIDstr = request.getParameter("AskerID");
 					String receiverIDstr = request.getParameter("ReceiverID");
 					if ( decision == null || askerIDstr == null || receiverIDstr == null ) {
-						out.write("AJAX connection request answer reached server but invalid parameters");
+						out.write("AJAX connection request answer reached server with invalid parameters");
 					} else {
-						out.write("server got AJAX connection request answer successfully");
 						int AskerID = Integer.parseInt(askerIDstr);
 						int ReceiverID = Integer.parseInt(receiverIDstr);
 						SiteFunctionality.updateConnectionRequest(AskerID, ReceiverID, (decision.equals("accept")) ? true : false);
+					}
+					break;
+				case "loadConvo":
+					String homeprofIDstr = request.getParameter("homeprof");
+					String awayprofIDstr = request.getParameter("awayprof");
+					if ( homeprofIDstr == null || awayprofIDstr == null ) {
+						out.write("AJAX load conversation request reached server with invalid parameters");
+					} else {
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Conversation.jsp");
+						RequetsDispatcherObj.forward(request, response);
 					}
 					break;
 				default:

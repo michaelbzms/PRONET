@@ -84,6 +84,15 @@
 					    					$(".conv_li").css("background-color", "#fbfcff");
 					    					$("#conversation<%= p.getID() %>").show();
 					    					$("#conv<%= p.getID() %>").css("background-color", "#b2cdff");
+					    					// load the conversation from server using AJAX
+					    					$.ajax({
+					    						url: "/TEDProject/AJAXServlet?action=loadConvo",
+					    						type: "post",
+					    						data: { homeprof: <%= prof.getID() %>, awayprof: <%= p.getID() %> },
+					    						success: function(response){
+					    							$("#conversation<%= p.getID() %>").html(response);
+					    						}
+					    					});
 					    				});
 					    			</script>
 					    <% 		} %>
@@ -106,7 +115,12 @@
 						   else { %>
 						<% 		for (Professional p : messagedProfs) { %>
 									<div id="conversation<%= p.getID() %>" class="conversation" <% if ( chatWithProf == null || chatWithProf.getID() != p.getID() ) { %> style="display: none" <% } %> >
-										<p>This is your conversation with <%= p.getFirstName() %> <%= p.getLastName() %></p>
+										<% if (chatWith != null && chatWithProf != null && chatWithProf.getID() == p.getID() ) { %>
+												<jsp:include page="Conversation.jsp"> 
+												<jsp:param name="homeprof" value="<%= prof.getID() %>" /> 
+												<jsp:param name="awayprof" value="<%= p.getID()%>"/> 
+												</jsp:include>
+										<% } %>
 									</div>
 						<% 		} %>
 						<% } %>

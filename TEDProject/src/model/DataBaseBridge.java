@@ -595,6 +595,37 @@ public class DataBaseBridge {
 		return ad;
 	}
 	
+	public List<Message> getMessagedForConvo(int profID1, int profID2){
+		if (!connected) return null;
+		List<Message> M = null;
+		String Query = "SELECT text, timeSent, containsFiles, idSentByProf "
+				     + "FROM Messages "
+				     + "WHERE (idProfessional1 = ? AND idProfessional2 = ?) OR "
+				     + 		 "(idProfessional1 = ? AND idProfessional2 = ?) "
+				     + "ORDER BY timeSent;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID1);
+			statement.setInt(2, profID2);
+			statement.setInt(3, profID2);
+			statement.setInt(4, profID1);
+			ResultSet resultSet = statement.executeQuery();
+			M = new ArrayList<Message>();
+			while (resultSet.next()) {
+				Message newmsg = new Message();
+				newmsg.setText(resultSet.getString("text"));
+				newmsg.setSentByProfID(resultSet.getInt("idSentByProf"));
+				newmsg.setTimeSent(resultSet.getString("timeSent"));
+				newmsg.setContainsFiles(resultSet.getBoolean("containsFiles"));
+				M.add(newmsg);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return M;
+	}
+	
 }
 
 
