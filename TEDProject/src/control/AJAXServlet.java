@@ -16,7 +16,7 @@ import model.SiteFunctionality;
 @WebServlet("/AJAXServlet")
 public class AJAXServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private boolean warned = false;
 
     public AJAXServlet() {
         super();
@@ -88,6 +88,25 @@ public class AJAXServlet extends HttpServlet {
 							return;
 						}
 						SiteFunctionality.addMessage(text, sentById, sentToId, datetime, containsFiles);
+					}
+					break;
+				case "checkForNewMessages":             // this happens really often (ex: every 2 secs)
+					String  latestGot = request.getParameter("latestGot");
+					String  homeprof = request.getParameter("homeprof");
+					String  awayprof = request.getParameter("awayprof");
+					if ( latestGot == null || homeprof == null || awayprof == null ) {
+						if (!warned) { System.out.println("Invalid arguements at checkForNewMessages action in AJAXServlet.java"); warned = true; }
+					} else {
+						int homeprofID, awayprofID;
+						try {
+							homeprofID = Integer.parseInt(homeprof);
+							awayprofID = Integer.parseInt(awayprof);
+						} catch ( NumberFormatException e ) {
+							if (!warned) { System.out.println("Could not cast ProfIDs to int at checkForNewMessages action in AJAXServlet.java"); warned = true; }
+							return;
+						}
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/NewMessages.jsp");
+						RequetsDispatcherObj.forward(request, response);
 					}
 					break;
 				default:

@@ -95,6 +95,7 @@
 					    						data: { homeprof: <%= prof.getID() %>, awayprof: <%= p.getID() %> },
 					    						success: function(response){
 					    							$("#conversation<%= p.getID() %>").html(response);
+					    							updateScroll();
 					    						}
 					    					});
 					    				});
@@ -126,8 +127,13 @@
 												<jsp:param name="homeprof" value="<%= prof.getID() %>" /> 
 												<jsp:param name="awayprof" value="<%= p.getID()%>"/> 
 												</jsp:include>
+												<script>
+													$(".active_conv").ready(function(){
+														updateScroll();
+													});
+												</script>
 										<% } %>
-									</div>
+									</div>										
 						<% 		} %>
 						<% } %>
 						</div>
@@ -135,12 +141,9 @@
 							<form id="send_text">
 								<textarea id="msg_input" name="msg"></textarea>
 								<input id="msg_submit" type="submit" value="send">
-								<script>
-									// function declaration for later
-									
-								
+								<script>									
 									$("#send_text").on("submit", function(){
-										
+										// if active conversation is with an unknown professional then dont sybmit anything
 										if ( $(".active_conv").attr("id") === "404CHATWITH" ){
 											 $("#msg_input").val("");  // reset input value
 											return false;              // dont send anything
@@ -152,6 +155,8 @@
 										
 										// append text to the (must be only one) active conversation
 										$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val() + "</p><br>");
+										
+										updateScroll();
 										
 										// Parse the id of active_conv to get the conversation's other professional id
 										var other_prof_id = $('.active_conv').attr('id').substring(12);   // TODO: make this more versatile?
@@ -192,7 +197,6 @@
 			var scroll_box = $('.active_conv');
 		    var height = scroll_box[0].scrollHeight;
 		    scroll_box.scrollTop(height);
-		    console.log($('.active_conv')[0].scrollHeight);
 		}
 		
 		function twoDigits(d) {
@@ -200,6 +204,37 @@
 		    if (-10 < d && d < 0) return "-0" + (-1*d).toString();
 		    return d.toString();
 		}
+		
+		// submit text with 'enter' but not on shift+enter
+		$("#send_text").keypress(function (e) {
+		    if(e.which == 13 && !e.shiftKey) {        
+		        $(this).closest("form").submit();
+		        e.preventDefault();
+		        return false;
+		    }
+		});	
+		
+		//update active_conv in real time every 2 secs:
+		window.setInterval(function(){
+			// find latest away message on the (ONE) active conversation
+			var latest_timestamp = $(".active_conv .away_timestamp").last().text();
+			// Parse the id of active_conv to get the conversation's other professional id
+			var other_prof_id = $('.active_conv').attr('id').substring(12);   // TODO: make this more versatile?
+			// use ajax to update it with new messages - if they exist
+			$.ajax({
+				url: "/TEDProject/AJAXServlet?action=checkForNewMessages",
+				type: "post",
+				data: { latestGot: latest_timestamp,
+						homeprof: <%= prof.getID() %>,
+						awayprof: other_prof_id,
+		              },
+				success: function(response){            // on success we append any new (away) messages to the conversation
+					$(".active_conv").append(response);
+					// alternatively use: $(".conversation" + other_prof_id)
+					updateScroll();
+				}
+			});
+		}, 2000);		
 	</script>
 </body>
 </html>

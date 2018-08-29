@@ -722,6 +722,38 @@ public class DataBaseBridge {
 		}
 		return M;
 	}
+
+	public List<Message> getNewAwayMessagesAfter(String latestGot, int homeprof, int awayprof){
+		if (!connected) return null;
+		List<Message> M = null;
+		String Query = "SELECT text, timeSent, containsFiles "
+				     + "FROM Messages "
+				     + "WHERE ((idProfessional1 = ? AND idProfessional2 = ?) OR (idProfessional1 = ? AND idProfessional2 = ?)) "
+				     +        "AND idSentByProf = ? AND timeSent > ? "
+				     + "ORDER BY timeSent;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, homeprof);
+			statement.setInt(2, awayprof);
+			statement.setInt(3, awayprof);
+			statement.setInt(4, homeprof);
+			statement.setInt(5, awayprof);      // sent by awayprof
+			statement.setString(6, latestGot);  // after latestGot datetime
+			ResultSet resultSet = statement.executeQuery();
+			M = new ArrayList<Message>();
+			while (resultSet.next()) {
+				Message newmsg = new Message();
+				newmsg.setText(resultSet.getString("text"));
+				newmsg.setTimeSent(resultSet.getString("timeSent"));
+				newmsg.setContainsFiles(resultSet.getBoolean("containsFiles"));
+				M.add(newmsg);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return M;
+	}
 	
 	public int existsConversationBetween(int sentById, int sentToId) {
 		if (!connected) return -1;

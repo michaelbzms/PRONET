@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, model.DataBaseBridge, model.Message" %>
+<!-- This JSP is loaded very often (ex every 2 secs) -->
 
-
-<% 	String homeprofIDstr = request.getParameter("homeprof");
+<%	String latestGot = request.getParameter("latestGot");
+	String homeprofIDstr = request.getParameter("homeprof");
 	String awayprofIDstr = request.getParameter("awayprof");
-	if ( homeprofIDstr == null || awayprofIDstr == null ) {   // should not happen (checked by AJAXServlet)
+	if ( latestGot == null || homeprofIDstr == null || awayprofIDstr == null ) {   // should not happen (checked by AJAXServlet)
 		return;
 	} else {
 		int homeprofID, awayprofID;
@@ -16,18 +17,16 @@
 			<p>Error: the ID of one of the professionals appears to not be a number.</p>
 	<%   	return;
 		}
-		DataBaseBridge db = new DataBaseBridge();
-		List<Message> messages = db.getMessagesForConvo(homeprofID, awayprofID);
+		DataBaseBridge db = new DataBaseBridge();            // TODO making a new connection every 2 secs is very expensive: CHANGE CONNECTIONS OF DATABASEBRIDGE TO STATIC
+		List<Message> messages = db.getNewAwayMessagesAfter(latestGot, homeprofID, awayprofID);
 		if ( messages == null ) { %>
 			<p>Error: DataBase down</p>
 	<%	} else {
 			for ( Message msg : messages ) { %>
-				<span <% if ( msg.getSentByProfID() == homeprofID )  { %> class="home_timestamp" 
-				   	  <% } else if (  msg.getSentByProfID() == awayprofID ) { %> class="away_timestamp" <% } %>>
+				<span class="away_timestamp">
 					<%= msg.getTimeSent() /* (!) Important: dont change timestamp format presented */ %>
 				</span>
-				<p <% if ( msg.getSentByProfID() == homeprofID )  { %> class="home_message" 
-				   <% } else if (  msg.getSentByProfID() == awayprofID ) { %> class="away_message" <% } %>> 
+				<p class="away_message"> 
 					<% 	if (msg.getText() != null) { %>
 							<%= msg.getText() %><br>
 					<% 	} 
@@ -40,3 +39,5 @@
 		}
 		db.close(); 
 	} %>
+
+
