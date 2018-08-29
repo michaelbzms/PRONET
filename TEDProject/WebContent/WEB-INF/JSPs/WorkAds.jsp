@@ -90,7 +90,7 @@
 				<br>
 				<div>
 					<div class="justify-content-between">
-						<h2>My Work Ads <a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right">Create New</a></h2>
+						<h2>My Work Ads <a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right" style="border-bottom: 10px">Create New</a></h2>
 					</div>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> myWorkAds = db.getWorkAds(prof.getID(), 0);

@@ -30,9 +30,9 @@ public class WorkAdManagementServlet extends HttpServlet {
 			return;
 		}
 		int profID = (int) request.getSession(false).getAttribute("ProfID");
-		int workAdID = -1;
+		int adID = -1;
 		if (workdAdIDstr != null) {
-			workAdID = Integer.parseInt(workdAdIDstr);
+			adID = Integer.parseInt(workdAdIDstr);
 		}
 		int result;
 		String title, description;
@@ -53,19 +53,22 @@ public class WorkAdManagementServlet extends HttpServlet {
 				if ( description.isEmpty() ) {
 					result = -2;
 				} else {
-					result = SiteFunctionality.updateWorkAd(workAdID, profID, description);
+					result = SiteFunctionality.updateWorkAd(adID, profID, description);
 				}
 				break;
 			case "delete":
-				result = SiteFunctionality.removeWorkAd(workAdID, profID);
+				result = SiteFunctionality.removeWorkAd(adID, profID);
 				break;
 			case "apply":
 				description = request.getParameter("applyNote");
 				if ( description.isEmpty() ) {
 					result = -2;
 				} else {
-					result = SiteFunctionality.applyToWorkAd(workAdID, profID, description);
+					result = SiteFunctionality.applyToWorkAd(adID, profID, description);
 				}
+				break;
+			case "cancel":
+				result = SiteFunctionality.removeApplication(profID, adID);
 				break;
 			default:	
 				request.setAttribute("errorType", "invalidPageRequest");

@@ -23,15 +23,15 @@
 		   if (ad == null) { %>
 		   		<h2 class="my_h2">INVALID WORK AD REQUEST</h2>
 				<p>Requested work ad does not exist.</p>
-		<% } else { 
+		<% } else {
 			HttpSession currentSession = request.getSession(false);
 			int profID;
-			if (request.getSession(false) != null) {
+			if (request.getSession(false) != null && currentSession.getAttribute("ProfID") != null) {
 				profID = (int) currentSession.getAttribute("ProfID");
 			} else {
 				profID = -1;
 			}
-			boolean isAdmin = ( currentSession != null && ((boolean) currentSession.getAttribute("isAdmin")) );
+			boolean isAdmin = ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
 			// Navbar only for professionals
 			if (profID > -1 && !isAdmin) { %>
 				<nav class="navbar navbar-expand-xl bg-light justify-content-center">
@@ -77,28 +77,37 @@
 				<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
 			<% } else if (profID == ad.getPublishedByID()) {	%>
 
-			<% } else if (profID > -1) {		// current prof can apply	%>
-				<div class="buttonContainer" style="text-align: center">
-					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Apply</button>
-				</div>
-				<div class="collapse" id="collapseEditor">		
-					<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
-				   		<textarea id="applyNote" name="applyNote"></textarea>
-					   	<div class="buttonContainer" style="text-align: right">
-							<input type="submit" value="Submit" class="btn btn-primary">
-							<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
-						</div>
-				   	</form>
-				</div>
-			<% } 
+			<% } else if (profID > -1) {	
+				if (! db.pendingWorkAdApplication(profID, ad.getID())) {		// current prof can apply		%>
+					<div class="buttonContainer">
+						<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Open Application Form</button>
+					</div>
+					<div class="collapse" id="collapseEditor">		
+						<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
+					   		<textarea id="applyNote" name="applyNote"></textarea>
+						   	<div class="buttonContainer" style="text-align: right">
+								<input type="submit" value="Submit" class="btn btn-primary">
+								<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
+							</div>
+					   	</form>
+					</div>
+				<% } else { 	// current prof has already applied		%>
+					<div class="buttonContainer">	
+						<small class="text-secondary">You have already applied for this ad</small><br>
+						<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= ad.getID() %>" class="btn btn-outline-danger">Cancel Application</a>
+					</div>
+				<% }
+			   } 
 		   } 
 		   db.close(); %>
 	</div>
-	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-	<script>
-		var adDescription = document.getElementById("adDescription");
-		if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
-		var applyNoteSMDE = new SimpleMDE({ element: document.getElementById("applyNote"), showIcons: ["code", "table"] });
-	</script>
+	<% if (ad != null) { %>
+		<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+		<script>
+			var adDescription = document.getElementById("adDescription");
+			if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
+			var applyNoteSMDE = new SimpleMDE({ element: document.getElementById("applyNote"), showIcons: ["code", "table"] });
+		</script>
+	<% } %>
 </body>
 </html>

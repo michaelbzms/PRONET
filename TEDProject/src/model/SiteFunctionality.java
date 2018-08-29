@@ -323,4 +323,19 @@ public class SiteFunctionality {
 		return 0;
 	}
 	
+	public static int removeApplication(int profID, int adID) {
+		DataBaseBridge dbg = new DataBaseBridge();              // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( dbg.deleteApplication(profID, adID) ) {		// Successful update
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -1;
+		}
+	}
+	
 }

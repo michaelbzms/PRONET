@@ -25,7 +25,7 @@
 		<% } else { 
 			HttpSession currentSession = request.getSession(false);
 			int sessionProfID;
-			if (request.getSession(false) != null) {
+			if (request.getSession(false) != null && currentSession.getAttribute("ProfID") != null) {
 				sessionProfID = (int) currentSession.getAttribute("ProfID");
 			} else {
 				sessionProfID = -1;

@@ -806,6 +806,36 @@ public class DataBaseBridge {
 		return true;
 	}
 	
+	public boolean pendingWorkAdApplication(int profID, int adID) {
+		if (!connected) return false;
+		String Query = "SELECT * FROM Applications WHERE idAd = ? and idApplicant = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, adID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			return resultSet.next();            // false if empty set, true otherwise
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean deleteApplication(int profID, int adID) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM Applications WHERE idAd = ? and idApplicant = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, adID);
+			statement.setInt(2, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 }
 
 

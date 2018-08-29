@@ -38,7 +38,7 @@ public class AdminAuthenticationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession(false);
         //String uri = req.getRequestURI();
-        if ( session == null ) {   
+        if ( session == null || session.getAttribute("ProfID") == null || session.getAttribute("isAdmin") == null ) {   
             this.context.log("Unauthorized access request - no active session.");
     		request.setAttribute("errorType", "nullSession");
     		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
