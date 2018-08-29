@@ -722,7 +722,7 @@ public class DataBaseBridge {
 		}
 		return M;
 	}
-
+	
 	public List<Message> getNewAwayMessagesAfter(String latestGot, int homeprof, int awayprof){
 		if (!connected) return null;
 		List<Message> M = null;
@@ -866,6 +866,56 @@ public class DataBaseBridge {
 			return false;
 		}
 		return true;
+	}
+	
+	public List<Application> getApplications(int ID, boolean mode) {		// mode = true for ad's applications, false for prof's applications 
+		if (!connected) return null;
+		List<Application> applications = null;
+		String Query;
+		if (mode) {
+			Query = "SELECT * FROM Applications WHERE idAd = ? ORDER BY applyDate;";
+		} else {
+			Query = "SELECT * FROM Applications WHERE idApplicant = ? ORDER BY applyDate;";
+		}
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			applications = new ArrayList<Application>();
+			java.util.Calendar cal = Calendar.getInstance();
+			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+			while (resultSet.next()) {
+				Application apl = new Application();
+				apl.setID(resultSet.getInt("idApplication"));
+				apl.setAdID(resultSet.getInt("idAd"));
+				apl.setProfID(resultSet.getInt("idApplicant"));
+				apl.setApplyDate(resultSet.getTimestamp("applyDate", cal).toLocalDateTime());
+				apl.setNote(resultSet.getString("note"));
+				applications.add(apl);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return applications;
+	}
+	
+	public String getWorkAdTitle(int adID) {
+		if (!connected) return null;
+		String Query = "SELECT title FROM Ads WHERE idAd = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, adID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				return resultSet.getString("title");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

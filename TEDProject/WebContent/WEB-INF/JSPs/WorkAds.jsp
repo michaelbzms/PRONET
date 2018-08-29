@@ -5,24 +5,26 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - WorkAds</title>
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd, model.MyUtil" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/workads.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge();
 		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
 		if ( !db.checkIfConnected() ) { %>
-			<h2>DATABASE ERROR</h2>	
+			<h2 class="my_h2">DATABASE ERROR</h2>	
 			<p>It appears that our database is down. Please contact the site's administrators.</p>
 	<%	} else if ( prof == null ) {  %>
-			<h2>INTERNAL ERROR</h2>	
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
 			<div class="main_container">
@@ -49,7 +51,7 @@
 				</nav>
 			
 				<div>
-					<h2>Work Ads from Connected Professionals</h2>
+					<h2 class="my_h2">Work Ads from Connected Professionals</h2>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> connectedWorkAds = db.getWorkAds(prof.getID(), 1);
 						if (connectedWorkAds != null && !connectedWorkAds.isEmpty()) { 
@@ -69,7 +71,7 @@
 				</div>
 				<br>
 				<div>
-					<h2>Work Ads from Others</h2>
+					<h2 class="my_h2">Work Ads from Others</h2>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> otherWorkAds = db.getWorkAds(prof.getID(), 2);
 						if (otherWorkAds != null && !otherWorkAds.isEmpty()) { 
@@ -83,14 +85,14 @@
 							  	</a>
 						<%	} %>
 					<%  } else {  %>
-							<p>There are no Work Ads from other Professionals.</p>
+							<p>No Professionals have applied to this Work Ad yet.</p>
 					<%  } %>
 				 	</div>
 				</div>
 				<br>
 				<div>
 					<div class="justify-content-between">
-						<h2>My Work Ads <a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right" style="border-bottom: 10px">Create New</a></h2>
+						<h2 class="my_h2">My Work Ads <a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right" style="border-bottom: 10px">Create New</a></h2>
 					</div>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> myWorkAds = db.getWorkAds(prof.getID(), 0);
@@ -108,8 +110,38 @@
 					<%  } %>
 				 	</div>
 				</div>
+				<br>
+				<div>
+					<h2 class="my_h2">My Applications</h2>
+					<div class="list-group">
+					<%  List<Application> applications = db.getApplications(prof.getID(), false);
+						if (applications != null && !applications.isEmpty()) { 
+						   int count = 0;
+						   for (Application apl : applications) { %>
+								<div class="apl_accordion">
+									<div class="d-flex w-100 justify-content-between">
+										<object><a href="/TEDProject/WorkAdLink?AdID=<%= apl.getAdID() %>"><%= db.getWorkAdTitle(apl.getAdID()) %></a></object>
+								  		<small><%= MyUtil.getTimeAgo(apl.getApplyDate()) %></small>
+							  		</div>
+								</div>
+								<div class="apl_panel">
+									<br>
+									<p id="aplNote<%= count %>"><%= apl.getNote() %></p>
+								</div>
+								<script>
+									var aplNote = document.getElementById("aplNote" + <%= count %>);
+									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);
+							  	</script>
+							<% count++;		
+						  	} %>
+					<%  } else {  %>
+							<p>You haven't applied to any Work Ads.</p>
+					<%  } %>
+				 	</div>
+				</div>
 			</div>
 	<% 	}
 		db.close(); %>
+	<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
 </body>
 </html>

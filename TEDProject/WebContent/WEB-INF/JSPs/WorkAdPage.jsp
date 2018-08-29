@@ -5,15 +5,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.MyUtil" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -75,8 +77,35 @@
 		  	<br>
 			<% if (isAdmin) { %>
 				<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
-			<% } else if (profID == ad.getPublishedByID()) {	%>
-
+			<% } else if (profID == ad.getPublishedByID()) {	// ad belongs to current prof; show its applications	%>
+				<div>
+					<h2 class="my_h2">Applications made to this Work Ad</h2>
+					<div class="list-group">
+					<%  List<Application> applications = db.getApplications(ad.getID(), true);
+						if (applications != null && !applications.isEmpty()) { 
+						   int count = 0;
+						   for (Application apl : applications) { %>
+								<div class="apl_accordion">
+									<div class="d-flex w-100 justify-content-between">
+										<object><a href="/TEDProject/ProfileLink?ProfID=<%= apl.getProfID() %>"><%= db.getProfessionalFullName(apl.getProfID()) %></a></object>
+								  		<small><%= MyUtil.printDate(apl.getApplyDate(), true) %></small>
+							  		</div>
+								</div>
+								<div class="apl_panel">
+									<br>
+									<p id="aplNote<%= count %>"><%= apl.getNote() %></p>
+								</div>
+								<script>
+									var aplNote = document.getElementById("aplNote" + <%= count %>);
+									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);
+							  	</script>
+							<% count++;		
+						  	} %>
+					<%  } else {  %>
+							<p>There are no Work Ads from other Professionals.</p>
+					<%  } %>
+				 	</div>
+				</div>
 			<% } else if (profID > -1) {	
 				if (! db.pendingWorkAdApplication(profID, ad.getID())) {		// current prof can apply		%>
 					<div class="buttonContainer">
@@ -85,7 +114,7 @@
 					<div class="collapse" id="collapseEditor">		
 						<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
 					   		<textarea id="applyNote" name="applyNote"></textarea>
-						   	<div class="buttonContainer" style="text-align: right">
+						   	<div class="buttonContainer text-right">
 								<input type="submit" value="Submit" class="btn btn-primary">
 								<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
 							</div>
@@ -93,7 +122,7 @@
 					</div>
 				<% } else { 	// current prof has already applied		%>
 					<div class="buttonContainer">	
-						<small class="text-secondary">You have already applied for this ad</small><br>
+						<small class="text-secondary">You have already applied for this Work Ad</small><br>
 						<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= ad.getID() %>" class="btn btn-outline-danger">Cancel Application</a>
 					</div>
 				<% }
@@ -102,12 +131,12 @@
 		   db.close(); %>
 	</div>
 	<% if (ad != null) { %>
-		<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 		<script>
 			var adDescription = document.getElementById("adDescription");
 			if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
 			var applyNoteSMDE = new SimpleMDE({ element: document.getElementById("applyNote"), showIcons: ["code", "table"] });
 		</script>
 	<% } %>
+	<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
 </body>
 </html>

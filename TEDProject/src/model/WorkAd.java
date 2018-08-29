@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 public class WorkAd {
 	
 	/* Characteristics */
-	private int ID = -1;          // its database ID
+	private int ID = -1;
 	private int publishedByID = -1;
 	private String title = null, description = null;
-	private LocalDateTime postedDate;
+	private LocalDateTime postedDate = null;
 	
 	/* Setters & Getters*/
 	public int getID() {
 		return ID;
 	}
 	public void setID(int iD) {
-		ID = iD;
+		this.ID = iD;
 	}
 	
 	public int getPublishedByID() {
