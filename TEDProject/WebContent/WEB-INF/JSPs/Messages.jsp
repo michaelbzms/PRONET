@@ -214,7 +214,7 @@
 		    }
 		});	
 		
-		//update active_conv in real time every 2 secs:
+		//update active_conv (ONLY the active conversation) in real time every 2 secs:
 		window.setInterval(function(){
 			// find latest away message on the (ONE) active conversation
 			var latest_timestamp = $(".active_conv .away_timestamp").last().text();
@@ -234,7 +234,10 @@
 					updateScroll();
 				}
 			});
-		}, 2000);		
+		}, 2000);
+		
+		// TODO: add script to reorder chat conversation list according to possibly changed 'lastSent'
+		// have to do it on repeat because another professional could text 'us'at any time
 	</script>
 </body>
 </html>

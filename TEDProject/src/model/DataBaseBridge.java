@@ -331,7 +331,7 @@ public class DataBaseBridge {
 		List<Professional> P = new ArrayList<Professional>();
 		String Query = "SELECT idProfessional, firstName, lastName, profilePictureURI, employmentStatus, employmentInstitution "
 				     + "FROM Professionals "
-				     + "WHERE (firstName LIKE ?) or (lastName LIKE ?)";
+				     + "WHERE (firstName LIKE ?) or (lastName LIKE ?);";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			for (String word : searchString.split(" ")) {
@@ -857,6 +857,7 @@ public class DataBaseBridge {
 		}
 		return true;
 	}
+
 	
 	public boolean pendingWorkAdApplication(int profID, int adID) {
 		if (!connected) return false;
