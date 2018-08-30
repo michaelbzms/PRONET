@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
-	<%@ page import="model.Professional, model.DataBaseBridge" %>
+	<%@ page import="model.Professional, model.DataBaseBridge, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
@@ -79,6 +79,7 @@
 					<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
 							<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
 					<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
+							<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></small><br>
 							<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
 							<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
 					<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>

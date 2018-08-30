@@ -24,9 +24,13 @@ public class DataBaseBridge {
 	final private String DBPassword = "MYUSERSQL";
 	private Connection connection;
 	private boolean connected;
+	private Calendar cal;
+	
 	
 	public DataBaseBridge() {
 		connected = true;
+		cal = Calendar.getInstance();
+		cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(database_url, DBUser, DBPassword);
@@ -57,8 +61,8 @@ public class DataBaseBridge {
 	/* DataBaseBridge services: (using prepared statements in order to be safe from SQL Injection) */
 	public boolean registerNewProfessional(String email, String password, String firstName, String lastName, String phone, String profilePicFilePath) {
 		if (!connected) return false;
-		String registerInsert = "INSERT INTO Professionals (idProfessional, email, password, firstName, lastName, phoneNumber, profilePictureURI, employmentStatus, employmentInstitution,professionalExperience, educationBackground, skills, professionalExperienceVisibility, educationBackgroundVisibility, skillsVisibility) "
-				              + " VALUES (default, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, default, default, default); ";
+		String registerInsert = "INSERT INTO Professionals (idProfessional, email, password, firstName, lastName, phoneNumber, profilePictureURI, employmentStatus, employmentInstitution,professionalExperience, educationBackground, skills, professionalExperienceVisibility, educationBackgroundVisibility, skillsVisibility, registrationDate) "
+				              + " VALUES (default, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, default, default, default, ?); ";
 		try {
 			PreparedStatement statement = connection.prepareStatement(registerInsert);
 			statement.setString(1, email);
@@ -67,6 +71,7 @@ public class DataBaseBridge {
 			statement.setString(4, lastName);
 			statement.setString(5, phone);
 			statement.setString(6, profilePicFilePath);
+			statement.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -370,11 +375,12 @@ public class DataBaseBridge {
 	
 	public boolean addConnectedProfessionals(int prof1ID, int prof2ID) {
 		if (!connected) return false;
-		String insertString = "INSERT INTO ConnectedProfessionals (idProfessional1, idProfessional2) VALUES (?, ?)";
+		String insertString = "INSERT INTO ConnectedProfessionals (idProfessional1, idProfessional2, connectionDate) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement statement = connection.prepareStatement(insertString);
 			statement.setInt(1, prof1ID);
 			statement.setInt(2, prof2ID);
+			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -432,11 +438,12 @@ public class DataBaseBridge {
 	
 	public boolean createConnectionRequest(int askerID, int receiverID) {
 		if (!connected) return false;
-		String insertString = "INSERT INTO ConnectionRequests (idAsker, idReceiver) VALUES (?, ?)";
+		String insertString = "INSERT INTO ConnectionRequests (idAsker, idReceiver, requestDate) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement statement = connection.prepareStatement(insertString);
 			statement.setInt(1, askerID);
 			statement.setInt(2, receiverID);
+			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -478,6 +485,25 @@ public class DataBaseBridge {
 		}
 	}
 	
+	public LocalDateTime getConnectionRequestDate(int askerID, int receiverID) {
+		if (!connected) return null;
+		String Query = "SELECT requestDate FROM ConnectionRequests WHERE idAsker = ? and idReceiver = ?";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, askerID);
+			statement.setInt(2, receiverID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				return resultSet.getTimestamp("requestDate", cal).toLocalDateTime();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public List<Professional> getProfsMessagingWith(int profID) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
@@ -510,7 +536,6 @@ public class DataBaseBridge {
 	
 	public String getProfessionalFullName(int ID) {
 		if (!connected) return null;
-		String profFullName = null;
 		String Query = "SELECT firstName, lastName FROM Professionals WHERE idProfessional = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
@@ -519,13 +544,12 @@ public class DataBaseBridge {
 			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
 				return null;
 			} else {
-				profFullName = resultSet.getString("firstName") + " " + resultSet.getString("lastName");
+				return resultSet.getString("firstName") + " " + resultSet.getString("lastName");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return profFullName;
 	}
 
 	public List<WorkAd> getWorkAds(int profID, int mode) {		// mode: 0 for own ads, 1 for ads from connected profs, 2 from others
@@ -535,15 +559,15 @@ public class DataBaseBridge {
 		if (mode == 0) {
 			Query = "SELECT idAd, idPublishedBy, title, postedDate FROM Ads WHERE idPublishedBy = ?;";
 		} else if (mode == 1) {
-			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, Professionals p, ConnectedProfessionals cp "
-				  + "WHERE a.idPublishedBy != ? AND a.idPublishedBy = p.idProfessional AND "
-				  + "((cp.idProfessional1 = p.idProfessional AND cp.idProfessional2 = ?) OR "
-				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = p.idProfessional));";
+			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, ConnectedProfessionals cp "
+				  + "WHERE a.idPublishedBy != ? AND "
+				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
+				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy));";
 		} else {
-			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, Professionals p, ConnectedProfessionals cp "
-				  + "WHERE a.idPublishedBy != ? AND a.idPublishedBy = p.idProfessional AND "
-				  + "NOT((cp.idProfessional1 = p.idProfessional AND cp.idProfessional2 = ?) OR "
-				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = p.idProfessional));";
+			Query = "SELECT idAd, idPublishedBy, title, postedDate FROM Ads WHERE idPublishedBy != ? AND idAd NOT IN "
+				  + "(SELECT a.idAd FROM Ads a, ConnectedProfessionals cp WHERE "
+				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
+				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy)));";
 		}
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
@@ -554,8 +578,6 @@ public class DataBaseBridge {
 			}
 			ResultSet resultSet = statement.executeQuery();
 			ads = new ArrayList<WorkAd>();
-			java.util.Calendar cal = Calendar.getInstance();
-			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 			while (resultSet.next()) {
 				WorkAd ad = new WorkAd();
 				ad.setID(resultSet.getInt("idAd"));
@@ -586,8 +608,6 @@ public class DataBaseBridge {
 				ad.setID(resultSet.getInt("idAd"));
 				ad.setPublishedByID(resultSet.getInt("idPublishedBy"));
 				ad.setTitle(resultSet.getString("title"));
-				java.util.Calendar cal = Calendar.getInstance();
-				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 				ad.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
 				ad.setDescription(resultSet.getString("description"));
 			}
@@ -882,8 +902,6 @@ public class DataBaseBridge {
 			statement.setInt(1, ID);
 			ResultSet resultSet = statement.executeQuery();
 			applications = new ArrayList<Application>();
-			java.util.Calendar cal = Calendar.getInstance();
-			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 			while (resultSet.next()) {
 				Application apl = new Application();
 				apl.setID(resultSet.getInt("idApplication"));

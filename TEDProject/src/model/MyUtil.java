@@ -22,6 +22,9 @@ public final class MyUtil {
 	}
 	
 	public static String getTimeAgo(LocalDateTime date) {		// TODO: remove (s)
+		if (date == null) { 
+			return "null ago";
+		}
 		long secAgo = ChronoUnit.SECONDS.between(date, LocalDateTime.now(ZoneOffset.UTC));
 		if (secAgo < 0) {
 			System.out.println("Either someone invented time travel or we messed up with timezones.");
