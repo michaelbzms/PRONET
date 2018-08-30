@@ -80,21 +80,24 @@
 			<% } else if (profID == ad.getPublishedByID()) {	// ad belongs to current prof; show its applications	%>
 				<div>
 					<h2 class="my_h2">Applications made to this Work Ad</h2>
-					<div class="list-group">
+				 	<div class="list-group">
 					<%  List<Application> applications = db.getApplications(ad.getID(), true);
 						if (applications != null && !applications.isEmpty()) { 
-						   int count = 0;
+						   int count = 1;
 						   for (Application apl : applications) { %>
-								<div class="apl_accordion">
-									<div class="d-flex w-100 justify-content-between">
-										<object><a href="/TEDProject/ProfileLink?ProfID=<%= apl.getProfID() %>"><%= db.getProfessionalFullName(apl.getProfID()) %></a></object>
-								  		<small><%= MyUtil.printDate(apl.getApplyDate(), true) %></small>
+								<div class="list-group-item list-group-item-action flex-column align-items-start apl_accordion">
+									<div class="d-flex w-100 apl_arrow">
+										<div class="d-flex w-100 justify-content-between">
+											<object><a href="/TEDProject/ProfileLink?ProfID=<%= apl.getProfID() %>"><%= db.getProfessionalFullName(apl.getProfID()) %></a></object>
+								  			<small><%= MyUtil.printDate(apl.getApplyDate(), true) %></small>
+								  		</div>
 							  		</div>
 								</div>
 								<div class="apl_panel">
 									<br>
 									<p id="aplNote<%= count %>"><%= apl.getNote() %></p>
 								</div>
+								<span id="aplFocusPoint<%= count %>"></span>
 								<script>
 									var aplNote = document.getElementById("aplNote" + <%= count %>);
 									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);
@@ -102,28 +105,31 @@
 							<% count++;		
 						  	} %>
 					<%  } else {  %>
-							<p>There are no Work Ads from other Professionals.</p>
+							<p>No applications have been made to this Work Ad.</p>
 					<%  } %>
 				 	</div>
 				</div>
 			<% } else if (profID > -1) {	
 				if (! db.pendingWorkAdApplication(profID, ad.getID())) {		// current prof can apply		%>
 					<div class="buttonContainer">
-						<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Open Application Form</button>
+						<button id="focusButton" class="btn btn-primary" type="button" onclick="$('#focusPoint').scrollTo(1000)" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Open Application Form</button>
 					</div>
 					<div class="collapse" id="collapseEditor">		
 						<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
-					   		<textarea id="applyNote" name="applyNote"></textarea>
+					   		<textarea id="applyNote" name="applyNote" autofocus></textarea>
 						   	<div class="buttonContainer text-right">
 								<input type="submit" value="Submit" class="btn btn-primary">
 								<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
 							</div>
 					   	</form>
 					</div>
+					<span id="focusPoint"></span>
 				<% } else { 	// current prof has already applied		%>
 					<div class="buttonContainer">	
 						<small class="text-secondary">You have already applied for this Work Ad</small><br>
-						<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= ad.getID() %>" class="btn btn-outline-danger">Cancel Application</a>
+						<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= ad.getID() %>" class="btn btn-outline-danger" 
+							onclick="return confirm('Are you sure you want to cancel your application to &quot;<%= ad.getTitle() %>&quot;?')">
+							Cancel Application</a>
 					</div>
 				<% }
 			   } 
@@ -138,5 +144,18 @@
 		</script>
 	<% } %>
 	<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
+	<script>
+		scrollingElement = (document.scrollingElement || document.body);
+		function scrollSmoothToBottom() {
+		   $(scrollingElement).animate({
+		      scrollTop: document.body.scrollHeight
+		   }, 1000);
+		}
+		$.fn.scrollTo = function(speed) {
+		    $('html, body').animate({
+		        scrollTop: parseInt($(this).offset().top)
+		    }, speed);
+		};
+	</script>
 </body>
 </html>

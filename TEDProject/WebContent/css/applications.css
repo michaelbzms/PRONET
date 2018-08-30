@@ -6,30 +6,23 @@
 }
 
 .apl_accordion {
-	background-color: #eee;
-    color: #444;
-    cursor: pointer;
-    padding: 20px;
-    width: 100%;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-    transition: 0.4s;
+	cursor: pointer;
 }
 
-.apl_active, .apl_accordion:hover {
-    background-color: #ccc;
+.apl_accordion_color {
+	background-color: #efefef !important;
 }
 
-.apl_accordion:after {
-    content: '+';
+.apl_arrow:before {
+    content: '\002B';
     color: #777;
     font-weight: bold;
     float: left;
+    margin-right: 15px;
 }
 
-.apl_active:after {
-    content: "-";	
+.apl_active:before {
+    content: '\2212';
 }
 
 .apl_panel {

@@ -4,3 +4,10 @@
  	overflow-y: auto;
     max-height: 500px;
 }
+
+.timeAgo_block {
+	display: inline-block;
+	width: 130px;
+	text-align: right;
+	vertical-align: top;
+}

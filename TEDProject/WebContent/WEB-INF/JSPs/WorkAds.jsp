@@ -116,18 +116,31 @@
 					<div class="list-group">
 					<%  List<Application> applications = db.getApplications(prof.getID(), false);
 						if (applications != null && !applications.isEmpty()) { 
-						   int count = 0;
-						   for (Application apl : applications) { %>
-								<div class="apl_accordion">
-									<div class="d-flex w-100 justify-content-between">
-										<object><a href="/TEDProject/WorkAdLink?AdID=<%= apl.getAdID() %>"><%= db.getWorkAdTitle(apl.getAdID()) %></a></object>
-								  		<small><%= MyUtil.getTimeAgo(apl.getApplyDate()) %></small>
-							  		</div>
+						   int count = 1;
+						   WorkAd appliedAd;
+						   for (Application apl : applications) { 
+							   appliedAd = db.getWorkAd(apl.getAdID());	%>
+								<div class="list-group-item list-group-item-action flex-column align-items-start apl_accordion">
+									<div class="d-flex w-100 apl_arrow">
+										<div class="d-flex w-100 justify-content-between">
+											<div>
+												<object><a href="/TEDProject/WorkAdLink?AdID=<%= appliedAd.getID() %>"><%= appliedAd.getTitle() %></a></object><br>
+								  				<small>Published by <object><a href="/TEDProject/ProfileLink?ProfID=<%= appliedAd.getPublishedByID() %>"><%= db.getProfessionalFullName(appliedAd.getPublishedByID()) %></a></object></small>			
+								  			</div>
+								  			<div>
+								  				<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= appliedAd.getID() %>" class="btn btn-outline-danger" 
+										   			onclick="return confirm('Are you sure you want to cancel your application to &quot;<%= appliedAd.getTitle() %>&quot;?')">
+													Cancel Application</a>
+								  				<small class="timeAgo_block"><%= MyUtil.getTimeAgo(apl.getApplyDate()) %></small>
+								  			</div>
+								  		</div>
+								  	</div>
 								</div>
 								<div class="apl_panel">
 									<br>
 									<p id="aplNote<%= count %>"><%= apl.getNote() %></p>
 								</div>
+								<span id="aplFocusPoint<%= count %>"></span>
 								<script>
 									var aplNote = document.getElementById("aplNote" + <%= count %>);
 									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);
@@ -142,6 +155,6 @@
 			</div>
 	<% 	}
 		db.close(); %>
-	<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
+	<script src="/TEDProject/Javascript/apl_accordion.js"></script>   
 </body>
 </html>
