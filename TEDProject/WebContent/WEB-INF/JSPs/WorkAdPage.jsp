@@ -36,27 +36,9 @@
 			boolean isAdmin = ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
 			// Navbar only for professionals
 			if (profID > -1 && !isAdmin) { %>
-				<nav class="navbar navbar-expand-xl bg-light justify-content-center">
-					<div class="container-fluid">
-					    <div class="navbar-header">
-					      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
-					    </div>
-						<ul class="navbar-nav"  role="navigation">
-							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-							<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-							<li class="nav-item"><a class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
-							<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-							<li class="nav-item">
-								<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-									<input class="btn btn-primary" type="submit" value="Logout" >
-								</form>
-							</li>
-						</ul>
-					</div>
-				</nav>
+				<jsp:include page="ProfNavBar.jsp"> 
+					<jsp:param name="activePage" value="WorkAds"/> 
+				</jsp:include>
 		<% } %>
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
 			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
@@ -135,6 +117,7 @@
 			   } 
 		   } 
 		   db.close(); %>
+		   <jsp:include page="/footer.html"></jsp:include>
 	</div>
 	<% if (ad != null) { %>
 		<script>

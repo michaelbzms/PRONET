@@ -23,35 +23,31 @@
 		<p>Could not retrieve your info from our data base. How did you login?</p>
 <% 	} else { %>
 		<div class="main_container">
-			<nav class="navbar navbar-expand-xl bg-light justify-content-center">
-				<div class="container-fluid">
-				    <div class="navbar-header">
-				      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
-				    </div>
-					<ul class="navbar-nav"  role="navigation">
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-						<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-						<li class="nav-item">
-							<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-								<input class="btn btn-primary" type="submit" value="Logout" >
-							</form>
-						</li>
-					</ul>
-				</div>
-			</nav>
+			<jsp:include page="ProfNavBar.jsp"> 
+				<jsp:param name="activePage" value="Network"/> 
+			</jsp:include>
 			<div class="search_bar">
 				<h2>Search for professionals</h2>
-				<form id="AJAXform" action="/TEDProject/AJAXServlet?action=searchProfessional" method="post" class="ajax">
+				<form id="search_form">
 					<label>Find: </label>
 					<input type="text" name="searchString" id="searchString">
 					<input type="submit" value="search">
+					<script>
+						$("#search_form").on("submit", function(){
+							$.ajax({
+								url: "/TEDProject/AJAXServlet?action=searchProfessional",
+								type: "post",
+								data: { searchString : $("#searchString").val() },
+								success: function(response){
+									$("#search_results").html(response);      // print results to search_results div
+								}
+							});
+							
+							return false;
+						});
+					</script>
 				</form>
-				<div id="searchProfessional" class="ajax_target_div">
+				<div id="search_results">
 				</div>
 			</div>
 			<div class="connections_bar">
@@ -82,10 +78,9 @@
 					</ul>
 				</div>
 			</div>
+			<jsp:include page="/footer.html"></jsp:include>
 		</div>
 <%	} 
-	db.close(); %>
-	<!-- JavaScript scripts declaration: -->
-	<script src="/TEDProject/Javascript/AJAX.js"></script>    
+	db.close(); %>  
 </body>
 </html>

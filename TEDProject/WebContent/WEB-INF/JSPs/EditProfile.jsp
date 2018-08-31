@@ -36,27 +36,9 @@
 			<h2>INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
-			<nav class="navbar navbar-expand-xl bg-light justify-content-center">
-				<div class="container-fluid">
-				    <div class="navbar-header">
-				      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
-				    </div>
-					<ul class="navbar-nav"  role="navigation">
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-						<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-						<li class="nav-item">
-							<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-								<input class="btn btn-primary" type="submit" value="Logout" >
-							</form>
-						</li>
-					</ul>
-				</div>
-			</nav>
+			<jsp:include page="ProfNavBar.jsp"> 
+				<jsp:param name="activePage" value="PersonalInformation"/> 
+			</jsp:include>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<br>
 			<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 38px; float: left" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
@@ -90,6 +72,7 @@
 				</div>
 			</form>
 		<% } %>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<script>

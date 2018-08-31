@@ -44,7 +44,7 @@ public class AJAXServlet extends HttpServlet {
 			RequestDispatcher RequetsDispatcherObj;
 			switch(action) {
 				case "searchProfessional":
-					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AJAXSearchResults.jsp");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/SearchResults.jsp");
 					RequetsDispatcherObj.forward(request, response);		
 					break;
 				case "connectionRequest":

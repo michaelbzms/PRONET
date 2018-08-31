@@ -23,27 +23,9 @@
 		<p>Could not retrieve your info from our data base. How did you login?</p>
 <% 	} else { %>
 		<div class="main_container">
-			<nav class="navbar navbar-expand-xl bg-light justify-content-center">
-				<div class="container-fluid">
-				    <div class="navbar-header">
-				      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
-				    </div>
-					<ul class="navbar-nav"  role="navigation">
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-						<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
-						<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-						<li class="nav-item">
-							<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-								<input class="btn btn-primary" type="submit" value="Logout" >
-							</form>
-						</li>
-					</ul>
-				</div>
-			</nav>
+			<jsp:include page="ProfNavBar.jsp"> 
+				<jsp:param name="activePage" value="Notifications"/> 
+			</jsp:include>
 			<div class="connection_requests_bar">
 				<h2>Connection Requests</h2>
 				<% List<Professional> RequestedBy = db.getConnectionRequestsFor(prof.getID()); 
@@ -94,7 +76,7 @@
 				   		Please contact our administrators.</p>
 				<% } %>
 			</div>
-		
+			<jsp:include page="/footer.html"></jsp:include>
 		</div>
 <%	} 
  	db.close(); %>

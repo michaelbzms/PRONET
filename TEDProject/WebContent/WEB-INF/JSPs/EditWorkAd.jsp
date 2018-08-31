@@ -86,6 +86,7 @@
 			</form>
 		<% } 
 			db.close(); %>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<script>

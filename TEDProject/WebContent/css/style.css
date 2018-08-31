@@ -48,6 +48,14 @@ body{
 	margin: 0px 0px 5px 0px;
 }
 
+
+label {
+	display: inline-block;
+	width: 160px;
+	text-align: left;
+	margin-bottom: 3px;
+}
+
 .main_container .form{
 	background-color: #3c74d8;
 	border-radius: 5px;
@@ -69,17 +77,21 @@ body{
 }
 
 
-label {
-	display: inline-block;
-	width: 160px;
-	text-align: left;
-	margin-bottom: 3px;
-}
-
-
 .ProfileOptions{
 	margin: 15px;
 	display: block;
+}
+
+.footer{
+	display: block;
+	margin-top: 30px;
+	padding-top: 10px;
+	color: #007bff;
+	text-align: center;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-top-color: #FFF;
+	box-shadow: 0px -3px 2px -2px #6397ff;
 }
 
 /* add over any bootstrap changes: */

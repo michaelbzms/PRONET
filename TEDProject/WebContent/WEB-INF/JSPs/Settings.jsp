@@ -16,33 +16,16 @@
 </head>
 <body>
 	<div class="main_container">
-		<nav class="navbar navbar-expand-xl bg-light justify-content-center">
-			<div class="container-fluid">
-			    <div class="navbar-header">
-			      <a class="navbar-brand" href="/TEDProject/prof/NavigationServlet?page=HomePage">PRONET</a>
-			    </div>
-				<ul class="navbar-nav"  role="navigation">
-					<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=HomePage">Home Page</a></li>
-					<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Network">Network</a></li>
-					<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=WorkAds">Work Ads</a></li>
-					<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a></li>
-					<li class="nav-item"><a class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a></li>
-					<li class="nav-item"><a class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a></li>
-					<li class="nav-item active"><a id="active_page" class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a></li>
-					<li class="nav-item">
-						<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-							<input class="btn btn-primary" type="submit" value="Logout" >
-						</form>
-					</li>
-				</ul>
-			</div>
-		</nav>
+		<jsp:include page="ProfNavBar.jsp"> 
+			<jsp:param name="activePage" value="Settings"/> 
+		</jsp:include>
 		<div class="buttonContainer" style="padding: 10px; text-align: center; margin: 10px">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change Email</a>
 		</div>
 		<div class="buttonContainer" style="padding: 10px; text-align: center; margin: 10px">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=password" class="btn btn-primary btn-lg">Change Password</a>
 		</div>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 </body>
 </html>
