@@ -73,9 +73,8 @@ public class AJAXServlet extends HttpServlet {
 					String text = request.getParameter("text");
 					String sentByProfStr = request.getParameter("sentBy");
 					String sentToProfStr = request.getParameter("sentTo");
-					String datetime = request.getParameter("timestamp");
 					String containsFilesStr = request.getParameter("containsFiles");
-					if ( text == null || sentByProfStr == null || sentToProfStr == null || datetime == null || containsFilesStr == null) {
+					if ( text == null || sentByProfStr == null || sentToProfStr == null || containsFilesStr == null) {
 						out.write("AJAX add message request reached server with invalid parameters");
 					} else {
 						boolean containsFiles = containsFilesStr.equals("true");
@@ -87,7 +86,7 @@ public class AJAXServlet extends HttpServlet {
 							out.write("AJAX add message request reached server with invalid FORMAT parameters");
 							return;
 						}
-						SiteFunctionality.addMessage(text, sentById, sentToId, datetime, containsFiles);
+						SiteFunctionality.addMessage(text, sentById, sentToId, containsFiles);
 					}
 					break;
 				case "checkForNewMessages":             // this happens really often (ex: every 2 secs)

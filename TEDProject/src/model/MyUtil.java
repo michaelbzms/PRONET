@@ -14,11 +14,21 @@ public final class MyUtil {
 	public static String printDate(LocalDateTime date, boolean withTime) {
 		DateTimeFormatter formatter;
 		if (withTime) {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 		} else {
 			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		}
 		return date.format(formatter);
+	}
+	
+	public static LocalDateTime getLocalDateTimeFromString(String date_str, boolean withTime) {
+		DateTimeFormatter formatter;
+		if (withTime) {
+			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		} else {
+			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		}
+		return LocalDateTime.parse(date_str, formatter);
 	}
 	
 	public static String getTimeAgo(LocalDateTime date) {		// TODO: remove (s)

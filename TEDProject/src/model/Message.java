@@ -1,5 +1,8 @@
 package model;
 
+import java.time.LocalDateTime;
+
+
 public class Message {
 	
 	/* Characteristics */
@@ -7,7 +10,7 @@ public class Message {
 	private int professionalID1 = -1, professionalID2 = -1;
 	private int sentByProfID = -1;
 	private boolean containsFiles = false;
-	String timeSent = null;
+	private LocalDateTime timeSent = null;
 
 	/* Setters & Getters */
 	public void setText(String text) { this.text = text; }
@@ -25,8 +28,8 @@ public class Message {
 	public boolean getContainsFiles() { return containsFiles; }
 	public void setContainsFiles(boolean containsFiles) { this.containsFiles = containsFiles; }
 	
-	public String getTimeSent() { return timeSent; }
-	public void setTimeSent(String timeSent) { this.timeSent = timeSent; }
+	public LocalDateTime getTimeSent() { return timeSent; }
+	public void setTimeSent(LocalDateTime timeSent) { this.timeSent = timeSent; }
 	
 	/* Methods */
 	public Message() {

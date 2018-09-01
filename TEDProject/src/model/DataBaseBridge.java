@@ -732,7 +732,7 @@ public class DataBaseBridge {
 				Message newmsg = new Message();
 				newmsg.setText(resultSet.getString("text"));
 				newmsg.setSentByProfID(resultSet.getInt("idSentByProf"));
-				newmsg.setTimeSent(resultSet.getString("timeSent"));
+				newmsg.setTimeSent(resultSet.getTimestamp("timeSent", cal).toLocalDateTime());
 				newmsg.setContainsFiles(resultSet.getBoolean("containsFiles"));
 				M.add(newmsg);
 			}
@@ -743,13 +743,13 @@ public class DataBaseBridge {
 		return M;
 	}
 	
-	public List<Message> getNewAwayMessagesAfter(String latestGot, int homeprof, int awayprof){
+	public List<Message> getNewAwayMessagesAfter(LocalDateTime latestGot, int homeprof, int awayprof){
 		if (!connected) return null;
 		List<Message> M = null;
 		String Query = "SELECT text, timeSent, containsFiles "
 				     + "FROM Messages "
 				     + "WHERE ((idProfessional1 = ? AND idProfessional2 = ?) OR (idProfessional1 = ? AND idProfessional2 = ?)) "
-				     +        "AND idSentByProf = ? AND timeSent > ? "
+				     +        "AND idSentByProf = ? " +  ( (latestGot != null) ? "AND timeSent > ? " : "")
 				     + "ORDER BY timeSent;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
@@ -758,13 +758,15 @@ public class DataBaseBridge {
 			statement.setInt(3, awayprof);
 			statement.setInt(4, homeprof);
 			statement.setInt(5, awayprof);      // sent by awayprof
-			statement.setString(6, latestGot);  // after latestGot datetime
+			if (latestGot != null) {
+				statement.setTimestamp(6, Timestamp.valueOf(latestGot));  // after latestGot datetime
+			}
 			ResultSet resultSet = statement.executeQuery();
 			M = new ArrayList<Message>();
 			while (resultSet.next()) {
 				Message newmsg = new Message();
 				newmsg.setText(resultSet.getString("text"));
-				newmsg.setTimeSent(resultSet.getString("timeSent"));
+				newmsg.setTimeSent(resultSet.getTimestamp("timeSent", cal).toLocalDateTime());
 				newmsg.setContainsFiles(resultSet.getBoolean("containsFiles"));
 				M.add(newmsg);
 			}
@@ -802,7 +804,7 @@ public class DataBaseBridge {
 		}
 	}
 
-	public boolean createConversationInOrder(int sentById, int sentToId, String datetime) {
+	public boolean createConversationInOrder(int sentById, int sentToId) {
 		if (!connected) return false;
 		String Insert = "INSERT INTO Conversations (`idProfessional1`, `idProfessional2`, `lastMessageSent`) "
 					  + "VALUES (?, ?, ?);";
@@ -810,7 +812,7 @@ public class DataBaseBridge {
 			PreparedStatement statement = connection.prepareStatement(Insert);
 			statement.setInt(1, sentById);
 			statement.setInt(2, sentToId);
-			statement.setString(3, datetime);
+			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -819,7 +821,7 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public boolean addMessageToConversationInOrder(int firstId, int secondID, int sentById, String text, String datetime, boolean containsFiles) {
+	public boolean addMessageToConversationInOrder(int firstId, int secondID, int sentById, String text, boolean containsFiles) {
 		if (!connected) return false;
 		String Insert = "INSERT INTO Messages (`idMessage`, `idProfessional1`, `idProfessional2`, `idSentByProf`, `text`, `timeSent`, `containsFiles`) "
 					  + "VALUES (default, ?, ?, ?, ?, ?, ?);";
@@ -829,7 +831,7 @@ public class DataBaseBridge {
 			statement.setInt(2, secondID);
 			statement.setInt(3, sentById);
 			statement.setString(4, text);
-			statement.setString(5, datetime);
+			statement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.setBoolean(6, containsFiles);
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -839,13 +841,13 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public boolean updateLastSentToConversation(int sentById, int sentToId, String datetime) {
+	public boolean updateLastSentToConversation(int sentById, int sentToId) {
 		if (!connected) return false;
 		String Update = "UPDATE Conversations SET lastMessageSent = ? "
 					  + "WHERE (idProfessional1 = ? and idProfessional2 = ?) OR (idProfessional1 = ? and idProfessional2 = ?);";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Update);
-			statement.setString(1, datetime);
+			statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.setInt(2, sentById);
 			statement.setInt(3, sentToId);
 			statement.setInt(4, sentToId);
@@ -858,7 +860,6 @@ public class DataBaseBridge {
 		return true;
 	}
 
-	
 	public boolean pendingWorkAdApplication(int profID, int adID) {
 		if (!connected) return false;
 		String Query = "SELECT * FROM Applications WHERE idAd = ? and idApplicant = ?;";

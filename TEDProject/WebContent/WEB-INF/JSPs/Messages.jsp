@@ -131,15 +131,6 @@
 											return false;              // dont send anything
 										}
 										
-										// get timestamp		
-										var dt = new Date();
-										var datetime = dt.getUTCFullYear() + "-" + twoDigits(1 + dt.getUTCMonth()) + "-" + twoDigits(dt.getUTCDate()) + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
-										
-										// append text to the (must be only one) active conversation
-										$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val() + "</p><br>");
-										
-										updateScroll();
-										
 										// Parse the id of active_conv to get the conversation's other professional id
 										var other_prof_id = $('.active_conv').attr('id').substring(12);   // TODO: make this more versatile?
 										
@@ -150,11 +141,16 @@
 					    						data: { text:  $("#msg_input").val(),
 					    								sentBy: <%= prof.getID() %>,
 					    								sentTo: other_prof_id,
-					    								timestamp: datetime,                 // TODO get time from server, not client
 					    								containsFiles: false                 // TODO Change this to support files
 										              },
 					    						success: function(response){
 					    							console.log("Conversation updated successfully");
+					    							// get timestamp (TODO: might be different from database's timestamp)		
+													var dt = new Date();
+													var datetime = twoDigits(dt.getUTCDate()) + "/" + twoDigits(1 + dt.getUTCMonth()) + "/" + dt.getUTCFullYear() + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
+													// append text to the (must be only one) active conversation
+													$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val() + "</p><br>");
+													updateScroll();
 					    						}
 					    				});
 										
