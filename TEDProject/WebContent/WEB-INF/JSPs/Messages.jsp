@@ -150,7 +150,7 @@
 					    						data: { text:  $("#msg_input").val(),
 					    								sentBy: <%= prof.getID() %>,
 					    								sentTo: other_prof_id,
-					    								timestamp: datetime,
+					    								timestamp: datetime,                 // TODO get time from server, not client
 					    								containsFiles: false                 // TODO Change this to support files
 										              },
 					    						success: function(response){

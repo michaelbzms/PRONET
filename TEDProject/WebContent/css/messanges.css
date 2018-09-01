@@ -77,7 +77,6 @@
 	border-width: 2px 0px 0px 0px;
 	border-color: #162787;
 	padding: 0.75vh;
-	overflow-y: auto;
 }
 
 #msg_input{
