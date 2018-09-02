@@ -1,21 +1,28 @@
 package control;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import model.SiteFunctionality;
 
 
 @WebServlet("/AJAXServlet")
+@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/files", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)      // this location is only a temporary save location in case we ran out of memory
 public class AJAXServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String UploadSaveDirectory = FileServlet.SaveDirectory;
+	private File Uploads = new File(UploadSaveDirectory);
     private boolean warned = false;
 
     public AJAXServlet() {
@@ -106,6 +113,17 @@ public class AJAXServlet extends HttpServlet {
 						}
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/NewMessages.jsp");
 						RequetsDispatcherObj.forward(request, response);
+					}
+					break;
+				case "addArticle":
+					String postText = request.getParameter("text");
+					Collection<Part> fileParts = request.getParts();
+					if ( postText == null || fileParts == null ) {
+						out.write("AJAX add article request reached server with invalid parameters");
+						System.out.println("AJAX add article request reached server with invalid parameters");
+					} else {
+						System.out.println("text = " + postText);
+						// TODO
 					}
 					break;
 				default:

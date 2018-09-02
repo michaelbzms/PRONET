@@ -45,8 +45,10 @@ public class FileServlet extends HttpServlet {
 							}	
 						}
 						break;
-					// case "image"  //TODO
-					// case "video"  //TODO
+					case "article":  
+						//TODO
+						
+						break;
 					default:
 						request.setAttribute("errorType", "404Request");
 						RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

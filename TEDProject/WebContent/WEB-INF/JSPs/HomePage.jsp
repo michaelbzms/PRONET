@@ -66,31 +66,40 @@
 					</div>
 					<div class="col-9">
 						<div class="article_input">
-							<form id="article_input_form" enctype="multipart/form-data">
-						   		<textarea id="article_input_editor" name="post" autofocus></textarea>
-						   		<input id="article_file_input" style="display: inline-block; cursor: pointer; margin-bottom: 15px" 
-							   		   type="file" name="file_input" accept="/*" multiple>
+							<form id="article_input_form" method="post" enctype="multipart/form-data">
+						   		<textarea id="article_input_editor" name="text" autofocus></textarea>
+						   		<input id="article_file_input" type="file" name="file_input" accept="/*" multiple
+						   		       style="display: inline-block; cursor: pointer; margin-bottom: 15px">
 						   		<div class="buttonContainer text-right">
-									<input type="submit" value="Submit" class="btn btn-primary">
+						   			<input type="submit" value="Submit" class="btn btn-primary">
 							   	</div>
 							   	<script>
-							   		$("#article_input_form").on("submit", function(){
-							   			var contains_files = $("#article_file_input").val() === "";
-							   			window.alert(contains_files);
+							   		$("#article_input_form").on("submit", function(e){
+							   			e.preventDefault();
 							   			
+							   			// get form's data ---> PROBLEM: doesnt work for text!!!
+							   			var formData = new FormData($(this)[0]);							   			
+							   			for (var pair of formData.entries()) {
+							   			    console.log(pair[0]+ ', ' + pair[1]); 
+							   			}
+							   			
+							   			// send them via AJAX to AJAXServlet		   			
 							   			$.ajax({
 				    						url: "/TEDProject/AJAXServlet?action=addArticle",
+				    						enctype: 'multipart/form-data',
 				    						type: "post",
-				    						data: { text:  $("#article_input_editor").val(),
-				    								uploadedBy: <%= prof.getID() %>,
-				    								containsFiles: contains_files    // + TODO send files somehow
-									              },
+				    						data: formData,
 				    						success: function(response){
-				    							console.log("Conversation updated successfully");
-				    						}
+				    							console.log("Made a post successfully");
+				    							// reset form's fields
+				    							$("#article_input_editor").val("");
+				    							$("#article_file_input").val("");
+				    						},
+				    						cache: false,
+				    				        contentType: false,
+				    				        processData: false
 				    					});
 							   			
-							   			return false;
 							   		});
 							   	</script>
 						   	</form>
