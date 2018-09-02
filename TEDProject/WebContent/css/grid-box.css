@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-ul.grid_container{
+.grid_container{
 	display: flex; /* Magic begins */
   	flex-wrap: wrap; /* Multiline */
 	padding: 10px;
@@ -10,7 +10,7 @@ ul.grid_container{
  	-moz-columns: 3;
 }
 
-li.grid_item{
+.grid_item{
 	display: inline-block;
 	flex-grow: 1;   /* Grow to fill available space */
 	border-color: #0e1854;
@@ -20,7 +20,8 @@ li.grid_item{
 	padding: 10px;
 	margin: 5px;
 	text-align: center;
-	background-color: #edf3ff;\
+	font-size: auto;
+	background-color: #edf3ff;
 }
 
 .grid_item img{
@@ -30,6 +31,51 @@ li.grid_item{
 
 .grid_item:hover{
 	background-color: #88c0ff;
+}
+
+.grid_container_mini{
+	display: flex; /* Magic begins */
+  	flex-wrap: wrap; /* Multiline */
+	padding: 2px;
+	list-style-type: none;
+	columns: 3;
+	-webkit-columns: 3;
+ 	-moz-columns: 3;
+}
+
+.grid_item_mini{
+	display: inline-block;
+	flex-grow: 1;   /* Grow to fill available space */
+	border-color: #0e1854;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+	margin: 5px;
+	padding: 10px;
+	height: 140px;
+	width: 100px;
+	font-size: auto;
+	text-align: center;
+	background-color: #edf3ff;
+}
+
+.grid_item_mini:hover{
+	background-color: #88c0ff;
+}
+
+.grid_item_mini img{
+	height: 80px;
+	width: 80px;
+}
+
+.grid_item_mini a{
+	color: inherit;
+  	text-decoration: inherit;
+}
+
+.grid_item_mini a:hover{
+	color: white;
+  	text-decoration: inherit;
 }
 
 .connection_requests_bar ul li{

@@ -150,12 +150,11 @@
 													var datetime = twoDigits(dt.getUTCDate()) + "/" + twoDigits(1 + dt.getUTCMonth()) + "/" + dt.getUTCFullYear() + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
 													// append text to the (must be only one) active conversation
 													$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val() + "</p><br>");
+													// reset input value
+													 $("#msg_input").val("");
 													updateScroll();
 					    						}
 					    				});
-										
-										// reset input value
-										 $("#msg_input").val("");
 										
 										return false;    // override default form action
 									});
