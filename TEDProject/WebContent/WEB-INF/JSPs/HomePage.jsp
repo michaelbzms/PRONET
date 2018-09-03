@@ -114,6 +114,12 @@
 							<jsp:include page="Article.jsp"> 
 								<jsp:param name="ArticleID" value="2" /> 
 							</jsp:include>
+							<jsp:include page="Article.jsp"> 
+								<jsp:param name="ArticleID" value="1" /> 
+							</jsp:include>
+							<jsp:include page="Article.jsp"> 
+								<jsp:param name="ArticleID" value="2" /> 
+							</jsp:include>
 						</div>
 					</div>	
 				</div>
@@ -121,6 +127,20 @@
 			</div>
 			<script>
 				var post = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+			</script>
+			<script>
+				var comm_buttons = document.getElementsByClassName("comment_button");
+				var i;
+				for (i = 0; i < comm_buttons.length; i++) {
+					comm_buttons[i].addEventListener("click", function() {
+						comm_form = this.nextElementSibling.firstElementChild;
+					    if (comm_form.style.height !== "0px") {
+					    	comm_form.style.height = 0;
+					    } else {
+					    	comm_form.style.height = "auto";
+					    }
+				  	});
+				}
 			</script>
 	<%	}
 		db.close(); %>

@@ -8,6 +8,7 @@
 	<%@ page import="model.Professional, model.DataBaseBridge, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->

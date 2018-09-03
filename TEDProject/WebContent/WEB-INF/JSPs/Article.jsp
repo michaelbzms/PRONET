@@ -39,11 +39,18 @@
 		<div class="content_container">
 			<%= article.getContent() %>
 		</div>
-		<div class="ml-1 mb-2">
-			<button type="button" class="btn btn-outline-primary">Like</button>
-			<button type="button" class="btn btn-outline-primary">Comment</button>
-		</div>
+		<button type="button" class="btn btn-outline-primary ml-1 mb-2">Like</button>
+		<button type="button" class="btn btn-outline-primary comment_button ml-1 mb-2">Comment</button>
 		<div class="comment_container">
-			Comments go here
+			<div class="comment_form" style="height: 0">
+				<form method=POST action="#">
+					<textarea name="comment_text" class="comment_form_text"></textarea>
+					<div class="text-right">
+						<input type="submit" value="Submit Comment" class="btn btn-primary">
+					</div>
+				</form>
+			</div>
+
+			<p>Comments go here</p>
 		</div>
 	</div>

@@ -16,7 +16,6 @@ for (i = 0; i < acc.length; i++) {
 	    } else {
 	      panel.style.maxHeight = panel.scrollHeight + "px";
 	    } 
-	    console.log('#aplFocusPoint' + i)
 	    $('#aplFocusPoint' + i).scrollTo(500)
   	});
 }

@@ -98,7 +98,7 @@
 					</div>
 					<div class="collapse" id="collapseEditor">		
 						<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
-					   		<textarea id="applyNote" name="applyNote" autofocus></textarea>
+					   		<textarea id="applyNote" name="applyNote"></textarea>
 						   	<div class="buttonContainer text-right">
 								<input type="submit" value="Submit" class="btn btn-primary">
 								<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
