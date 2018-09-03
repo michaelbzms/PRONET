@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+.article {
+	padding: 10px;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 0px 0px 3px 1px #6397ff;
+}
+
+.article_prof_img {
+	height: 48px;
+    width: 48px;
+    margin: 0 5px;
+}
+
+.content_container {
+	margin: 10px;
+}
+
+.comment_container {
+    box-shadow: 0px -3px 2px -2px #cccccc;
+    padding: 5px;
+}

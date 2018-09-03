@@ -9,6 +9,7 @@
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
@@ -57,7 +58,7 @@
 								   for (Professional p : Connections) { %>
 										<li class="grid_item_mini">
 											<img style="height: 72px; width: 72px" class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
-											<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>"><%= p.getFirstName() %><br><%= p.getLastName() %></a>					
+											<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>"><%= p.getFirstName() %><br><%= p.getLastName() %></a>		
 										</li>
 								<%	} %>
 							<% } %>
@@ -104,9 +105,15 @@
 							   	</script>
 						   	</form>
 						</div>
-						<div class="wall">
+						<div>
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							// TODO TSIARAS
+							<!-- For testing purposes: -->
+							<jsp:include page="Article.jsp"> 
+								<jsp:param name="ArticleID" value="1" /> 
+							</jsp:include>
+							<jsp:include page="Article.jsp"> 
+								<jsp:param name="ArticleID" value="2" /> 
+							</jsp:include>
 						</div>
 					</div>	
 				</div>

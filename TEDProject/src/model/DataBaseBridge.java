@@ -504,6 +504,28 @@ public class DataBaseBridge {
 		}
 	}
 	
+	public LocalDateTime getConnectionDate(int profID1, int profID2) {
+		if (!connected) return null;
+		String Query = "SELECT connectionDate FROM ConnectedProfessionals WHERE (idProfessional1 = ? AND idProfessional2 = ?) "
+					 + "OR (idProfessional1 = ? AND idProfessional2 = ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID1);
+			statement.setInt(2, profID2);
+			statement.setInt(3, profID2);
+			statement.setInt(4, profID1);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				return resultSet.getTimestamp("connectionDate", cal).toLocalDateTime();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public List<Professional> getProfsMessagingWith(int profID) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
@@ -937,6 +959,32 @@ public class DataBaseBridge {
 			return null;
 		}
 	}
+	
+	public Article getArticle(int articleID) {
+		if (!connected) return null;
+		Article article = null;
+		String Query = "SELECT * FROM Articles WHERE idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				article = new Article();
+				article.setID(resultSet.getInt("idArticle"));
+				article.setAuthorID(resultSet.getInt("idAuthor"));
+				article.setPostedDate(resultSet.getTimestamp("postedTime", cal).toLocalDateTime());
+				article.setContent(resultSet.getString("content"));
+				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return article;
+	}
+	
 	
 }
 

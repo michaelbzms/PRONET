@@ -91,11 +91,11 @@ public class NavigationServlet extends HttpServlet {
 				}
 				RequetsDispatcherObj.forward(request, response);
 				return;
-			case "Application":
-				attr = request.getParameter("AdID");
+			case "Article":
+				attr = request.getParameter("ArticleID");
 				if (attr != null) {
-					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Application.jsp");
-					request.setAttribute("AdID", attr);
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ArticlePage.jsp");
+					request.setAttribute("ArticleID", attr);
 					RequetsDispatcherObj.forward(request, response);
 					return;
 				}
