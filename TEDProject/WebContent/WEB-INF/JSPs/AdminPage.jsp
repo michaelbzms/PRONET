@@ -16,11 +16,15 @@
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 </head>
 <body>
+	<% boolean exportPage = false;
+	   if (request.getAttribute("exportXML") != null && request.getAttribute("exportXML").equals("form")) {
+		   exportPage = true;
+	   } %>
 	<div class="main_container">
 		<nav class="navbar navbar-expand-xl bg-light justify-content-center">
 			<div class="container-fluid">
 			    <div class="navbar-header">
-			      <a class="navbar-brand" href="/TEDProject/admin/AdminServlet">PRONET</a>
+			    	<a class="navbar-brand" href="/TEDProject/admin/AdminServlet">PRONET</a>
 			    </div>
 				<ul class="navbar-nav"  role="navigation">
 					<li class="nav-item">
@@ -31,24 +35,38 @@
 				</ul>
 			</div>
 		</nav>
-		<h2>Registered Professionals:</h2><br>
+		<div class="justify-content-between">
+			<h2>Registered Professionals <a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right" style="border-bottom: 10px">Export Professionals' data to XML</a></h2>
+		</div>
 		<div>
 			<% DataBaseBridge db = new DataBaseBridge();
-			   Professional[] professionals = db.getAllProfessionals(); %>
-			<ul class="grid_container"> 
-			<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
-				<li class="grid_item">
-					<!-- profile picture here as an <img> element  -->
-					<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
-					<% if ( professionals[i].getEmploymentStatus() != null ) { %>
-						<%= professionals[i].getEmploymentStatus() %> <br>
-					<% } %>
-					<!-- The following is a servlet URI which will forward the HTTP GET request to ProfPublicProfilePage.jsp with the correct ID  -->
-					<a href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">View Details</a>
-				</li>
+			   Professional[] professionals = db.getAllProfessionals(); 
+			   if (exportPage) { %>
+				<form method="POST" action="/TEDProject/admin/AdminServlet?exportXML=submitted">
 			<% } %>
-			</ul>
-			<% db.close(); %>
+					<ul class="grid_container"> 
+					<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
+						<li class="grid_item">
+							<% if (exportPage) { %>
+								<input type="checkbox" name="profID" value="<%= professionals[i].getID() %>">
+							<% } %>	
+							<!-- profile picture here as an <img> element  -->
+							<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
+							<% if ( professionals[i].getEmploymentStatus() != null ) { %>
+								<%= professionals[i].getEmploymentStatus() %> <br>
+							<% } %>
+							<!-- The following is a servlet URI which will forward the HTTP GET request to ProfPublicProfilePage.jsp with the correct ID  -->
+							<a href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">View Details</a>
+						</li>
+					<% } %>
+					</ul>
+				<% if (exportPage) { %>
+					<div class="buttonContainer">
+						<input type="submit" class="btn btn-primary" value="Submit">
+					</div>
+				</form>
+			<% } 
+			   db.close(); %>
 		</div>
 	</div>
 </body>

@@ -8,7 +8,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "professional")
@@ -38,19 +37,17 @@ public class XMLProfessional {
 	public void setProfWorkAds(List<WorkAd> profWorkAds) { this.profWorkAds = profWorkAds; }
 	
 	
-	public static void jaxbProfToXML(XMLProfessional xmlProf) {
-		System.out.println(new File("").getAbsolutePath());
+	public static void jaxbProfToXML(XMLProfessional xmlProf, String filename) {
 		try {
-            JAXBContext context = JAXBContext.newInstance(XMLProfessional.class);
-            Marshaller m = context.createMarshaller();
-            //for pretty-print XML in JAXB
+            JAXBContext jcontext = JAXBContext.newInstance(XMLProfessional.class);
+            Marshaller m = jcontext.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            // Write to System.out for debugging
-            m.marshal(xmlProf, System.out);
-
-            // Write to File
-            m.marshal(xmlProf, new File("prof.xml"));
+            if (filename == null) {			// print to console
+            	m.marshal(xmlProf, System.out);
+            } else {
+            	m.marshal(xmlProf, new File(filename));
+            }
         } catch (JAXBException e) {
             e.printStackTrace();
         }

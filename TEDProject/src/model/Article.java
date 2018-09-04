@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlRootElement(name = "article")
+@XmlType(propOrder = {"content", "postedDate"})
 public class Article {
 	
 	/* Characteristics */

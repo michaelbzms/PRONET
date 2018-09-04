@@ -1,6 +1,9 @@
 package model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -346,10 +349,31 @@ public class SiteFunctionality {
 		}
 		XMLProfessional xmlProf = new XMLProfessional();
 		xmlProf.setProf(db.getProfessional(profID));
-		//xmlProf.setProfArticles(db.getProfArticles(profID));
+		xmlProf.setProfArticles(db.getProfArticles(profID));
 		xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
 		// + more
 		return xmlProf;
+	}
+	
+	public static XMLProfessionalList createXMLprofList(Integer profIDs[]) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return null;
+		}
+		List<XMLProfessional> profList = new ArrayList<XMLProfessional>();
+		XMLProfessional xmlProf;
+		for (int profID : profIDs) {
+			xmlProf = new XMLProfessional();
+			xmlProf.setProf(db.getProfessional(profID));
+			xmlProf.setProfArticles(db.getProfArticles(profID));
+			xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
+			// + more
+			profList.add(xmlProf);
+		}
+		XMLProfessionalList xmlProfList = new XMLProfessionalList();
+		xmlProfList.setProfList(profList);
+		return xmlProfList;
 	}
 	
 }

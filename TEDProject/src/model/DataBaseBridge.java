@@ -579,7 +579,7 @@ public class DataBaseBridge {
 		List<WorkAd> ads = null;
 		String Query;
 		if (mode == 0) {
-			Query = "SELECT idAd, idPublishedBy, title, postedDate FROM Ads WHERE idPublishedBy = ?;";
+			Query = "SELECT * FROM Ads WHERE idPublishedBy = ?;";
 		} else if (mode == 1) {
 			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, ConnectedProfessionals cp "
 				  + "WHERE a.idPublishedBy != ? AND "
@@ -606,6 +606,9 @@ public class DataBaseBridge {
 				ad.setPublishedByID(resultSet.getInt("idPublishedBy"));
 				ad.setTitle(resultSet.getString("title"));
 				ad.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				if (mode == 0) {		// descriptions are never directly displayed in other cases
+					ad.setDescription(resultSet.getString("description"));
+				}
 				ads.add(ad);
 			}
 		} catch (SQLException e) {
@@ -985,6 +988,31 @@ public class DataBaseBridge {
 		return article;
 	}
 	
+	public List<Article> getProfArticles(int profID) {
+		if (!connected) return null;
+		List<Article> articles = null;
+		String Query = "SELECT * FROM Articles WHERE idAuthor = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			articles = new ArrayList<Article>();
+			Article article = null;
+			while (resultSet.next()) {
+				article = new Article();
+				article.setID(resultSet.getInt("idArticle"));
+				article.setAuthorID(resultSet.getInt("idAuthor"));
+				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				article.setContent(resultSet.getString("content"));
+				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
+				articles.add(article);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return articles;
+	}
 	
 }
 
