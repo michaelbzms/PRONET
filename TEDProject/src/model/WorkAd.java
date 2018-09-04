@@ -2,6 +2,12 @@ package model;
 
 import java.time.LocalDateTime;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+@XmlRootElement(name = "workAd")
 public class WorkAd {
 	
 	/* Characteristics */
@@ -11,39 +17,22 @@ public class WorkAd {
 	private LocalDateTime postedDate = null;
 	
 	/* Setters & Getters*/
-	public int getID() {
-		return ID;
-	}
-	public void setID(int iD) {
-		this.ID = iD;
-	}
+	@XmlAttribute
+	public int getID() { return ID; }
+	public void setID(int iD) {	this.ID = iD; }
 	
-	public int getPublishedByID() {
-		return publishedByID;
-	}
-	public void setPublishedByID(int publishedByID) {
-		this.publishedByID = publishedByID;
-	}
+	@XmlTransient
+	public int getPublishedByID() { return publishedByID; }
+	public void setPublishedByID(int publishedByID) { this.publishedByID = publishedByID; }
 	
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+	public String getTitle() { return title; }
+	public void setTitle(String title) { this.title = title; }
 	
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	public String getDescription() { return description; }
+	public void setDescription(String description) { this.description = description; }
 	
-	public LocalDateTime getPostedDate() {
-		return postedDate;
-	}
-	public void setPostedDate(LocalDateTime postedDate) {
-		this.postedDate = postedDate;
-	}
+	@XmlJavaTypeAdapter(value = XMLLocalDateTimeAdapter.class)
+	public LocalDateTime getPostedDate() { return postedDate; }
+	public void setPostedDate(LocalDateTime postedDate) { this.postedDate = postedDate; }
 	
 }

@@ -338,4 +338,18 @@ public class SiteFunctionality {
 		}
 	}
 	
+	public static XMLProfessional createXMLprof(int profID) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return null;
+		}
+		XMLProfessional xmlProf = new XMLProfessional();
+		xmlProf.setProf(db.getProfessional(profID));
+		//xmlProf.setProfArticles(db.getProfArticles(profID));
+		xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
+		// + more
+		return xmlProf;
+	}
+	
 }

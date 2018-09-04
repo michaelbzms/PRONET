@@ -974,7 +974,7 @@ public class DataBaseBridge {
 				article = new Article();
 				article.setID(resultSet.getInt("idArticle"));
 				article.setAuthorID(resultSet.getInt("idAuthor"));
-				article.setPostedDate(resultSet.getTimestamp("postedTime", cal).toLocalDateTime());
+				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
 				article.setContent(resultSet.getString("content"));
 				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
 			}

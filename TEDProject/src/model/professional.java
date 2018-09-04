@@ -1,6 +1,12 @@
 package model;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = "profBio")
+@XmlType(propOrder = {"firstName", "lastName", "email", "password", "phone", "description", "employmentStatus", "employmentInstitution", "professionalExperience", "educationBackground", "skills"})
 public class Professional {
 	
 	/* Characteristics */
@@ -11,6 +17,7 @@ public class Professional {
 	private boolean profExpVisibility = true, edBackgroundVisibility = true, skillsVisibility = true;
 	
 	/* Setters & Getters*/
+	@XmlAttribute
 	public int getID() { return ID; }
 	public void setID(int iD) { ID = iD; }
 	
@@ -28,7 +35,8 @@ public class Professional {
 
 	public String getPhone() { return phone; }
 	public void setPhone(String phone) { this.phone = phone; }
-
+	
+	@XmlTransient
 	public String getProfilePicURI() { return profilePicURI; }
 	public void setProfilePicURI(String profilePicURI) { this.profilePicURI = profilePicURI; }
 
@@ -50,12 +58,15 @@ public class Professional {
 	public String getSkills() { return skills; }
 	public void setSkills(String skills) { this.skills = skills; }
 
+	@XmlTransient
 	public boolean getProfExpVisibility() { return profExpVisibility; }
 	public void setProfExpVisibility(boolean profExpVisibility) { this.profExpVisibility = profExpVisibility; }
 
+	@XmlTransient
 	public boolean getEdBackgroundVisibility() { return edBackgroundVisibility; }
 	public void setEdBackgroundVisibility(boolean edBackgroundVisibility) { this.edBackgroundVisibility = edBackgroundVisibility; }
 
+	@XmlTransient
 	public boolean getSkillsVisibility() { return skillsVisibility; }
 	public void setSkillsVisibility(boolean skillsVisibility) { this.skillsVisibility = skillsVisibility; }
 
