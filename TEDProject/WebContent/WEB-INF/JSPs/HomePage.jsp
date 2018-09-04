@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Home Page</title>
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Article" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
@@ -18,6 +18,7 @@
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<style>
+		<!-- temporary style until we get markdown working (or not) -->
 		#article_input_editor{
 			width: 100%;
 			height: 15vh;
@@ -119,9 +120,16 @@
 							   	</script>
 						   	</form>
 						</div>
-						<div>
+						<div class="wall">
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							ARTICLES AREA
+							<% List<Article> articles = db.getWallArticlesFor(prof.getID()); 
+							   if (articles != null) {
+							   		for (Article article : articles ) { %>
+										<jsp:include page="Article.jsp"> 
+											<jsp:param name="ArticleID" value="<%= article.getID() %>" /> 
+										</jsp:include>							
+							<% 		} 
+								} %>
 						</div>
 					</div>	
 				</div>
