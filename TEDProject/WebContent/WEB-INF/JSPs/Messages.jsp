@@ -138,21 +138,25 @@
 										$.ajax({
 					    						url: "/TEDProject/AJAXServlet?action=addMessage",
 					    						type: "post",
-					    						data: { text:  $("#msg_input").val(),
+					    						data: { text: $("#msg_input").val(),
 					    								sentBy: <%= prof.getID() %>,
 					    								sentTo: other_prof_id,
 					    								containsFiles: false                 // TODO Change this to support files
 										              },
 					    						success: function(response){
-					    							console.log("Conversation updated successfully");
-					    							// get timestamp (TODO: might be different from database's timestamp)		
-													var dt = new Date();
-													var datetime = twoDigits(dt.getUTCDate()) + "/" + twoDigits(1 + dt.getUTCMonth()) + "/" + dt.getUTCFullYear() + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
-													// append text to the (must be only one) active conversation
-													$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val() + "</p><br>");
-													// reset input value
-													 $("#msg_input").val("");
-													updateScroll();
+					    							if ( response === "success" ){
+						    							console.log("Conversation updated successfully");
+						    							// get timestamp (TODO: might be different from database's timestamp)		
+														var dt = new Date();
+														var datetime = twoDigits(dt.getUTCDate()) + "/" + twoDigits(1 + dt.getUTCMonth()) + "/" + dt.getUTCFullYear() + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
+														// append text to the (must be only one) active conversation
+														$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val().replaceAll("\n","\n<br>\n") + "</p><br>");
+														// reset input value
+														 $("#msg_input").val("");
+														updateScroll();
+					    							} else { // else toast-notify user? TODO
+					    								window.alert(response);
+					    							}
 					    						}
 					    				});
 										
@@ -217,5 +221,6 @@
 		// TODO: add script to reorder chat conversation list according to possibly changed 'lastSent'
 		// have to do it on repeat because another professional could text 'us'at any time
 	</script>
+	<script src="/TEDProject/Javascript/util.js"></script>
 </body>
 </html>

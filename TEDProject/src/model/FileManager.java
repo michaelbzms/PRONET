@@ -7,6 +7,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.Part;
@@ -65,5 +67,53 @@ public class FileManager {
 		return true;
 	}
 	
+	public static boolean saveArticleFiles(Collection<Part> fileParts, String saveLocation, DataBaseBridge db, int articleID) {
+		for (Part filePart : fileParts) {
+			String userUploadFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();    // MSIE fix
+			String contentType = filePart.getContentType();
+			
+			// Debug:
+			System.out.println("Saving uploaded file: " + userUploadFileName + " to " + saveLocation + " under a new unique name...");
+			
+			// figure out an appropriate unique name for the file
+			String type, unique_name = "", extension = "";
+			int j = contentType.indexOf('/');
+			if ( contentType.substring(0, j).equals("image") ) {
+				type = "img";
+			} else if ( contentType.substring(0, j).equals("video") ) {
+				type = "vid";
+			} else if ( contentType.substring(0, j).equals("video") ) {
+				type = "aud";
+			} else {      // if file is not an image or a video or an audio, then
+				// do NOT save it
+				System.out.println("(!) Did not save file" + userUploadFileName + "because it was not supported!");
+				continue;
+			}
+			int i = userUploadFileName.lastIndexOf('.');
+			if (i > 0) { extension = userUploadFileName.substring(i+1); }
+			int min = 0, max = 999999; 
+			File f;
+			do {	
+				unique_name = type + Integer.toString(ThreadLocalRandom.current().nextInt(min, max + 1)) + "." + extension ;
+				f = new File(saveLocation + "/" + unique_name);
+			} while (f.exists() && !f.isDirectory()); 
+			
+			// save to disk
+			File UploadedArticleFiles = new File(saveLocation);
+			File newfile = new File(UploadedArticleFiles, unique_name);
+			try (InputStream input = filePart.getInputStream()) {
+			    Files.copy(input, newfile.toPath());
+			    System.out.println("File " + unique_name + " saved to disk!");
+			} catch ( IOException e ) {
+				System.err.println("Could not save file " + unique_name + " to disk!");
+				continue;
+			}
+			
+			// save to database its URI
+			String fileURI = "http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "&type=article";
+			db.addArticleFile(articleID, fileURI);
+		}
+		return true;
+	}
 	
 }

@@ -34,9 +34,10 @@ public class FileServlet extends HttpServlet {
 			RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
 		} else {
+				boolean success;
 				switch (type) {
 					case "profile":
-						boolean success = serveFile("profile", requestedFile, response);
+						success = serveFile("profile", requestedFile, response);
 						if (!success) {
 							if ( !serveErrorFile(response, "/images/errorImage.png") ) {
 								request.setAttribute("errorType", "404Request");
@@ -46,8 +47,14 @@ public class FileServlet extends HttpServlet {
 						}
 						break;
 					case "article":  
-						//TODO
-						
+						success = serveFile("article", requestedFile, response);
+						if (!success) {
+							if ( !serveErrorFile(response, "/images/errorImage.png") ) {   // TODO: error image even if file was not an image?
+								request.setAttribute("errorType", "404Request");
+								RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+								RequetsDispatcherObj.forward(request, response);
+							}	
+						}
 						break;
 					default:
 						request.setAttribute("errorType", "404Request");
@@ -140,7 +147,7 @@ public class FileServlet extends HttpServlet {
 		File file = new File(filepath);
 		response.setContentLength((int)file.length());
 	
-		// write image to output
+		// write file to output
 		try {
 			FileInputStream in = new FileInputStream(file);
 			OutputStream out;

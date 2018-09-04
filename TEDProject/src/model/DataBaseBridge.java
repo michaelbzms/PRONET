@@ -1014,6 +1014,54 @@ public class DataBaseBridge {
 		return articles;
 	}
 	
+	public int addArticle(String postText, int authorID, boolean containsFiles) {
+		if (!connected) return -1;
+		String Insert = "INSERT INTO Articles (`idArticle`, `idAuthor`, `postedDate`, `content`, `containsFiles`) "
+					  + "VALUES (default, ?, ?, ?, ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Insert);
+			statement.setInt(1, authorID);
+			statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+			statement.setString(3, postText);
+			statement.setBoolean(4, containsFiles);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
+		}
+		String getIDQuery = "SELECT LAST_INSERT_ID();";     // LAST_INSERT_ID concerns only this connection, so other queries wont affect it (I think)
+		int articleID = -1;
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(getIDQuery);
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return -4;
+			} else {
+				articleID = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -3;
+		}
+		return articleID;
+	}
+	
+	public boolean addArticleFile(int articleID, String fileURI) {
+		if (!connected) return false;
+		String Insert = "INSERT INTO ArticleFilePaths (`idArticleFile`, `filePath`, `idArticle`) "
+					  + "VALUES (default, ?, ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Insert);
+			statement.setString(1, fileURI);
+			statement.setInt(2, articleID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 }
 
 

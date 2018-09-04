@@ -340,6 +340,15 @@ public class SiteFunctionality {
 			return -1;
 		}
 	}
+
+	public static int addArticle(HttpServletRequest request, DataBaseBridge db, String postText, boolean containsFiles) {
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		Professional prof = acquireProfFromSession(db, request);
+		return db.addArticle(postText, prof.getID(), containsFiles);
+	}
 	
 	public static XMLProfessional createXMLprof(int profID) {
 		DataBaseBridge db = new DataBaseBridge();

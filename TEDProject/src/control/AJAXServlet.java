@@ -3,6 +3,7 @@ package control;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.Collection;
 
 import javax.servlet.RequestDispatcher;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import model.DataBaseBridge;
+import model.FileManager;
 import model.SiteFunctionality;
 
 
@@ -21,12 +24,15 @@ import model.SiteFunctionality;
 @MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/files", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)      // this location is only a temporary save location in case we ran out of memory
 public class AJAXServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String UploadSaveDirectory = FileServlet.SaveDirectory;
-	private File Uploads = new File(UploadSaveDirectory);
+	private static final String ArticleSaveDirectory = FileServlet.SaveDirectory + "/article";
+	private File Uploads = new File(ArticleSaveDirectory);
     private boolean warned = false;
 
     public AJAXServlet() {
         super();
+        if (!Uploads.exists()){
+        	Uploads.mkdirs();
+        }
     }
 
 
@@ -82,8 +88,13 @@ public class AJAXServlet extends HttpServlet {
 					String sentToProfStr = request.getParameter("sentTo");
 					String containsFilesStr = request.getParameter("containsFiles");
 					if ( text == null || sentByProfStr == null || sentToProfStr == null || containsFilesStr == null) {
-						out.write("AJAX add message request reached server with invalid parameters");
-					} else {
+						out.write("AJAX add message request reached server with invalid parameters"); 
+					} 
+					else if ( !SiteFunctionality.checkInputText(text, false, 0) ) {      // TODO: size restriction policy for messages?
+						out.write("illegal text message input characters");
+					}
+					else {
+						text = text.replace("\n", "\n<br>\n");
 						boolean containsFiles = containsFilesStr.equals("true");
 						int sentById, sentToId;
 						try {
@@ -94,6 +105,7 @@ public class AJAXServlet extends HttpServlet {
 							return;
 						}
 						SiteFunctionality.addMessage(text, sentById, sentToId, containsFiles);
+						out.write("success");
 					}
 					break;
 				case "checkForNewMessages":             // this happens really often (ex: every 2 secs)
@@ -121,9 +133,35 @@ public class AJAXServlet extends HttpServlet {
 					if ( postText == null || fileParts == null ) {
 						out.write("AJAX add article request reached server with invalid parameters");
 						System.out.println("AJAX add article request reached server with invalid parameters");
+					} else if ( !SiteFunctionality.checkInputText(postText, false, 0) ) {    // TODO: size restriction policy for article posts?
+						out.write("illegal post text input characters");
 					} else {
-						System.out.println("text = " + postText);
-						// TODO
+						postText = postText.replace("\n", "\n<br>\n");
+						
+						// remove all non-file Parts
+						fileParts.removeIf((Part filePart) -> !filePart.getName().equals("file_input"));
+						
+						boolean containsFiles = false;
+						for (Part filePart : fileParts) {
+							String userUploadFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();  // MSIE fix
+							if ( !userUploadFileName.isEmpty() ) {
+								// debug:
+								//System.out.println("- filePart: " + filePart.getName() + " , submitted file name: " + filePart.getSubmittedFileName() + ", type: " + filePart.getContentType());
+								containsFiles = true;
+							}
+						}
+						
+						DataBaseBridge db = new DataBaseBridge();
+						int articleID = SiteFunctionality.addArticle(request, db, postText, containsFiles);
+						if ( articleID < 0 ) {
+							out.write("failed to add article (wont attempt to save any files)");
+							break;
+						}
+						if (containsFiles) {
+							FileManager.saveArticleFiles(fileParts, ArticleSaveDirectory, db, articleID);
+						}
+						db.close();
+						out.write("success");
 					}
 					break;
 				default:

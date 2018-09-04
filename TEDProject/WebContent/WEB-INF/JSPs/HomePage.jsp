@@ -17,6 +17,15 @@
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+	<style>
+		#article_input_editor{
+			width: 100%;
+			height: 15vh;
+			resize: none;
+			margin: 5px 0px 10px 0px;
+			box-shadow: 0px 0px 3px 0px #6397ff;
+		}
+	</style>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge();
@@ -68,21 +77,22 @@
 					<div class="col-9">
 						<div class="article_input">
 							<form id="article_input_form" method="post" enctype="multipart/form-data">
-						   		<textarea id="article_input_editor" name="text" autofocus></textarea>
+						   		<textarea id="article_input_editor" name="text" autofocus></textarea><br>
 						   		<input id="article_file_input" type="file" name="file_input" accept="/*" multiple
 						   		       style="display: inline-block; cursor: pointer; margin-bottom: 15px">
 						   		<div class="buttonContainer text-right">
-						   			<input type="submit" value="Submit" class="btn btn-primary">
+						   			<input type="submit" value="Post" class="btn btn-primary">
 							   	</div>
 							   	<script>
 							   		$("#article_input_form").on("submit", function(e){
 							   			e.preventDefault();
 							   			
-							   			// get form's data ---> PROBLEM: doesnt work for text!!!
+							   			// get form's data
 							   			var formData = new FormData($(this)[0]);							   			
-							   			for (var pair of formData.entries()) {
-							   			    console.log(pair[0]+ ', ' + pair[1]); 
-							   			}
+							   			// DEBUG: Print formData to console
+							   			//for (var pair of formData.entries()) {
+							   			//    console.log(pair[0]+ ', ' + pair[1]); 
+							   			//}
 							   			
 							   			// send them via AJAX to AJAXServlet		   			
 							   			$.ajax({
@@ -91,14 +101,18 @@
 				    						type: "post",
 				    						data: formData,
 				    						success: function(response){
-				    							console.log("Made a post successfully");
-				    							// reset form's fields
-				    							$("#article_input_editor").val("");
-				    							$("#article_file_input").val("");
+				    							if ( response === "success" ){
+				    								console.log("Made a post successfully");
+				    								// reset form's fields
+				    								$("#article_input_editor").val("");
+				    								$("#article_file_input").val("");
+				    							} else {
+				    								window.alert(response);
+				    							}
 				    						},
 				    						cache: false,
 				    				        contentType: false,
-				    				        processData: false
+				    				        processData: false       // (!) important
 				    					});
 							   			
 							   		});
@@ -107,26 +121,15 @@
 						</div>
 						<div>
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							<!-- For testing purposes: -->
-							<jsp:include page="Article.jsp"> 
-								<jsp:param name="ArticleID" value="1" /> 
-							</jsp:include>
-							<jsp:include page="Article.jsp"> 
-								<jsp:param name="ArticleID" value="2" /> 
-							</jsp:include>
-							<jsp:include page="Article.jsp"> 
-								<jsp:param name="ArticleID" value="1" /> 
-							</jsp:include>
-							<jsp:include page="Article.jsp"> 
-								<jsp:param name="ArticleID" value="2" /> 
-							</jsp:include>
+							ARTICLES AREA
 						</div>
 					</div>	
 				</div>
 				<jsp:include page="/footer.html"></jsp:include>
 			</div>
 			<script>
-				var post = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+				// Markdown inteferes with AJAX form! 
+				// var post = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 			</script>
 			<script>
 				var comm_buttons = document.getElementsByClassName("comment_button");
