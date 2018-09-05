@@ -52,26 +52,30 @@
 				<% } %>
 			</p>
 			<div class="ProfileOptions">
-			<% if (currentSession != null && !isAdmin) { 
-				   if (isSelf) { %>
-					<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
-				<% } else { %>
-						<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary" style="margin-bottom: 15px">Message</a>
-						<br>
-					<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
-							<small class="text-info">Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></small><br>
-							<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
-					<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
-							<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></small><br>
-							<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
-							<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
-					<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
-							<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></small><br>
-							<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
-					<%  } else {		// Any other not connected prof %>		
-							<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
-					<%  } %>
-				<%	}
+			<% if (currentSession != null) { 
+				   if (!isAdmin) {
+					   if (isSelf) { %>
+							<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
+					<% } else { %>
+							<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary" style="margin-bottom: 15px">Message</a>
+							<br>
+						<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
+								<small class="text-info">Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></small><br>
+								<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
+						<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
+								<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></small><br>
+								<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
+								<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
+						<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
+								<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></small><br>
+								<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
+						<%  } else {		// Any other not connected prof %>		
+								<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
+						<%  } %>
+					<% }
+				   } else {	%>
+				   	   <a href="/TEDProject/admin/AdminServlet?exportXML=downloadProf&ProfID=<%= profID %>" class="btn btn-primary">Export to XML</a>
+				<% }
 			   } %>
 			</div>
 		  	<h2 class="my_h2">Contact Info:</h2> 

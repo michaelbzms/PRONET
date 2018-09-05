@@ -68,7 +68,7 @@
 					</ul>
 				<% if (exportPage) { %>
 					<div class="buttonContainer text-center">
-						<input type="submit" value="Download Selected" onclick="window.location.href = 'index.html';" class="btn btn-primary">
+						<input type="submit" value="Download Selected" onclick="return checkIfAnyChecked();" class="btn btn-primary">
 						<a href="/TEDProject/admin/AdminServlet" class="btn btn-secondary">Cancel</a>
 					</div>
 				</form>
@@ -82,6 +82,17 @@
 			for(var i=0, n=checkboxes.length;i<n;i++) {
 				checkboxes[i].checked = source.checked;
 			}
+		}
+		function checkIfAnyChecked() {
+			checkboxes = document.getElementsByName('profID');
+			for(var i=0, n=checkboxes.length;i<n;i++) {
+				if (checkboxes[i].checked == true) {
+					console.log(checkboxes[i].checked);
+					return true;
+				}
+			}
+		    alert("At least one Professional must be selected."); 
+		    return false;
 		}
 	</script>
 </body>

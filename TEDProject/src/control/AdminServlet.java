@@ -1,9 +1,6 @@
 package control;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -45,8 +42,21 @@ public class AdminServlet extends HttpServlet {
 						profIDs[i++] = Integer.parseInt(profIDstr);
 					}
 			        ServletContext context = getServletContext();
-					String profFilePath = context.getRealPath("/professionalsList.xml");
-				    XMLProfessionalList.jaxbProfListToXML(SiteFunctionality.createXMLprofList(profIDs), profFilePath);		    
+					String profListFilePath = context.getRealPath("/professionalsList.xml");
+				    XMLProfessionalList.jaxbProfListToXML(SiteFunctionality.createXMLprofList(profIDs), profListFilePath);		    
+				    if (! MyUtil.forceDownloadFile(response, context, profListFilePath)) {
+						request.setAttribute("errorType", "downloadFailed");
+						RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj.forward(request, response);
+				    }
+				}
+			} else if (exportXML.equals("downloadProf")) {
+				String profIDstr = request.getParameter("ProfID");
+				if (profIDstr != null) {
+					int profID = Integer.parseInt(profIDstr);
+			        ServletContext context = getServletContext();
+					String profFilePath = context.getRealPath("/prof" + profID + ".xml");
+				    XMLProfessional.jaxbProfToXML(SiteFunctionality.createXMLprof(profID), profFilePath);		    
 				    if (! MyUtil.forceDownloadFile(response, context, profFilePath)) {
 						request.setAttribute("errorType", "downloadFailed");
 						RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
