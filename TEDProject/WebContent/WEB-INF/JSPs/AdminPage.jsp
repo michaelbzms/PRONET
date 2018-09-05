@@ -36,13 +36,19 @@
 			</div>
 		</nav>
 		<div class="justify-content-between">
-			<h2>Registered Professionals <a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right" style="border-bottom: 10px">Export Professionals' data to XML</a></h2>
+			<% if (!exportPage) { %>
+				<h2>Registered Professionals 
+				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right" style="border-bottom: 10px">Export Professionals' data to XML</a></h2>
+			<% } else {	%>
+				<h2>Export Registered Professionals to XML</h2>
+			<% } %> 
 		</div>
 		<div>
 			<% DataBaseBridge db = new DataBaseBridge();
 			   Professional[] professionals = db.getAllProfessionals(); 
 			   if (exportPage) { %>
 				<form method="POST" action="/TEDProject/admin/AdminServlet?exportXML=submitted">
+					<input type="checkbox" onClick="selectAll(this)">Select All<br>
 			<% } %>
 					<ul class="grid_container"> 
 					<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
@@ -61,13 +67,22 @@
 					<% } %>
 					</ul>
 				<% if (exportPage) { %>
-					<div class="buttonContainer">
-						<input type="submit" class="btn btn-primary" value="Submit">
+					<div class="buttonContainer text-center">
+						<input type="submit" value="Download Selected" onclick="window.location.href = 'index.html';" class="btn btn-primary">
+						<a href="/TEDProject/admin/AdminServlet" class="btn btn-secondary">Cancel</a>
 					</div>
 				</form>
 			<% } 
 			   db.close(); %>
 		</div>
 	</div>
+	<script>
+		function selectAll(source) {
+			checkboxes = document.getElementsByName('profID');
+			for(var i=0, n=checkboxes.length;i<n;i++) {
+				checkboxes[i].checked = source.checked;
+			}
+		}
+	</script>
 </body>
 </html>

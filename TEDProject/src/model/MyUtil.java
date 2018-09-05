@@ -1,9 +1,17 @@
 package model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
 public final class MyUtil {
 	
@@ -54,5 +62,36 @@ public final class MyUtil {
 		}
 	}
 	
+	public static boolean forceDownloadFile(HttpServletResponse response, ServletContext context, String filepath) {
+		File profFile = new File(filepath);  
+        FileInputStream inStream;
+		try {
+			inStream = new FileInputStream(profFile);	
+	        String mimeType = context.getMimeType(filepath);
+	        if (mimeType == null) {        
+	            // set to binary type if MIME mapping not found
+	            mimeType = "application/octet-stream";
+	        }
+	        response.setContentType(mimeType);
+	        response.setContentLength((int) profFile.length());     
+	        // forces download
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + profFile.getName() + '"');	         
+	        OutputStream outStream = response.getOutputStream();	         
+	        byte[] buffer = new byte[4096];
+	        int bytesRead = -1;         
+	        while ((bytesRead = inStream.read(buffer)) != -1) {
+	            outStream.write(buffer, 0, bytesRead);
+	        }	         
+	        inStream.close();
+	        outStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}  
+        return true;
+	}
 	
 }

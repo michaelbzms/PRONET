@@ -1,14 +1,19 @@
 package control;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.MyUtil;
 import model.SiteFunctionality;
 import model.XMLProfessional;
 import model.XMLProfessionalList;
@@ -26,9 +31,12 @@ public class AdminServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String exportXML = request.getParameter("exportXML");
-		RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AdminPage.jsp");
 		if (exportXML != null) {
-			if (exportXML.equals("submitted")) {
+			if (exportXML.equals("form")) {
+				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AdminPage.jsp");
+				request.setAttribute("exportXML", exportXML);
+				RequetsDispatcherObj.forward(request, response);
+			} else if (exportXML.equals("submitted")) {
 				String profIDstrs[] = request.getParameterValues("profID");
 				if (profIDstrs != null) {
 					Integer profIDs[] = new Integer[profIDstrs.length];
@@ -36,13 +44,20 @@ public class AdminServlet extends HttpServlet {
 					for (String profIDstr : profIDstrs) {
 						profIDs[i++] = Integer.parseInt(profIDstr);
 					}
-				    XMLProfessionalList.jaxbProfListToXML(SiteFunctionality.createXMLprofList(profIDs), null);
+			        ServletContext context = getServletContext();
+					String profFilePath = context.getRealPath("/professionalsList.xml");
+				    XMLProfessionalList.jaxbProfListToXML(SiteFunctionality.createXMLprofList(profIDs), profFilePath);		    
+				    if (! MyUtil.forceDownloadFile(response, context, profFilePath)) {
+						request.setAttribute("errorType", "downloadFailed");
+						RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj.forward(request, response);
+				    }
 				}
-				// redirect to download button?
 			}
-			request.setAttribute("exportXML", exportXML);		// both for "form" and "submitted"
-		} 
-		RequetsDispatcherObj.forward(request, response);
+		} else {
+			RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/AdminPage.jsp");
+			RequetsDispatcherObj.forward(request, response);
+		}
 	}
 	
 

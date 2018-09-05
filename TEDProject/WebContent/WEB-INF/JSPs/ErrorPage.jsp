@@ -59,6 +59,9 @@
 		<% } else if ( request.getAttribute("errorType").equals("404Request") ) { %>
 			<h2>Error 404</h2>
 			<p>The file you requested does not exists.</p>
+		<% } else if ( request.getAttribute("errorType").equals("downloadFailed") ) { %>
+			<h2>Download Failed</h2>
+			<p>The file you requested could not be downloaded.</p>
 		<% } else { %>
 			<h2>UNKNOWN ERROR: <%= request.getAttribute("errorType") %></h2>
 			<p>Well, this is embarassing... An unknown error has occured! :(</p>
