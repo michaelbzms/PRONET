@@ -18,7 +18,6 @@
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 	<style>
-		<!-- temporary style until we get markdown working (or not) -->
 		#article_input_editor{
 			width: 100%;
 			height: 15vh;

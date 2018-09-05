@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, java.time.LocalDateTime, model.DataBaseBridge, model.Message, model.MyUtil" %>
-<!-- This JSP is loaded very often (ex every 2 secs) -->
+<%  // This JSP is loaded very often (ex every 2 secs) %>
 
 <%! private DataBaseBridge newMessagesConnection = new DataBaseBridge();    // this connection will close by finalize when this jsp servlet gets destroyed %>
 
