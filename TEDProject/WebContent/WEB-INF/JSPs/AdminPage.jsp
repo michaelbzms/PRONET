@@ -13,6 +13,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
+	<script src="/TEDProject/Javascript/js-cookie.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 </head>
 <body>
@@ -94,6 +95,12 @@
 		    alert("At least one Professional must be selected."); 
 		    return false;
 		}
+		setInterval(function() {
+		  if (Cookies.get("fileDownloading")) {    
+		    Cookies.remove("fileDownloading", { path: '/TEDProject/admin' });		// clean the cookie for future downoads
+		    location.href = "/TEDProject/admin/AdminServlet";		// redirect
+		  }
+		}, 500);
 	</script>
 </body>
 </html>

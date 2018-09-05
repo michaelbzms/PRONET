@@ -6,6 +6,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +44,8 @@ public class AdminServlet extends HttpServlet {
 					}
 			        ServletContext context = getServletContext();
 					String profListFilePath = context.getRealPath("/professionalsList.xml");
-				    XMLProfessionalList.jaxbProfListToXML(SiteFunctionality.createXMLprofList(profIDs), profListFilePath);		    
+				    XMLProfessionalList.jaxbProfListToXML(SiteFunctionality.createXMLprofList(profIDs), profListFilePath);
+				    response.addCookie(new Cookie("fileDownloading", "true"));
 				    if (! MyUtil.forceDownloadFile(response, context, profListFilePath)) {
 						request.setAttribute("errorType", "downloadFailed");
 						RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
