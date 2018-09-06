@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+
+.grid_container_container {	
+ 	overflow-y: auto;
+    max-height: 400px;
+}
+
 .grid_container{
 	display: flex; /* Magic begins */
   	flex-wrap: wrap; /* Multiline */
@@ -89,7 +95,20 @@
 	margin-bottom: 3px;
 }
 
-.grid_container_container {	
- 	overflow-y: auto;
-    max-height: 400px;
+.notification{
+	margin: 5px 20px 5px 20px;
+	background-color: #edf3ff;
+	border-color: #0e1854;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 5px;
+}
+
+.notification:hover{
+	background-color: #88c0ff;
+}
+
+.notification p{
+	margin: 0px;
+	padding: 0px;
 }

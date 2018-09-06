@@ -214,6 +214,31 @@ public class DataBaseBridge {
 		}
 		return prof;
 	}
+	
+	public Professional getBasicProfessionalInfo(int ID) {
+		if (!connected) return null;
+		Professional prof = null;
+		String Query = "SELECT idProfessional, firstName, lastName, profilePictureURI FROM Professionals WHERE idProfessional = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				prof = new Professional();
+				prof.setID(resultSet.getInt("idProfessional"));
+				prof.setFirstName(resultSet.getString("firstName"));
+				prof.setLastName(resultSet.getString("lastName"));
+				prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
+				// leave rest null
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return prof;
+	}
 
 	public List<Professional> getConnectedProfessionalsFor(int ID) {
 		if (!connected) return null;
@@ -1094,6 +1119,69 @@ public class DataBaseBridge {
 		return IDs;
 	}
 
+	public List<Notification> getNotificationsFor(int profID){
+		if (!connected) return null;
+		List<Notification> notifications = null;
+		String Query = "((SELECT 0 AS Type, a.idArticle AS idArticle, i.idInterestShownBy AS ByProf, i.dateShown AS Timestamp, null AS Comment, -1 AS commentID "
+				 	 + "  FROM Articles a, ArticleInterests i "
+				 	 + "  WHERE a.idAuthor = ? AND a.idArticle = i.idArticle AND i.seen = false "
+				 	 + ")  UNION  ("
+				 	 + "  SELECT 1 AS Type, a.idArticle AS idArticle, c.idWrittenBy AS ByProf, c.dateWritten AS Timestamp, c.comment AS Comment, c.idComment AS commentID "
+				 	 + "  FROM Articles a, ArticleComments c "
+				 	 + "  WHERE  a.idAuthor = ? AND a.idArticle = c.idArticle AND c.seen = false )) "
+				 	 + "ORDER BY Timestamp DESC;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			notifications = new ArrayList<Notification>();
+			Notification n = null;
+			while (resultSet.next()) {
+				n = new Notification(resultSet.getBoolean("Type"));
+				n.setArticleID(resultSet.getInt("idArticle"));
+				n.setNotifiedByProfID(resultSet.getInt("ByProf"));
+				n.setComment(resultSet.getString("Comment"));          // might be null if Type is 1 (Interest)
+				n.setCommentID(resultSet.getLong("commentID"));        // might be -1 if Type is 1 (Interest)
+				n.setTimeHappened(resultSet.getTimestamp("Timestamp", cal).toLocalDateTime());
+				notifications.add(n);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return notifications;
+	}
+	
+	public boolean markCommentAsSeen(long commentID) {
+		if (!connected) return false;
+		String Update = "UPDATE ArticleComments SET seen = true WHERE idComment = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Update);
+			statement.setLong(1, commentID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean markInterestAsSeen(int articleID, int InterestShownByID) {
+		if (!connected) return false;
+		String Update = "UPDATE ArticleInterests SET seen = true WHERE idArticle = ? AND idInterestShownBy = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Update);
+			statement.setInt(1, articleID);
+			statement.setInt(2, InterestShownByID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 }
 
 

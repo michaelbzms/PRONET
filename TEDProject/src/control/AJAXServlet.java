@@ -180,6 +180,39 @@ public class AJAXServlet extends HttpServlet {
 						RequetsDispatcherObj.forward(request, response);
 					}
 					break;
+				case "markAsSeen":
+					String type = request.getParameter("type");
+					String commentIdstr = request.getParameter("commentID");
+					String interestBystr = request.getParameter("interestBy");
+					String articleIdstr = request.getParameter("articleID");
+					if ( type == null || commentIdstr == null || interestBystr == null || articleIdstr == null ) {
+						out.write("error: ajax request missing parameter(s)");
+					} else {
+						int articleId = -1, interestById = -1;
+						long commentId = -1;
+						try {
+							articleId = Integer.parseInt(articleIdstr);
+							interestById = Integer.parseInt(interestBystr);
+							commentId = Long.parseLong(commentIdstr);
+						} catch ( NumberFormatException e ) {
+							out.write("error: parameter should be integer number but isn't");
+							return;
+						}
+						if ( type.equals("true") ) {
+							DataBaseBridge db = new DataBaseBridge();
+							db.markCommentAsSeen(commentId);
+							db.close();
+							out.write("success");
+						} else if (type.equals("false")) {
+							DataBaseBridge db = new DataBaseBridge();
+							db.markInterestAsSeen(articleId, interestById);
+							db.close();
+							out.write("success");
+						} else {
+							out.write("error: ambiguous type parameter");
+						}
+					}
+					break;
 				default:
 					out.write("Error: Invalid AJAX action!");
 					break;

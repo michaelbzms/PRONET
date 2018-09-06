@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Notifications</title>
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Notification, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
@@ -70,6 +70,65 @@
 					   			<br>
 					   		</li>
 				     <% } %>
+				   		</ul>
+				   		<h2>Notifications</h2>
+				   		<ul class="list-group">
+				   			<% List<Notification> notifications = db.getNotificationsFor(prof.getID()); 
+				   			   if ( notifications != null ) {
+				   				   	int i = 0;
+				   			  		for ( Notification n : notifications ) { 
+					   			   		Professional notifier = db.getBasicProfessionalInfo(n.getNotifiedByProfID());
+					   			   		if ( notifier != null ) { %>
+						   					<li id="notification<%= i %>" class="notification">
+						   						<% if ( n.getIsComment() ) {  // comment  %>
+						   							<p style="float: left">
+						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+						   								has commented on one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
+						   							</p>
+						   							<button id="cancel<%= i %>" class="btn btn-outline-primary" style="float: right">✓</button>
+						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+						   							<p style="float: left; clear: left; color: #0e1956">"<%= n.getComment() %>"</p>
+						   						<% } else {                   // interest %>
+						   							<p style="float: left">
+						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+						   								has shown interest in one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
+						   							</p>
+						   							<button id="cancel<%= i %>"  class="btn btn-outline-primary" style="float: right">✓</button>
+						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+						   						<% } %>
+						   						<script>
+						   							// when marked as "seen" this should also be reflected in the database
+						   							$("#cancel<%= i %>").on("click", function(){
+						   								
+														$.ajax({
+								    						url: "/TEDProject/AJAXServlet?action=markAsSeen",
+								    						type: "post",
+								    						data: {  
+								    							type: <%= n.getIsComment() %>,               // true -> comment, false -> interest
+								    							commentID: <%= n.getCommentID() %>,          // PK of ArticleComments
+								    							interestBy: <%= n.getNotifiedByProfID() %>,  // part of PK of ArticleInterests 
+								    							articleID: <%= n.getArticleID() %>           // part of PK of ArticleInterests 
+								    						},
+								    						success: function(response){
+								    							if ( response === "success" ) {
+								    								$("#notification<%= i %>").fadeOut();
+								    							} else {
+								    								window.alert(response);
+								    							}
+								    						}
+														});
+						   								
+						   							});
+						   						</script>
+						   					</li>   
+					   					<% } else { %>
+					   						<li class="notification">
+					   							<p>Error: We could not recover the Professional who notified you from our database.</p>
+					   						</li> 
+				   			<% 			}
+					   			   		i++;
+				   			 		} 
+				   			   }%>
 				   		</ul>
 				<% } else { %>
 				   		<p>Ooops! It appears that we cannot load your connection requests from our database.<br>
