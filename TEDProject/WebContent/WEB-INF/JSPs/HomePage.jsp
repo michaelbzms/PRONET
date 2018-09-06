@@ -20,7 +20,7 @@
 	<style>
 		#article_input_editor{
 			width: 100%;
-			height: 15vh;
+			height: 10vh;
 			resize: none;
 			margin: 5px 0px 10px 0px;
 			box-shadow: 0px 0px 3px 0px #6397ff;
@@ -78,8 +78,8 @@
 						<div class="article_input">
 							<form id="article_input_form" method="post" enctype="multipart/form-data">
 						   		<textarea id="article_input_editor" name="text" autofocus></textarea><br>
-						   		<input id="article_file_input" type="file" name="file_input" accept="/*" multiple
-						   		       style="display: inline-block; cursor: pointer; margin-bottom: 15px">
+							   	<input id="article_file_input" type="file" name="file_input" accept="/*" multiple
+							   		   style="display: inline-block; cursor: pointer; float: left">
 						   		<div class="buttonContainer text-right">
 						   			<input type="submit" value="Post" class="btn btn-primary">
 							   	</div>
@@ -119,17 +119,64 @@
 							   	</script>
 						   	</form>
 						</div>
-						<div class="wall">
+						<div id="wall" class="wall">
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							<% List<Article> articles = db.getWallArticlesFor(prof.getID()); 
-							   if (articles != null) {
-							   		for (Article article : articles ) { %>
+							<%	int InitialCount = 10;       // number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
+								int[] articleIDs = db.getWallArticlesIDsFor(prof.getID()); 
+								if (articleIDs != null) {
+									for (int i = 0 ; i < InitialCount && i < articleIDs.length ; i++) {  %>
 										<jsp:include page="Article.jsp"> 
-											<jsp:param name="ArticleID" value="<%= article.getID() %>" /> 
+											<jsp:param name="ArticleID" value="<%= articleIDs[i] %>" /> 
 										</jsp:include>							
 							<% 		} 
 								} %>
 						</div>
+						<script>
+							// Client-side variables:
+							var nextArticleIDindex = <% if (articleIDs!= null && articleIDs.length > InitialCount ) { %> <%= InitialCount %> <% } else { %> -1 <% } %>;
+							var ArticleIDs = [];
+							<% for (int i = 0 ; i < articleIDs.length ; i++ ) { %>   // "transfer" Java article IDs table to client side (aka in javascript)
+								ArticleIDs[<%= i %>] = <%= articleIDs[i] %>;
+							<% } %>
+							var padding = 1;        // should be >= 1 to avoid decimal errors. Could be more if we want to load new articles earlier than the exact bottom-scroll but not too high
+							
+							// if scrolled to bottom and we can show more articles then do so with AJAX
+							$("#wall").scroll(function(){
+								// DEBUG: console.log("scrollTop + height = " + ( $("#wall").scrollTop() +  $("#wall").height()) + ", scrollHeight = " + $("#wall")[0].scrollHeight );
+								
+								if ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && ( $("#wall").scrollTop() + $("#wall").height() + padding >= $("#wall")[0].scrollHeight ) ){   // plus one to avoid decimal errors
+									// DEBUG: console.log("nextArticleIDindex = " + nextArticleIDindex + ", ArticleIDs[nextArticleIDindex] = " + ArticleIDs[nextArticleIDindex]);
+									
+									$.ajax({
+			    						url: "/TEDProject/AJAXServlet?action=loadArticle",
+			    						type: "post",
+			    						data: { ArticleID : ArticleIDs[nextArticleIDindex] },
+			    						success: function(response){
+			    							$("#wall").append(response);
+			    						}
+									});
+									
+									nextArticleIDindex++;    // this update MUST be done synchronoysly (and NOT on AJAX callback)
+								}
+							});
+							
+							// if we load less articles than enough to cause overflow due to small "InitialCount" value then load more as a client until overflow happens
+							$("#wall").ready(function(){
+								while ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && $("#wall")[0].offsetHeight >= $("#wall")[0].scrollHeight ){   // while no overflow has happened after loading "InitialCount" articles then load more right now (immediatelly after loading the page)
+									$.ajax({
+			    						url: "/TEDProject/AJAXServlet?action=loadArticle",
+			    						type: "post",
+			    						async: false,           // make these calls synchronous!
+			    						data: { ArticleID : ArticleIDs[nextArticleIDindex] },
+			    						success: function(response){
+			    							$("#wall").append(response);
+			    						}
+									});
+									nextArticleIDindex++;
+								}
+								$("#wall").scrollTop(0);     // scroll back to top
+							});
+						</script>
 					</div>	
 				</div>
 				<jsp:include page="/footer.html"></jsp:include>

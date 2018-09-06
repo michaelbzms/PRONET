@@ -164,6 +164,22 @@ public class AJAXServlet extends HttpServlet {
 						out.write("success");
 					}
 					break;
+				case "loadArticle":
+					String articleIDstr = request.getParameter("ArticleID");
+					if ( articleIDstr == null ) {
+						out.write("error: empty request for article");
+					} else {
+						int articleID = -1;
+						try {
+							articleID = Integer.parseInt(articleIDstr);
+						} catch ( NumberFormatException e ) {
+							out.write("error: article ID not an integer number");
+							return;
+						}   // "ArticleID" is already a request parameter as needed for Article.jsp
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Article.jsp");
+						RequetsDispatcherObj.forward(request, response);
+					}
+					break;
 				default:
 					out.write("Error: Invalid AJAX action!");
 					break;

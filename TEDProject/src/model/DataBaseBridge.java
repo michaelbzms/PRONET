@@ -1062,10 +1062,10 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public List<Article> getWallArticlesFor(int profID) {
+	public int[] getWallArticlesIDsFor(int profID) {
 		if (!connected) return null;
-		List<Article> articles = null;
-		String Query = "SELECT a.idArticle, a.idAuthor, a.postedDate, a.content, a.containsFiles FROM Articles a, ConnectedProfessionals c WHERE a.idAuthor = ? OR "
+		List<Integer> articleIDs = null;
+		String Query = "SELECT a.idArticle FROM Articles a, ConnectedProfessionals c WHERE a.idAuthor = ? OR "
 					 + "(a.idAuthor = c.idProfessional1 AND c.idProfessional2 = ?) OR (a.idAuthor = c.idProfessional2 AND c.idProfessional1 = ?) OR "
 					 + "EXISTS (SELECT * FROM ArticleInterests ai, ConnectedProfessionals cp "
 					 +         "WHERE a.idArticle = ai.idArticle AND "
@@ -1079,22 +1079,20 @@ public class DataBaseBridge {
 			statement.setInt(4, profID);
 			statement.setInt(5, profID);
 			ResultSet resultSet = statement.executeQuery();
-			articles = new ArrayList<Article>();
-			Article article = null;
+			articleIDs = new ArrayList<Integer>();
 			while (resultSet.next()) {
-				article = new Article();
-				article.setID(resultSet.getInt("idArticle"));
-				article.setAuthorID(resultSet.getInt("idAuthor"));
-				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
-				article.setContent(resultSet.getString("content"));
-				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
-				articles.add(article);
+				articleIDs.add(resultSet.getInt("idArticle"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return articles;
+		// Convert list to an int[] for easier use:
+		int[] IDs = new int[articleIDs.size()];
+		for (int i = 0 ; i < articleIDs.size() ; i++) {
+			IDs[i] = articleIDs.get(i);
+		}
+		return IDs;
 	}
 
 }

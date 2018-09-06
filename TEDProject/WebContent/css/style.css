@@ -113,7 +113,7 @@ label {
 
 .wall{
 	overflow-y: scroll;
-	max-height: 60vh;
+	max-height: 80vh;
 }
 
 .neon_header{

@@ -21,13 +21,13 @@
 	Article article = db.getArticle(articleID);
 	if (article == null) { %>
 		<p>Error: Article not found.</p>
-		return;
-<%	}	
+	<%	return;
+	}	
 	Professional authorProf = db.getProfessional(article.getAuthorID()); 
 	if (authorProf == null) { %>
 		<p>Error: Article author not found.</p>
-		return;
-<%	}	%>
+	<%	return;
+	}	%>
 	<div class="article">
 		<div class="article_header">
 			<a href="/TEDProject/ProfileLink?ProfID=<%= authorProf.getID() %>">
