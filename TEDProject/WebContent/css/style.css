@@ -111,11 +111,6 @@ label {
 	box-shadow: 0px 0px 3px 1px #6397ff;
 }
 
-.wall{
-	overflow-y: scroll;
-	max-height: 80vh;
-}
-
 .neon_header{
 	color: #ecf2ff;
 	text-shadow:

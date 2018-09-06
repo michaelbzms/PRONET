@@ -119,9 +119,9 @@
 							   	</script>
 						   	</form>
 						</div>
-						<div id="wall" class="wall">
+						<div id="wall">
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							<%	int InitialCount = 10;       // number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
+							<%	int InitialCount = 3;       // number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
 								int[] articleIDs = db.getWallArticlesIDsFor(prof.getID()); 
 								if (articleIDs != null) {
 									for (int i = 0 ; i < InitialCount && i < articleIDs.length ; i++) {  %>
@@ -141,10 +141,10 @@
 							var padding = 1;        // should be >= 1 to avoid decimal errors. Could be more if we want to load new articles earlier than the exact bottom-scroll but not too high
 							
 							// if scrolled to bottom and we can show more articles then do so with AJAX
-							$("#wall").scroll(function(){
-								// DEBUG: console.log("scrollTop + height = " + ( $("#wall").scrollTop() +  $("#wall").height()) + ", scrollHeight = " + $("#wall")[0].scrollHeight );
+							$(window).scroll(function(){
+								// console.log("scrollTop + height = " + ( $("#wall").scrollTop() +  $("#wall").height()) + ", scrollHeight = " + $("#wall")[0].scrollHeight );
 								
-								if ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && ( $("#wall").scrollTop() + $("#wall").height() + padding >= $("#wall")[0].scrollHeight ) ){   // plus one to avoid decimal errors
+								if ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && ( $(window).scrollTop() + $(window).height() + padding >= document.documentElement.scrollHeight ) ){   // plus one to avoid decimal errors
 									// DEBUG: console.log("nextArticleIDindex = " + nextArticleIDindex + ", ArticleIDs[nextArticleIDindex] = " + ArticleIDs[nextArticleIDindex]);
 									
 									$.ajax({
@@ -162,7 +162,7 @@
 							
 							// if we load less articles than enough to cause overflow due to small "InitialCount" value then load more as a client until overflow happens
 							$("#wall").ready(function(){
-								while ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && $("#wall")[0].offsetHeight >= $("#wall")[0].scrollHeight ){   // while no overflow has happened after loading "InitialCount" articles then load more right now (immediatelly after loading the page)
+								while ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && $("body").height() <= $(window).height() ){   // while no overflow has happened to window after loading "InitialCount" articles then load more right now (immediatelly after loading the page)
 									$.ajax({
 			    						url: "/TEDProject/AJAXServlet?action=loadArticle",
 			    						type: "post",
@@ -174,8 +174,9 @@
 									});
 									nextArticleIDindex++;
 								}
-								$("#wall").scrollTop(0);     // scroll back to top
+								$(window).scrollTop(0);     // scroll back to top
 							});
+							
 						</script>
 					</div>	
 				</div>
