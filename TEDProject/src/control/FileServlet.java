@@ -13,12 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.PropertiesManager;
+
 
 @WebServlet("/FileServlet")
 public class FileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	public static final String SaveDirectory = "D:/TEDProjectStorage";
+	public static final String SaveDirectory = PropertiesManager.getProperty("saveDir");
 	
     
     public FileServlet() {

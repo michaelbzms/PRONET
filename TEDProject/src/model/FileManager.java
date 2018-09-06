@@ -15,11 +15,13 @@ import javax.servlet.http.Part;
 
 public class FileManager {
 	
+	private static String projectURL = PropertiesManager.getProperty("protocol") + "://" + PropertiesManager.getProperty("hostname") + ':' + PropertiesManager.getProperty("port") + "/TEDProject";
+	
 	public static boolean editProfilePicture(Professional tempProf, Part filePart, String saveLocation, String userUploadFilePath, int profID) {     // (!) modifies tempProf accordingly
 		DataBaseBridge db = new DataBaseBridge();
 		Professional prof = db.getProfessional(profID);
 		db.close();
-		if ( prof.getProfilePicURI() == null || !(new File(saveLocation + "/profile/" + prof.getProfile_pic_name())).exists()  || prof.getProfilePicURI().equals("http://localhost:8080/TEDProject/images/defaultProfilePic.png") ) {
+		if ( prof.getProfilePicURI() == null || !(new File(saveLocation + "/profile/" + prof.getProfile_pic_name())).exists()  || prof.getProfilePicURI().equals(projectURL + "/images/defaultProfilePic.png") ) {
 			// if previous picture was the default picture (or simply does not exist) then must choose a new unique name and save the picture under it
 			String unique_name = "", extension = "";
 			int i = userUploadFilePath.lastIndexOf('.');
@@ -31,7 +33,7 @@ public class FileManager {
 				f = new File(saveLocation + "/profile/" + unique_name + "." + extension);
 			} while (f.exists() && !f.isDirectory());           // assure it's unique
 			// update tempProf to reflect changes
-			tempProf.setProfilePicURI("http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "." + extension +"&type=profile");
+			tempProf.setProfilePicURI(projectURL + "/FileServlet?file=" + unique_name + "." + extension +"&type=profile");
 			// save to disk
 			File UploadedProfiles = new File(saveLocation + "/profile");
 			File newfile = new File(UploadedProfiles, unique_name + "." + extension);
@@ -110,7 +112,7 @@ public class FileManager {
 			}
 			
 			// save to database its URI
-			String fileURI = "http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "&type=article";
+			String fileURI = projectURL + "/FileServlet?file=" + unique_name + "&type=article";
 			db.addArticleFile(articleID, fileURI);
 		}
 		return true;

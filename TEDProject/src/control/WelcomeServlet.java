@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import model.PropertiesManager;
 import model.SiteFunctionality;
 
 
@@ -90,8 +91,9 @@ public class WelcomeServlet extends HttpServlet {
 				// Figure out under which file name his uploaded profile picture SHOULD be saved - if it exists, else use the default -
 				boolean should_save_image = false;
 				String unique_name = "", extension = "", diskFilePath = "";
+				String projectURL = PropertiesManager.getProperty("protocol") + "://" + PropertiesManager.getProperty("hostname") + ':' + PropertiesManager.getProperty("port") + "/TEDProject";
 				if (profilePicFileURL.isEmpty()) {      // use default
-					profilePicFileURL = "http://localhost:8080/TEDProject/images/defaultProfilePic.png";
+					profilePicFileURL = projectURL + "/images/defaultProfilePic.png";
 				} else {                                 // save image (part) to server's images under a unique name
 					int i = profilePicFileURL.lastIndexOf('.');
 					if (i > 0) { extension = profilePicFileURL.substring(i+1); }
@@ -102,7 +104,7 @@ public class WelcomeServlet extends HttpServlet {
 						f = new File(UploadSaveDirectory + "/profile/" + unique_name + "." + extension);
 					} while (f.exists() && !f.isDirectory());          // assure it's unique
 					diskFilePath = UploadSaveDirectory + "/profile/" + unique_name + "." + extension;
-					profilePicFileURL = "http://localhost:8080/TEDProject/FileServlet?file=" + unique_name + "." + extension + "&type=profile";
+					profilePicFileURL = projectURL + "/FileServlet?file=" + unique_name + "." + extension + "&type=profile";
 					should_save_image = true;
 				}
 				// call register function from the model

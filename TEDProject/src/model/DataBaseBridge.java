@@ -18,10 +18,9 @@ import java.sql.SQLException;
 
 public class DataBaseBridge {
 	
-	/* These fields are better hardcoded only here than all over the place on the caller's side */
-	final private String database_url = "jdbc:mysql://localhost:3306/TED?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";   // not using SSL yet
-	final private String DBUser = "myuser";
-	final private String DBPassword = "MYUSERSQL";
+	final private String dbURL = PropertiesManager.getProperty("dbURL");
+	final private String dbUser = PropertiesManager.getProperty("dbUser");
+	final private String dbPassword = PropertiesManager.getProperty("dbPassword");
 	private Connection connection;
 	private boolean connected;
 	private Calendar cal;
@@ -33,7 +32,7 @@ public class DataBaseBridge {
 		cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(database_url, DBUser, DBPassword);
+			connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 		} catch (ClassNotFoundException e) {
 			connected = false;
 			System.err.println("Forcing the JDBC Driver to register itself failed!");

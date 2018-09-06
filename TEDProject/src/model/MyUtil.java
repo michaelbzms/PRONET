@@ -2,8 +2,6 @@ package model;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -21,20 +19,22 @@ public final class MyUtil {
 
 	public static String printDate(LocalDateTime date, boolean withTime) {
 		DateTimeFormatter formatter;
+		String dateFormat = PropertiesManager.getProperty("dateFormat");
 		if (withTime) {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+			formatter = DateTimeFormatter.ofPattern(dateFormat + " HH:mm:ss");
 		} else {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			formatter = DateTimeFormatter.ofPattern(dateFormat);
 		}
 		return date.format(formatter);
 	}
 	
 	public static LocalDateTime getLocalDateTimeFromString(String date_str, boolean withTime) {
 		DateTimeFormatter formatter;
+		String dateFormat = PropertiesManager.getProperty("dateFormat");
 		if (withTime) {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+			formatter = DateTimeFormatter.ofPattern(dateFormat + " HH:mm:ss");
 		} else {
-			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			formatter = DateTimeFormatter.ofPattern(dateFormat);
 		}
 		return LocalDateTime.parse(date_str, formatter);
 	}
@@ -84,10 +84,7 @@ public final class MyUtil {
 	        }	         
 	        inStream.close();
 	        outStream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}  

@@ -21,6 +21,7 @@ import javax.servlet.http.Part;
 import model.DataBaseBridge;
 import model.FileManager;
 import model.Professional;
+import model.PropertiesManager;
 import model.SiteFunctionality;
 
 
