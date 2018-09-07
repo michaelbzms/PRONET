@@ -16,14 +16,30 @@
 
 .content_container {
 	margin: 10px;
+	word-wrap: break-word;
 }
 
-.comment_container {
+.comments_container {
     box-shadow: 0px -3px 2px -2px #cccccc;
+    margin-top: 5px;
     padding: 5px;
 }
 
+.past_comments_container {
+	margin-top: 5px;
+	overflow-y: auto;
+    max-height: 500px;
+}
+
+.comment {
+	margin: 5px;
+	padding: 10px 10px 5px 10px;
+	border: lightgray solid 1px;
+	border-radius: 5px;
+}
+
 .comment_form {
+	margin-top: 5px;
 	padding: 0 10px;
     height: 0;
     overflow: hidden;
@@ -33,4 +49,10 @@
 .comment_form_text {
 	height: 100px;
 	width: 100%;
+}
+
+.comment_prof_img {
+	height: 32px;
+    width: 32px;
+    margin: 0 5px;
 }

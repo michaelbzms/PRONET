@@ -350,6 +350,21 @@ public class SiteFunctionality {
 		return db.addArticle(postText, prof.getID(), containsFiles);
 	}
 	
+	public static int addComment(int articleID, int authorID, String commentText) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( db.createComment(articleID, authorID, commentText) ) {
+			db.close(); 
+			return 0;	
+		} else {				// database error
+			db.close(); 
+			return -1;
+		}
+	}
+	
 	public static XMLProfessional createXMLprof(int profID) {
 		DataBaseBridge db = new DataBaseBridge();
 		if ( !db.checkIfConnected() ) {
@@ -360,7 +375,9 @@ public class SiteFunctionality {
 		xmlProf.setProf(db.getProfessional(profID));
 		xmlProf.setProfArticles(db.getProfArticles(profID));
 		xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
+		xmlProf.setProfComments(db.getComments(profID, false));
 		// + more
+		db.close();
 		return xmlProf;
 	}
 	
@@ -377,9 +394,11 @@ public class SiteFunctionality {
 			xmlProf.setProf(db.getProfessional(profID));
 			xmlProf.setProfArticles(db.getProfArticles(profID));
 			xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
+			xmlProf.setProfComments(db.getComments(profID, false));
 			// + more
 			profList.add(xmlProf);
 		}
+		db.close();
 		XMLProfessionalList xmlProfList = new XMLProfessionalList();
 		xmlProfList.setProfList(profList);
 		return xmlProfList;

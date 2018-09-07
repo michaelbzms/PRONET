@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -109,9 +110,9 @@ public class AJAXServlet extends HttpServlet {
 					}
 					break;
 				case "checkForNewMessages":             // this happens really often (ex: every 2 secs)
-					String  latestGot = request.getParameter("latestGot");
-					String  homeprof = request.getParameter("homeprof");
-					String  awayprof = request.getParameter("awayprof");
+					String latestGot = request.getParameter("latestGot");
+					String homeprof = request.getParameter("homeprof");
+					String awayprof = request.getParameter("awayprof");
 					if ( latestGot == null || homeprof == null || awayprof == null ) {
 						if (!warned) { System.out.println("Invalid arguements at checkForNewMessages action in AJAXServlet.java"); warned = true; }
 					} else {
@@ -178,6 +179,30 @@ public class AJAXServlet extends HttpServlet {
 						}   // "ArticleID" is already a request parameter as needed for Article.jsp
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Article.jsp");
 						RequetsDispatcherObj.forward(request, response);
+					}
+					break;
+				case "addComment":
+					String commentText = request.getParameter("commentText");
+					String cArticleIDstr = request.getParameter("ArticleID");
+					String cAuthorIDstr = request.getParameter("AuthorID");
+					if (commentText == null || cArticleIDstr == null) {
+						out.write("AJAX add comment request reached server with invalid parameters");
+						System.out.println("AJAX add comment request reached server with invalid parameters");
+					} else if ( !SiteFunctionality.checkInputText(commentText, false, 0) ) {    // TODO: size restriction policy for article posts?
+						out.write("illegal comment text input characters");
+					} else {
+						int articleID = -1;
+						int authorID = -1;
+						try {
+							articleID = Integer.parseInt(cArticleIDstr);
+							authorID = Integer.parseInt(cAuthorIDstr);
+						} catch ( NumberFormatException e ) {
+							e.printStackTrace();	
+							return;
+						}
+						commentText = commentText.replace("\n", "\n<br>\n");
+						SiteFunctionality.addComment(articleID, authorID, commentText);
+						out.write("success");
 					}
 					break;
 				case "markAsSeen":

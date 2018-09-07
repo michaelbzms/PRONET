@@ -17,7 +17,7 @@ public class XMLProfessional {
 	private List<Article> profArticles = null;
 	private List<WorkAd> profWorkAds = null;
 	//private List<Likes> profLikes = null;
-	//private List<Comments> profComments = null;
+	private List<Comment> profComments = null;
 	//private List<Integer> profNetwork = null;
 
 	// XmlAttribute profID ?
@@ -36,6 +36,10 @@ public class XMLProfessional {
 	public List<WorkAd> getProfWorkAds() { return profWorkAds; }
 	public void setProfWorkAds(List<WorkAd> profWorkAds) { this.profWorkAds = profWorkAds; }
 	
+	@XmlElementWrapper(name = "profComments") 
+	@XmlElement(name = "comment")
+	public List<Comment> getProfComments() { return profComments; }
+	public void setProfComments(List<Comment> profComments) { this.profComments = profComments; }
 	
 	public static void jaxbProfToXML(XMLProfessional xmlProf, String filename) {
 		try {

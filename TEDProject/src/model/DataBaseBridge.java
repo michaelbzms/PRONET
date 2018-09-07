@@ -1089,19 +1089,20 @@ public class DataBaseBridge {
 	public int[] getWallArticlesIDsFor(int profID) {
 		if (!connected) return null;
 		List<Integer> articleIDs = null;
-		String Query = "SELECT a.idArticle FROM Articles a, ConnectedProfessionals c WHERE a.idAuthor = ? OR "
-					 + "(a.idAuthor = c.idProfessional1 AND c.idProfessional2 = ?) OR (a.idAuthor = c.idProfessional2 AND c.idProfessional1 = ?) OR "
-					 + "EXISTS (SELECT * FROM ArticleInterests ai, ConnectedProfessionals cp "
-					 +         "WHERE a.idArticle = ai.idArticle AND "
-					 +               "(( ai.idInterestShownBy = cp.idProfessional1 AND cp.idProfessional2 = ? ) OR ( ai.idInterestShownBy = cp.idProfessional2 AND cp.idProfessional1 = ? ))) "
-					 + "ORDER BY a.postedDate DESC;";
+		String Query = "SELECT * FROM Articles;";
+//		String Query = "SELECT a.idArticle FROM Articles a, ConnectedProfessionals c WHERE a.idAuthor = ? OR "
+//					 + "(a.idAuthor = c.idProfessional1 AND c.idProfessional2 = ?) OR (a.idAuthor = c.idProfessional2 AND c.idProfessional1 = ?) OR "
+//					 + "EXISTS (SELECT * FROM ArticleInterests ai, ConnectedProfessionals cp "
+//					 +         "WHERE a.idArticle = ai.idArticle AND "
+//					 +               "(( ai.idInterestShownBy = cp.idProfessional1 AND cp.idProfessional2 = ? ) OR ( ai.idInterestShownBy = cp.idProfessional2 AND cp.idProfessional1 = ? ))) "
+//					 + "ORDER BY a.postedDate DESC;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
-			statement.setInt(1, profID);
-			statement.setInt(2, profID);
-			statement.setInt(3, profID);
-			statement.setInt(4, profID);
-			statement.setInt(5, profID);
+//			statement.setInt(1, profID);
+//			statement.setInt(2, profID);
+//			statement.setInt(3, profID);
+//			statement.setInt(4, profID);
+//			statement.setInt(5, profID);
 			ResultSet resultSet = statement.executeQuery();
 			articleIDs = new ArrayList<Integer>();
 			while (resultSet.next()) {
@@ -1118,7 +1119,55 @@ public class DataBaseBridge {
 		}
 		return IDs;
 	}
-
+	
+	public List<Comment> getComments(int ID, boolean articleComments) {		// if articleComments is false then it returns prof comments (ID = profID instead of articleID)
+		if (!connected) return null;
+		List<Comment> comments = null;
+		String Query;
+		if (articleComments) {
+			Query = "SELECT * FROM ArticleComments WHERE idArticle = ? ORDER BY dateWritten DESC;";		// newer comments first
+		} else {
+			Query = "SELECT * FROM ArticleComments WHERE idWrittenBy = ? ORDER BY dateWritten ASC;";
+		}
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, ID);
+			ResultSet resultSet = statement.executeQuery();
+			comments = new ArrayList<Comment>();
+			Comment comment = null;
+			while (resultSet.next()) {
+				comment = new Comment();
+				comment.setID(resultSet.getInt("idComment"));
+				comment.setArticleID(resultSet.getInt("idArticle"));
+				comment.setAuthorID(resultSet.getInt("idWrittenBy"));
+				comment.setText(resultSet.getString("comment"));
+				comment.setDateWritten(resultSet.getTimestamp("dateWritten", cal).toLocalDateTime());
+				comments.add(comment);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return comments;
+	}
+	
+	public boolean createComment(int articleID, int profID, String text) {
+		if (!connected) return false;
+		String insertString = "INSERT INTO ArticleComments (idComment, idArticle, idWrittenBy, comment, dateWritten) VALUES (default, ?, ?, ?, ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(insertString);
+			statement.setInt(1, articleID);
+			statement.setInt(2, profID);
+			statement.setString(3, text);
+			statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public List<Notification> getNotificationsFor(int profID){
 		if (!connected) return null;
 		List<Notification> notifications = null;
@@ -1181,7 +1230,7 @@ public class DataBaseBridge {
 		}
 		return true;
 	}
-	
+
 }
 
 
