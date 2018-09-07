@@ -70,19 +70,19 @@
 						   			</div>
 						   			<br>
 						   		</li>
-					     <% } 
-					    } else { %>
+					     <% } %>
+					   		</ul>
+					 <% } else { %>
 					    	<p>You don't have any Connection Requests.</p>
 					 <% } %>
-				   		</ul>
 				   		<br>
 				   		<h2>Notifications</h2>
-			   			<% List<Notification> notifications = db.getNotificationsFor(prof.getID()); %>
-				   		<ul class="list-group">
-		   			 <% if ( notifications != null ) {
+			   			<% List<Notification> notifications = db.getNotificationsFor(prof.getID());
+		   			    if ( notifications != null ) {
 		   				 	if (! notifications.isEmpty() ) {
-			   				   	int i = 0;
-			   			  		for ( Notification n : notifications ) { 
+			   				   	int i = 0; %>
+						   	    <ul class="list-group">
+			   			  	 <% for ( Notification n : notifications ) { 
 				   			   		Professional notifier = db.getBasicProfessionalInfo(n.getNotifiedByProfID());
 				   			   		if ( notifier != null ) { %>
 					   					<li id="notification<%= i %>" class="notification">
@@ -133,12 +133,12 @@
 				   						</li> 
 			   						<% }
 				   			   		i++;
-			   			 		}
-			   				 } else { %>
+			   			 		} %>
+			   			  	 	</ul>
+			   			 <% } else { %>
 						    	<p>You don't have any Notifications.</p>
 						 <% }
 		   			    } %>
-			   			</ul>
 				<% } else { %>
 				   		<p>Ooops! It appears that we cannot load your connection requests from our database.<br>
 				   		Please contact our administrators.</p>

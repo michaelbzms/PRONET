@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -56,6 +55,7 @@ public class AJAXServlet extends HttpServlet {
 			out.write("Error: null action!");
 		} else {
 			RequestDispatcher RequetsDispatcherObj;
+			String articleIDstr;
 			switch(action) {
 				case "searchProfessional":
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/SearchResults.jsp");
@@ -166,7 +166,7 @@ public class AJAXServlet extends HttpServlet {
 					}
 					break;
 				case "loadArticle":
-					String articleIDstr = request.getParameter("ArticleID");
+					articleIDstr = request.getParameter("ArticleID");
 					if ( articleIDstr == null ) {
 						out.write("error: empty request for article");
 					} else {
@@ -183,9 +183,9 @@ public class AJAXServlet extends HttpServlet {
 					break;
 				case "addComment":
 					String commentText = request.getParameter("commentText");
-					String cArticleIDstr = request.getParameter("ArticleID");
-					String cAuthorIDstr = request.getParameter("AuthorID");
-					if (commentText == null || cArticleIDstr == null) {
+					articleIDstr = request.getParameter("ArticleID");
+					String authorIDstr = request.getParameter("AuthorID");
+					if (commentText == null || articleIDstr == null || authorIDstr == null) {
 						out.write("AJAX add comment request reached server with invalid parameters");
 						System.out.println("AJAX add comment request reached server with invalid parameters");
 					} else if ( !SiteFunctionality.checkInputText(commentText, false, 0) ) {    // TODO: size restriction policy for article posts?
@@ -194,14 +194,40 @@ public class AJAXServlet extends HttpServlet {
 						int articleID = -1;
 						int authorID = -1;
 						try {
-							articleID = Integer.parseInt(cArticleIDstr);
-							authorID = Integer.parseInt(cAuthorIDstr);
+							articleID = Integer.parseInt(articleIDstr);
+							authorID = Integer.parseInt(authorIDstr);
 						} catch ( NumberFormatException e ) {
 							e.printStackTrace();	
 							return;
 						}
 						commentText = commentText.replace("\n", "\n<br>\n");
-						SiteFunctionality.addComment(articleID, authorID, commentText);
+						if ( SiteFunctionality.addComment(articleID, authorID, commentText) < 0 ) {
+							out.write("failed to add comment");
+							break;
+						}
+						out.write("success");
+					}
+					break;
+				case "toggleInterest":
+					articleIDstr = request.getParameter("ArticleID");
+					String profIDstr = request.getParameter("ProfID");
+					if (articleIDstr == null || profIDstr == null) {
+						out.write("AJAX add comment request reached server with invalid parameters");
+						System.out.println("AJAX add comment request reached server with invalid parameters");
+					} else {
+						int articleID = -1;
+						int profID = -1;
+						try {
+							articleID = Integer.parseInt(articleIDstr);
+							profID = Integer.parseInt(profIDstr);
+						} catch ( NumberFormatException e ) {
+							e.printStackTrace();	
+							return;
+						}
+						if ( SiteFunctionality.toggleInterest(articleID, profID) < 0 ) {
+							out.write("failed to toggle interest");
+							break;
+						}
 						out.write("success");
 					}
 					break;

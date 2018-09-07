@@ -1230,6 +1230,53 @@ public class DataBaseBridge {
 		}
 		return true;
 	}
+	
+	public boolean addInterest(int articleID, int profID) {
+		if (!connected) return false;
+		String Insert = "INSERT INTO ArticleInterests (`idArticle`, `idInterestShownBy`, `dateShown`) "
+					  + "VALUES (?, ?, ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Insert);
+			statement.setInt(1, articleID);
+			statement.setInt(2, profID);
+			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean removeInterest(int articleID, int profID) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM ArticleInterests WHERE idArticle = ? and idInterestShownBy = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, articleID);
+			statement.setInt(2, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean getInterest(int articleID, int profID) {
+		if (!connected) return false;
+		String Query = "SELECT * FROM ArticleInterests WHERE idArticle = ? and idInterestShownBy = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			return resultSet.next();            // false if empty set, true otherwise
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 }
 

@@ -365,6 +365,27 @@ public class SiteFunctionality {
 		}
 	}
 	
+	public static int toggleInterest(int articleID, int profID) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if ( db.getInterest(articleID, profID) ) {		// If prof has already shown interest, then remove interest
+			if (! db.removeInterest(articleID, profID) ) {
+				db.close(); 
+				return -1;				
+			}
+		} else {	// else add interest
+			if (! db.addInterest(articleID, profID) ) {
+				db.close(); 
+				return -2;				
+			}
+		}
+		db.close(); 
+		return 0;	
+	}
+	
 	public static XMLProfessional createXMLprof(int profID) {
 		DataBaseBridge db = new DataBaseBridge();
 		if ( !db.checkIfConnected() ) {
