@@ -29,107 +29,116 @@
 			<div class="connection_requests_bar">
 				<h2>Connection Requests</h2>
 				<% List<Professional> RequestedBy = db.getConnectionRequestsFor(prof.getID()); 
-				   if ( RequestedBy != null ){ %>
-					   	<ul class="list-group">
-				     <%	for ( Professional asker : RequestedBy ) { %>
-					   		<li id="request<%= asker.getID() %>">
-					   			<a href="/TEDProject/ProfileLink?ProfID=<%= asker.getID() %>"><%= asker.getFirstName() %> <%= asker.getLastName() %></a>
-					   			<div style="float:right">
-					   				<button class="btn btn-outline-primary" id="accept<%= asker.getID() %>" value="accept">accept</button>
-					   				<button class="btn btn-outline-secondary" id="decline<%= asker.getID() %>" value="decline">decline</button>
-					   				<script> 
-					   					<!-- JS script for accepting/rejecting friend requests -->
-					   					
-					   					$("#accept<%= asker.getID() %>").on("click", function(){
-					   						// send AJAX post information to server
-					   						$.ajax({
-					   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
-					   							type: "post",
-					   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"accept" },
-					   							success: function(response){
-					   								console.log(response);
-					   								$("#request<%= asker.getID() %>").fadeOut();
-					   							}
-					   						});
-					   					});
-					   					
-					   					$("#decline<%= asker.getID() %>").on("click", function(){
-					   						// send AJAX post information to server
-					   						$.ajax({
-					   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
-					   							type: "post",
-					   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"decline" },
-					   							success: function(response){
-					   								console.log(response);
-					   								$("#request<%= asker.getID() %>").fadeOut();
-					   							}
-					   						});
-					   					});
-					   				</script>
-					   			</div>
-					   			<br>
-					   		</li>
-				     <% } %>
+				   if ( RequestedBy != null ){ 
+				   		if (! RequestedBy.isEmpty() ) {	%>
+						   	<ul class="list-group">
+					     <%	for ( Professional asker : RequestedBy ) { %>
+						   		<li id="request<%= asker.getID() %>">
+						   			<a href="/TEDProject/ProfileLink?ProfID=<%= asker.getID() %>"><%= asker.getFirstName() %> <%= asker.getLastName() %></a>
+						   			<div style="float:right">
+						   				<button class="btn btn-outline-primary" id="accept<%= asker.getID() %>" value="accept">accept</button>
+						   				<button class="btn btn-outline-secondary" id="decline<%= asker.getID() %>" value="decline">decline</button>
+						   				<script> 
+						   					<!-- JS script for accepting/rejecting friend requests -->
+						   					
+						   					$("#accept<%= asker.getID() %>").on("click", function(){
+						   						// send AJAX post information to server
+						   						$.ajax({
+						   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
+						   							type: "post",
+						   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"accept" },
+						   							success: function(response){
+						   								console.log(response);
+						   								$("#request<%= asker.getID() %>").fadeOut();
+						   							}
+						   						});
+						   					});
+						   					
+						   					$("#decline<%= asker.getID() %>").on("click", function(){
+						   						// send AJAX post information to server
+						   						$.ajax({
+						   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
+						   							type: "post",
+						   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"decline" },
+						   							success: function(response){
+						   								console.log(response);
+						   								$("#request<%= asker.getID() %>").fadeOut();
+						   							}
+						   						});
+						   					});
+						   				</script>
+						   			</div>
+						   			<br>
+						   		</li>
+					     <% } 
+					    } else { %>
+					    	<p>You don't have any Connection Requests.</p>
+					 <% } %>
 				   		</ul>
+				   		<br>
 				   		<h2>Notifications</h2>
+			   			<% List<Notification> notifications = db.getNotificationsFor(prof.getID()); %>
 				   		<ul class="list-group">
-				   			<% List<Notification> notifications = db.getNotificationsFor(prof.getID()); 
-				   			   if ( notifications != null ) {
-				   				   	int i = 0;
-				   			  		for ( Notification n : notifications ) { 
-					   			   		Professional notifier = db.getBasicProfessionalInfo(n.getNotifiedByProfID());
-					   			   		if ( notifier != null ) { %>
-						   					<li id="notification<%= i %>" class="notification">
-						   						<% if ( n.getIsComment() ) {  // comment  %>
-						   							<p style="float: left">
-						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
-						   								has commented on one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
-						   							</p>
-						   							<button id="cancel<%= i %>" class="btn btn-outline-primary" style="float: right">✓</button>
-						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
-						   							<p style="float: left; clear: left; color: #0e1956">"<%= n.getComment() %>"</p>
-						   						<% } else {                   // interest %>
-						   							<p style="float: left">
-						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
-						   								has shown interest in one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
-						   							</p>
-						   							<button id="cancel<%= i %>"  class="btn btn-outline-primary" style="float: right">✓</button>
-						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
-						   						<% } %>
-						   						<script>
-						   							// when marked as "seen" this should also be reflected in the database
-						   							$("#cancel<%= i %>").on("click", function(){
-						   								
-														$.ajax({
-								    						url: "/TEDProject/AJAXServlet?action=markAsSeen",
-								    						type: "post",
-								    						data: {  
-								    							type: <%= n.getIsComment() %>,               // true -> comment, false -> interest
-								    							commentID: <%= n.getCommentID() %>,          // PK of ArticleComments
-								    							interestBy: <%= n.getNotifiedByProfID() %>,  // part of PK of ArticleInterests 
-								    							articleID: <%= n.getArticleID() %>           // part of PK of ArticleInterests 
-								    						},
-								    						success: function(response){
-								    							if ( response === "success" ) {
-								    								$("#notification<%= i %>").fadeOut();
-								    							} else {
-								    								window.alert(response);
-								    							}
-								    						}
-														});
-						   								
-						   							});
-						   						</script>
-						   					</li>   
-					   					<% } else { %>
-					   						<li class="notification">
-					   							<p>Error: We could not recover the Professional who notified you from our database.</p>
-					   						</li> 
-				   			<% 			}
-					   			   		i++;
-				   			 		} 
-				   			   }%>
-				   		</ul>
+		   			 <% if ( notifications != null ) {
+		   				 	if (! notifications.isEmpty() ) {
+			   				   	int i = 0;
+			   			  		for ( Notification n : notifications ) { 
+				   			   		Professional notifier = db.getBasicProfessionalInfo(n.getNotifiedByProfID());
+				   			   		if ( notifier != null ) { %>
+					   					<li id="notification<%= i %>" class="notification">
+					   						<% if ( n.getIsComment() ) {  // comment  %>
+					   							<p style="float: left">
+					   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+					   								has commented on one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
+					   							</p>
+					   							<button id="cancel<%= i %>" class="btn btn-outline-primary" style="float: right">✓</button>
+					   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+					   							<p style="float: left; clear: left; color: #0e1956">"<%= n.getComment() %>"</p>
+					   						<% } else {                   // interest %>
+					   							<p style="float: left">
+					   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+					   								has shown interest in one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
+					   							</p>
+					   							<button id="cancel<%= i %>"  class="btn btn-outline-primary" style="float: right">✓</button>
+					   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+					   						<% } %>
+					   						<script>
+					   							// when marked as "seen" this should also be reflected in the database
+					   							$("#cancel<%= i %>").on("click", function(){
+					   								
+													$.ajax({
+							    						url: "/TEDProject/AJAXServlet?action=markAsSeen",
+							    						type: "post",
+							    						data: {  
+							    							type: <%= n.getIsComment() %>,               // true -> comment, false -> interest
+							    							commentID: <%= n.getCommentID() %>,          // PK of ArticleComments
+							    							interestBy: <%= n.getNotifiedByProfID() %>,  // part of PK of ArticleInterests 
+							    							articleID: <%= n.getArticleID() %>           // part of PK of ArticleInterests 
+							    						},
+							    						success: function(response){
+							    							if ( response === "success" ) {
+							    								$("#notification<%= i %>").fadeOut();
+							    							} else {
+							    								window.alert(response);
+							    							}
+							    						}
+													});
+					   								
+					   							});
+					   						</script>
+					   					</li>   
+				   					<% } else { %>
+				   						<li class="notification">
+				   							<p>Error: We could not recover the Professional who notified you from our database.</p>
+				   						</li> 
+			   						<% }
+				   			   		i++;
+			   			 		}
+			   				 } else { %>
+						    	<p>You don't have any Notifications.</p>
+						 <% }
+		   			    } %>
+			   			</ul>
 				<% } else { %>
 				   		<p>Ooops! It appears that we cannot load your connection requests from our database.<br>
 				   		Please contact our administrators.</p>

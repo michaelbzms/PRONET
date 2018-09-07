@@ -28,7 +28,7 @@
 .past_comments_container {
 	margin-top: 5px;
 	overflow-y: auto;
-    max-height: 500px;
+    max-height: 400px;
 }
 
 .comment {

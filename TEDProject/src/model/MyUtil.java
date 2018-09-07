@@ -39,7 +39,7 @@ public final class MyUtil {
 		return LocalDateTime.parse(date_str, formatter);
 	}
 	
-	public static String getTimeAgo(LocalDateTime date) {		// TODO: remove (s)
+	public static String getTimeAgo(LocalDateTime date) {
 		if (date == null) { 
 			return "null ago";
 		}
@@ -50,15 +50,15 @@ public final class MyUtil {
 		} else if (secAgo < 60) {
 			return "a few seconds ago";
 		} else if (secAgo < 60*60) {
-			return Long.toString(secAgo/60) + " minute(s) ago";
+			return Long.toString(secAgo/60) + " minute" + (secAgo < 60*2 ? "" : "s") + " ago";
 		} else if (secAgo < 24*60*60) {
-			return Long.toString(secAgo/(60*60)) + " hour(s) ago";
+			return Long.toString(secAgo/(60*60)) + " hour" + (secAgo < 60*60*2 ? "" : "s") + " ago";
 		} else if (secAgo < 30*24*60*60) {
-			return Long.toString(secAgo/(24*60*60)) + " day(s) ago";
+			return Long.toString(secAgo/(24*60*60)) + " day" + (secAgo < 24*60*60*2 ? "" : "s") + " ago";
 		} else if (secAgo < 12*30*24*60*60) {
-			return Long.toString(secAgo/(30*24*60*60)) + " month(s) ago";
+			return Long.toString(secAgo/(30*24*60*60)) + " month" + (secAgo < 30*24*60*60*2 ? "" : "s") + " ago";
 		} else {
-			return "more than a year ago";
+			return Long.toString(secAgo/(12*30*24*60*60)) + " year" + (secAgo < 12*30*24*60*60*2 ? "" : "s") + " ago";
 		}
 	}
 	

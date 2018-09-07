@@ -11,6 +11,11 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<style>
+		.past_comments_container {		/* override max-height declared in article.css */
+		    max-height: 2000px;
+		}
+	</style>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
@@ -39,5 +44,6 @@
 			<jsp:param name="ArticleID" value="<%= articleID %>" /> 
 		</jsp:include>
 	</div>
+	<script src="/TEDProject/Javascript/comment.js"></script>
 </body>
 </html>

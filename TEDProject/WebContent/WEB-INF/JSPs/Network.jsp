@@ -50,6 +50,7 @@
 				<div id="search_results">
 				</div>
 			</div>
+			<br>
 			<div class="connections_bar">
 				<h2>Connections</h2>
 				<div class="grid_container_container">

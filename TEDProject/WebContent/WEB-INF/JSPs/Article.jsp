@@ -42,7 +42,7 @@
 			</div>
 			<div>
 				<a href="/TEDProject/ProfileLink?ProfID=<%= authorProf.getID() %>"><%= authorProf.getFirstName() %> <%= authorProf.getLastName() %></a><br>
-				<small class="text-secondary"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small>
+				<a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= article.getID() %>"><small class="text-secondary"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small></a>
 			</div>
 		</div> 
 		<div class="content_container">
