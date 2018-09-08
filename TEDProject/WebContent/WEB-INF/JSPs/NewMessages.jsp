@@ -41,11 +41,7 @@
 				<p class="away_message"> 
 					<% 	if (msg.getText() != null) { %>
 							<%= msg.getText() %><br>
-					<% 	} 
-					   	if (msg.getContainsFiles()) { %>
-					   		<!-- TODO get files -->
-					   		<br>**insert file(s) here**<br>
-					<%	} %>
+					<% 	} %>
 				</p>
 	<% 		}
 		}

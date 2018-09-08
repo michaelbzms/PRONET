@@ -299,7 +299,7 @@ public class SiteFunctionality {
 		}
 	}
 
-	public static int addMessage(String text, int sentById, int sentToId, boolean containsFiles) {
+	public static int addMessage(String text, int sentById, int sentToId) {
 		DataBaseBridge db = new DataBaseBridge();
 		if ( !db.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
@@ -309,14 +309,14 @@ public class SiteFunctionality {
 		switch (result) {
 			case 0:   // conversation does not exist
 				db.createConversationInOrder(sentById, sentToId);
-				db.addMessageToConversationInOrder(sentById, sentToId, sentById, text, containsFiles);
+				db.addMessageToConversationInOrder(sentById, sentToId, sentById, text);
 				break;
 			case 1:   // conversation exists with order (sentById, sentToId)
-				db.addMessageToConversationInOrder(sentById, sentToId, sentById, text, containsFiles);
+				db.addMessageToConversationInOrder(sentById, sentToId, sentById, text);
 				db.updateLastSentToConversation(sentById, sentToId);
 				break;
 			case 2:   // conversation exists with order (sentToId, sentById)
-				db.addMessageToConversationInOrder(sentToId, sentById, sentById, text, containsFiles);
+				db.addMessageToConversationInOrder(sentToId, sentById, sentById, text);
 				db.updateLastSentToConversation(sentToId, sentById);
 				break;
 			default:  // should not happen

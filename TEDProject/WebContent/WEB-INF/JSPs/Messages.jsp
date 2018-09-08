@@ -141,7 +141,6 @@
 					    						data: { text: $("#msg_input").val(),
 					    								sentBy: <%= prof.getID() %>,
 					    								sentTo: other_prof_id,
-					    								containsFiles: false                 // TODO Change this to support files
 										              },
 					    						success: function(response){
 					    							if ( response === "success" ){
@@ -154,7 +153,7 @@
 														// reset input value
 														 $("#msg_input").val("");
 														updateScroll();
-					    							} else { // else toast-notify user? TODO
+					    							} else { // else toast-notify user
 					    								window.alert(response);
 					    							}
 					    						}
@@ -173,7 +172,6 @@
 	<% db.close(); %>
 	 <!-- JS functions for this page -->
 	<script>
-		//TODO should work but doesn't, at least not in firefox
 		// use this to scroll a conversation to the bottom
 		function updateScroll(){
 			var scroll_box = $('.active_conv');
@@ -217,9 +215,6 @@
 				}
 			});
 		}, 2000);
-		
-		// TODO: add script to reorder chat conversation list according to possibly changed 'lastSent'
-		// have to do it on repeat because another professional could text 'us'at any time
 	</script>
 	<script src="/TEDProject/Javascript/util.js"></script>
 </body>

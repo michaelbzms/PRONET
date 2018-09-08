@@ -87,8 +87,7 @@ public class AJAXServlet extends HttpServlet {
 					String text = request.getParameter("text");
 					String sentByProfStr = request.getParameter("sentBy");
 					String sentToProfStr = request.getParameter("sentTo");
-					String containsFilesStr = request.getParameter("containsFiles");
-					if ( text == null || sentByProfStr == null || sentToProfStr == null || containsFilesStr == null) {
+					if ( text == null || sentByProfStr == null || sentToProfStr == null ) {
 						out.write("AJAX add message request reached server with invalid parameters"); 
 					} 
 					else if ( !SiteFunctionality.checkInputText(text, false, 0) ) {      // TODO: size restriction policy for messages?
@@ -96,7 +95,6 @@ public class AJAXServlet extends HttpServlet {
 					}
 					else {
 						text = text.replace("\n", "\n<br>\n");
-						boolean containsFiles = containsFilesStr.equals("true");
 						int sentById, sentToId;
 						try {
 							sentById = Integer.parseInt(sentByProfStr);
@@ -105,7 +103,7 @@ public class AJAXServlet extends HttpServlet {
 							out.write("AJAX add message request reached server with invalid FORMAT parameters");
 							return;
 						}
-						SiteFunctionality.addMessage(text, sentById, sentToId, containsFiles);
+						SiteFunctionality.addMessage(text, sentById, sentToId);
 						out.write("success");
 					}
 					break;

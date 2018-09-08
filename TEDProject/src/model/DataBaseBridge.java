@@ -689,7 +689,7 @@ public class DataBaseBridge {
 	
 	public boolean createWorkAd(int profID, String title, String description) {
 		if (!connected) return false;
-		String insertString = "INSERT INTO Ads (idAd, idPublishedBy, title, postedDate, description, containsFiles) VALUES (default, ?, ?, ?, ?, 0)";
+		String insertString = "INSERT INTO Ads (idAd, idPublishedBy, title, postedDate, description) VALUES (default, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = connection.prepareStatement(insertString);
 			statement.setInt(1, profID);
@@ -764,7 +764,7 @@ public class DataBaseBridge {
 	public List<Message> getMessagesForConvo(int profID1, int profID2){
 		if (!connected) return null;
 		List<Message> M = null;
-		String Query = "SELECT text, timeSent, containsFiles, idSentByProf "
+		String Query = "SELECT text, timeSent, idSentByProf "
 				     + "FROM Messages "
 				     + "WHERE (idProfessional1 = ? AND idProfessional2 = ?) OR "
 				     + 		 "(idProfessional1 = ? AND idProfessional2 = ?) "
@@ -782,7 +782,6 @@ public class DataBaseBridge {
 				newmsg.setText(resultSet.getString("text"));
 				newmsg.setSentByProfID(resultSet.getInt("idSentByProf"));
 				newmsg.setTimeSent(resultSet.getTimestamp("timeSent", cal).toLocalDateTime());
-				newmsg.setContainsFiles(resultSet.getBoolean("containsFiles"));
 				M.add(newmsg);
 			}
 		} catch (SQLException e) {
@@ -795,7 +794,7 @@ public class DataBaseBridge {
 	public List<Message> getNewAwayMessagesAfter(LocalDateTime latestGot, int homeprof, int awayprof){
 		if (!connected) return null;
 		List<Message> M = null;
-		String Query = "SELECT text, timeSent, containsFiles "
+		String Query = "SELECT text, timeSent "
 				     + "FROM Messages "
 				     + "WHERE ((idProfessional1 = ? AND idProfessional2 = ?) OR (idProfessional1 = ? AND idProfessional2 = ?)) "
 				     +        "AND idSentByProf = ? " +  ( (latestGot != null) ? "AND timeSent > ? " : "")
@@ -816,7 +815,6 @@ public class DataBaseBridge {
 				Message newmsg = new Message();
 				newmsg.setText(resultSet.getString("text"));
 				newmsg.setTimeSent(resultSet.getTimestamp("timeSent", cal).toLocalDateTime());
-				newmsg.setContainsFiles(resultSet.getBoolean("containsFiles"));
 				M.add(newmsg);
 			}
 		} catch (SQLException e) {
@@ -870,10 +868,10 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public boolean addMessageToConversationInOrder(int firstId, int secondID, int sentById, String text, boolean containsFiles) {
+	public boolean addMessageToConversationInOrder(int firstId, int secondID, int sentById, String text) {
 		if (!connected) return false;
-		String Insert = "INSERT INTO Messages (`idMessage`, `idProfessional1`, `idProfessional2`, `idSentByProf`, `text`, `timeSent`, `containsFiles`) "
-					  + "VALUES (default, ?, ?, ?, ?, ?, ?);";
+		String Insert = "INSERT INTO Messages (`idMessage`, `idProfessional1`, `idProfessional2`, `idSentByProf`, `text`, `timeSent`) "
+					  + "VALUES (default, ?, ?, ?, ?, ?);";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Insert);
 			statement.setInt(1, firstId);
@@ -881,7 +879,6 @@ public class DataBaseBridge {
 			statement.setInt(3, sentById);
 			statement.setString(4, text);
 			statement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
-			statement.setBoolean(6, containsFiles);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
