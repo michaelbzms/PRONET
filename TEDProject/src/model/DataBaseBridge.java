@@ -1168,27 +1168,35 @@ public class DataBaseBridge {
 	public List<Notification> getNotificationsFor(int profID){
 		if (!connected) return null;
 		List<Notification> notifications = null;
-		String Query = "((SELECT 0 AS Type, a.idArticle AS idArticle, i.idInterestShownBy AS ByProf, i.dateShown AS Timestamp, null AS Comment, -1 AS commentID "
+		String Query = "((SELECT 'interest' AS Type, a.idArticle AS postID, i.idInterestShownBy AS ByProf, i.dateShown AS Timestamp, null AS Text, -1 AS notificationID "
 				 	 + "  FROM Articles a, ArticleInterests i "
-				 	 + "  WHERE a.idAuthor = ? AND a.idArticle = i.idArticle AND i.seen = false "
-				 	 + ")  UNION  ("
-				 	 + "  SELECT 1 AS Type, a.idArticle AS idArticle, c.idWrittenBy AS ByProf, c.dateWritten AS Timestamp, c.comment AS Comment, c.idComment AS commentID "
+				 	 + "  WHERE a.idAuthor = ? AND a.idArticle = i.idArticle AND i.seen = false AND i.idInterestShownBy != ? "
+				 	 + ")  UNION ALL ("
+				 	 + "  SELECT 'comment' AS Type, a.idArticle AS postID, c.idWrittenBy AS ByProf, c.dateWritten AS Timestamp, c.comment AS Text, c.idComment AS notificationID "
 				 	 + "  FROM Articles a, ArticleComments c "
-				 	 + "  WHERE  a.idAuthor = ? AND a.idArticle = c.idArticle AND c.seen = false )) "
+				 	 + "  WHERE  a.idAuthor = ? AND a.idArticle = c.idArticle AND c.seen = false AND c.idWrittenBy != ? "
+				 	 + ")  UNION ALL ("
+				 	 + "  SELECT 'application' AS Type, ad.idAd AS postID, ap.idApplicant AS ByProf, ap.applyDate AS Timestamp, ap.note AS Text, ap.idApplication AS notificationID "
+				 	 + "  FROM Applications ap, Ads ad "
+				 	 + "  WHERE ap.idAd = ad.idAd AND ad.idPublishedBy = ? AND ap.seen = false AND ap.idApplicant != ? )) "
 				 	 + "ORDER BY Timestamp DESC;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			statement.setInt(1, profID);
 			statement.setInt(2, profID);
+			statement.setInt(3, profID);
+			statement.setInt(4, profID);
+			statement.setInt(5, profID);
+			statement.setInt(6, profID);
 			ResultSet resultSet = statement.executeQuery();
 			notifications = new ArrayList<Notification>();
 			Notification n = null;
 			while (resultSet.next()) {
-				n = new Notification(resultSet.getBoolean("Type"));
-				n.setArticleID(resultSet.getInt("idArticle"));
+				n = new Notification(resultSet.getString("Type"));
+				n.setPostID(resultSet.getInt("postID"));
 				n.setNotifiedByProfID(resultSet.getInt("ByProf"));
-				n.setComment(resultSet.getString("Comment"));          // might be null if Type is 1 (Interest)
-				n.setCommentID(resultSet.getLong("commentID"));        // might be -1 if Type is 1 (Interest)
+				n.setText(resultSet.getString("Text"));                          // null if Type is 'Interest'
+				n.setNotificationID(resultSet.getLong("notificationID"));        //  -1  if Type is 'Interest'
 				n.setTimeHappened(resultSet.getTimestamp("Timestamp", cal).toLocalDateTime());
 				notifications.add(n);
 			}
@@ -1205,6 +1213,20 @@ public class DataBaseBridge {
 		try {
 			PreparedStatement statement = connection.prepareStatement(Update);
 			statement.setLong(1, commentID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean markApplicationAsSeen(int applicationID) {
+		if (!connected) return false;
+		String Update = "UPDATE Applications SET seen = true WHERE idApplication = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Update);
+			statement.setInt(1, applicationID);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

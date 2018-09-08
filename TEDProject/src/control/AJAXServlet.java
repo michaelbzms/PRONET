@@ -231,30 +231,40 @@ public class AJAXServlet extends HttpServlet {
 					break;
 				case "markAsSeen":
 					String type = request.getParameter("type");
-					String commentIdstr = request.getParameter("commentID");
+					String commentORapplicationIDstr = request.getParameter("commentORapplicationID");
 					String interestBystr = request.getParameter("interestBy");
 					String articleIdstr = request.getParameter("articleID");
-					if ( type == null || commentIdstr == null || interestBystr == null || articleIdstr == null ) {
+					if ( type == null || commentORapplicationIDstr == null || interestBystr == null || articleIdstr == null ) {
 						out.write("error: ajax request missing parameter(s)");
 					} else {
 						int articleId = -1, interestById = -1;
-						long commentId = -1;
+						long commentID = -1;
+						int applicationID = -1;
 						try {
 							articleId = Integer.parseInt(articleIdstr);
 							interestById = Integer.parseInt(interestBystr);
-							commentId = Long.parseLong(commentIdstr);
+							if ( type.equals("comment") ) {
+								commentID = Long.parseLong(commentORapplicationIDstr);
+							} else if (type.equals("application")) {
+								applicationID = Integer.parseInt(commentORapplicationIDstr);
+							}
 						} catch ( NumberFormatException e ) {
 							out.write("error: parameter should be integer number but isn't");
 							return;
 						}
-						if ( type.equals("true") ) {
-							DataBaseBridge db = new DataBaseBridge();
-							db.markCommentAsSeen(commentId);
-							db.close();
-							out.write("success");
-						} else if (type.equals("false")) {
+						if ( type.equals("interest") ) {
 							DataBaseBridge db = new DataBaseBridge();
 							db.markInterestAsSeen(articleId, interestById);
+							db.close();
+							out.write("success");
+						} else if (type.equals("comment")) {
+							DataBaseBridge db = new DataBaseBridge();
+							db.markCommentAsSeen(commentID);
+							db.close();
+							out.write("success");
+						} else if (type.equals("application")) {
+							DataBaseBridge db = new DataBaseBridge();
+							db.markApplicationAsSeen(applicationID);
 							db.close();
 							out.write("success");
 						} else {

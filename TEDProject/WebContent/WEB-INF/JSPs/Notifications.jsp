@@ -86,21 +86,31 @@
 				   			   		Professional notifier = db.getBasicProfessionalInfo(n.getNotifiedByProfID());
 				   			   		if ( notifier != null ) { %>
 					   					<li id="notification<%= i %>" class="notification">
-					   						<% if ( n.getIsComment() ) {  // comment  %>
-					   							<p style="float: left">
-					   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
-					   								has commented on one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
-					   							</p>
-					   							<button id="cancel<%= i %>" class="btn btn-outline-primary" style="float: right">✓</button>
-					   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
-					   							<p style="float: left; clear: left; color: #0e1956">"<%= n.getComment() %>"</p>
-					   						<% } else {                   // interest %>
-					   							<p style="float: left">
-					   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
-					   								has shown interest in one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getArticleID() %>">articles</a>!
-					   							</p>
-					   							<button id="cancel<%= i %>"  class="btn btn-outline-primary" style="float: right">✓</button>
-					   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+					   						<% if ( n.getType().equals("interest") ) {            // interest %>
+						   							<p style="float: left">
+						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+						   								has shown interest in one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getPostID() %>">articles</a>!
+						   							</p>
+						   							<button id="cancel<%= i %>"  class="btn btn-outline-primary" style="float: right">✓</button>
+						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+					   						<% } else if ( n.getType().equals("comment") ) {      // comment  %>
+						   							<p style="float: left">
+						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+						   								has commented on one of your <a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= n.getPostID() %>">articles</a>!
+						   							</p>
+						   							<button id="cancel<%= i %>" class="btn btn-outline-primary" style="float: right">✓</button>
+						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+						   							<p style="float: left; clear: left; color: #0e1956; overflow: hidden">"<%= n.getText() %>"</p>
+					   						<% } else if ( n.getType().equals("application") ) {  // application  %>
+						   							<p style="float: left">
+						   								<a href="/TEDProject/ProfileLink?ProfID=<%= n.getNotifiedByProfID() %>"><%= notifier.getFirstName() %> <%= notifier.getLastName() %></a>
+						   								has made an application on one of your <a href="/TEDProject/WorkAdLink?AdID=<%= n.getPostID() %>">work ads</a>!
+						   							</p>
+						   							<button id="cancel<%= i %>" class="btn btn-outline-primary" style="float: right">✓</button>
+						   							<span style="float: right; color: #007bff; margin-right: 10px"><%= MyUtil.getTimeAgo(n.getTimeHappened()) %></span>
+						   							<p style="float: left; clear: left; color: #0e1956; overflow: hidden">"<%= n.getText() %>"</p>
+					   						<% } else { %>
+					   								<p>Error: Unknown notification type</p>
 					   						<% } %>
 					   						<script>
 					   							// when marked as "seen" this should also be reflected in the database
@@ -110,10 +120,10 @@
 							    						url: "/TEDProject/AJAXServlet?action=markAsSeen",
 							    						type: "post",
 							    						data: {  
-							    							type: <%= n.getIsComment() %>,               // true -> comment, false -> interest
-							    							commentID: <%= n.getCommentID() %>,          // PK of ArticleComments
-							    							interestBy: <%= n.getNotifiedByProfID() %>,  // part of PK of ArticleInterests 
-							    							articleID: <%= n.getArticleID() %>           // part of PK of ArticleInterests 
+							    							type: "<%= n.getType() %>",
+							    							commentORapplicationID: <%= n.getNotificationID() %>,     // null or idComment or idApplication
+							    							interestBy: <%= n.getNotifiedByProfID() %>,               // idInterestShownBy
+							    							articleID: <%= n.getPostID() %>                           // idArticle
 							    						},
 							    						success: function(response){
 							    							if ( response === "success" ) {
