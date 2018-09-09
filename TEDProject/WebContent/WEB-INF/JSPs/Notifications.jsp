@@ -98,9 +98,10 @@
 			   			<p>Ooops! It appears that we cannot load your connection requests from our database.<br>
 			   			Please contact our administrators.</p>
 				<%	} %>
-			 </div>
+			</div>
+			<br>
 		 	<div id="notifications_bar" class="connection_requests_bar">
-		 		<button id="markAll" class="btn btn-primary float-right">mark all as seen</button>
+		 		<button id="markAll" class="btn btn-primary float-right">Mark all as seen</button>
 	   			<h2 style="padding-top: 6px">Notifications</h2>
    				<%	List<Notification> notifications = db.getNotificationsFor(prof.getID());
 		    		if ( notifications != null ) {
@@ -189,6 +190,7 @@
 				   		Please contact our administrators.</p>
 			<%	} %>
 			</div>
+			<br>
 			<jsp:include page="/footer.html"></jsp:include>
 		</div>
 	<script>
