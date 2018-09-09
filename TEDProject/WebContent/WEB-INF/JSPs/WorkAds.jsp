@@ -7,11 +7,11 @@
 	<title>PRONET - WorkAds</title>
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/workads.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
@@ -73,7 +73,8 @@
 				<br>
 				<div>
 					<div class="justify-content-between">
-						<h2 class="my_h2">My Work Ads <a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right" style="border-bottom: 10px">Create New</a></h2>
+						<a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right">Create New</a>
+						<h2 class="my_h2" style="padding-top: 6px">My Work Ads</h2>
 					</div>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> myWorkAds = db.getWorkAds(prof.getID(), 0);
@@ -124,7 +125,7 @@
 								<span id="aplFocusPoint<%= count %>"></span>
 								<script>
 									var aplNote = document.getElementById("aplNote" + <%= count %>);
-									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);
+									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);   //TODO: are you sure replace === replaceALL?
 							  	</script>
 							<% count++;		
 						  	} %>

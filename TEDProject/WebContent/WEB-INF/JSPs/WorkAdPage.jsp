@@ -7,11 +7,11 @@
 	<title>PRONET - Personal Information</title>
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
