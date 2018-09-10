@@ -1295,6 +1295,32 @@ public class DataBaseBridge {
 			return false;
 		}
 	}
+	
+	public List<Professional> getInterestedProfessionals(int articleID) {
+		if (!connected) return null;
+		List<Professional> P = new ArrayList<Professional>();
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureURI, ai.dateShown "
+				     + "FROM Professionals p, ArticleInterests ai "
+				     + "WHERE ai.idInterestShownBy = p.idProfessional AND ai.idArticle = ? " 
+				     + "ORDER BY ai.dateShown DESC;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				Professional prof = new Professional();
+				prof.setID(resultSet.getInt("idProfessional"));
+				prof.setFirstName(resultSet.getString("firstName"));
+				prof.setLastName(resultSet.getString("lastName"));
+				prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
+				P.add(prof);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return P;
+	}
 
 }
 

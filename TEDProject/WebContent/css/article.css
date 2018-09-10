@@ -14,6 +14,16 @@
     margin: 0 5px;
 }
 
+.interests_count:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.interested_profs_container {
+	overflow-y: auto;
+	max-height: 80vh;
+}
+
 .content_container {
 	margin: 10px;
 	word-wrap: break-word;
@@ -22,17 +32,17 @@
 .comments_container {
     box-shadow: 0px -3px 2px -2px #cccccc;
     margin-top: 5px;
-    padding: 5px;
+    padding-top: 5px;
 }
 
 .past_comments_container {
-	margin-top: 5px;
+	margin: 5px 0;
 	overflow-y: auto;
     max-height: 400px;
 }
 
 .comment {
-	margin: 5px;
+	margin: 5px 5px 5px 15px;
 	padding: 10px 10px 5px 10px;
 	border: lightgray solid 1px;
 	border-radius: 5px;
