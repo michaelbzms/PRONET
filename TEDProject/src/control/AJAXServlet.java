@@ -154,13 +154,13 @@ public class AJAXServlet extends HttpServlet {
 						int articleID = SiteFunctionality.addArticle(request, db, postText, containsFiles);
 						if ( articleID < 0 ) {
 							out.write("failed to add article (wont attempt to save any files)");
-							break;
+							return;
 						}
 						if (containsFiles) {
 							FileManager.saveArticleFiles(fileParts, ArticleSaveDirectory, db, articleID);
 						}
 						db.close();
-						out.write("success");
+						out.write(Integer.toString(articleID));
 					}
 					break;
 				case "loadArticle":

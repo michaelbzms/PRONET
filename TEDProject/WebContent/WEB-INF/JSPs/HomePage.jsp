@@ -101,11 +101,22 @@
 				    						type: "post",
 				    						data: formData,
 				    						success: function(response){
-				    							if ( response === "success" ){
+				    							var articleID = parseInt(response);
+				    							if ( !isNaN(articleID) ){        // if response is a number then it is the ID of the article we just posted successfully
 				    								console.log("Made a post successfully");
 				    								// reset form's fields
 				    								$("#article_input_editor").val("");
 				    								$("#article_file_input").val("");
+				    								// get article just posted with ajax and prepend it to our wall
+				    								$.ajax({
+							    						url: "/TEDProject/AJAXServlet?action=loadArticle",
+							    						type: "post",
+							    						async: false,           // make these calls synchronous!
+							    						data: { ArticleID : articleID },
+							    						success: function(response){
+							    							$("#wall").prepend(response);
+							    						}
+													});
 				    							} else {
 				    								window.alert(response);
 				    							}
@@ -121,7 +132,7 @@
 						</div>
 						<div id="wall">
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							<%	int InitialCount = 3;       // number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
+							<%	int InitialCount = 3;       // CONFIG number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
 								int[] articleIDs = db.getWallArticlesIDsFor(prof.getID()); 
 								if (articleIDs != null) {
 									for (int i = 0 ; i < InitialCount && i < articleIDs.length ; i++) {  %>
@@ -142,7 +153,7 @@
 							
 							// if scrolled to bottom and we can show more articles then do so with AJAX
 							$(window).scroll(function(){
-								// console.log("scrollTop + height = " + ( $("#wall").scrollTop() +  $("#wall").height()) + ", scrollHeight = " + $("#wall")[0].scrollHeight );
+								// DEBUG: console.log("scrollTop + height = " + ( $("#wall").scrollTop() +  $("#wall").height()) + ", scrollHeight = " + $("#wall")[0].scrollHeight );
 								
 								if ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && ( $(window).scrollTop() + $(window).height() + padding >= document.documentElement.scrollHeight ) ){   // plus one to avoid decimal errors
 									// DEBUG: console.log("nextArticleIDindex = " + nextArticleIDindex + ", ArticleIDs[nextArticleIDindex] = " + ArticleIDs[nextArticleIDindex]);

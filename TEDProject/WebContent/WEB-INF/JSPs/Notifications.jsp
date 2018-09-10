@@ -79,7 +79,7 @@
 					    										}
 					    									});
 					    									if ( gotEmpty ){
-					    										$("#connection_requests_bar ul").html("You don't have any Connection Requests.");
+					    										$("#connection_requests_bar ul").html("<p><i>You don't have any Connection Requests.</p></i>");
 					    									}
 					    						 		}, 450);
 						   							}
