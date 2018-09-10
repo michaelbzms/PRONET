@@ -186,7 +186,6 @@
 				// Markdown inteferes with AJAX form! 
 				// var post = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 			</script>
-			<script src="/TEDProject/Javascript/comment.js"></script>
 	<%	}
 		db.close(); %>
 </body>

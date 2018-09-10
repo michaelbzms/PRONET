@@ -74,15 +74,32 @@
 				}
 	   		});
 	   	</script>
-		<button type="button" class="btn btn-outline-primary comment_button ml-1 mb-2">Comment</button>
+		<button id="commentButton<%= articleID %>" type="button" class="btn btn-outline-primary comment_button ml-1 mb-2">Comment</button>
 		<div class="comments_container">
-			<div class="comment_form" style="height: 0">	<!-- This style is needed here -->
+			<div id="comment_form<%= articleID %>" class="comment_form" style="height: 0">	<!-- This style is needed here -->
 				<form id="comment_input_form<%= articleID %>">
 					<textarea id="comment_input_textarea<%= articleID %>" name="comment_text" class="comment_form_text" required></textarea>
 					<div class="text-right">
 						<input type="submit" value="Submit Comment" class="btn btn-primary">
 					</div>
 				</form>
+				<script>
+					$("#commentButton<%= articleID %>").on("click", function(){
+					    commentForm = document.getElementById("comment_form<%= articleID %>");
+					    if (commentForm.style.height !== "0px") {
+					    	$(commentForm).animate({
+				   	            height: '0px'
+				   	        });
+					    } else {
+					    	$(commentForm).animate({ 
+					    		height : commentForm.scrollHeight+'px' 
+					    	});
+					    	setTimeout(function() { 
+					    		commentForm.style.height = "auto"; 
+					    	}, 500);
+					    }
+					});
+				</script>
 				<script>
 			   		$("#comment_input_form<%= articleID %>").on("submit", function(e){			
 			   			e.preventDefault();
