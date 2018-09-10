@@ -553,7 +553,7 @@ public class DataBaseBridge {
 	public List<Professional> getProfsMessagingWith(int profID) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
-		String Query = "SELECT p.idProfessional, p.firstName, p.lastName "
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureURI "
 				     + "FROM Professionals p, Conversations c "
 				     + "WHERE (p.idProfessional = c.idProfessional1 AND c.idProfessional2 = ?) OR "
 				     +       "(p.idProfessional = c.idProfessional2 AND c.idProfessional1 = ?) "
@@ -569,6 +569,7 @@ public class DataBaseBridge {
 				prof.setID(resultSet.getInt("idProfessional"));
 				prof.setFirstName(resultSet.getString("firstName"));
 				prof.setLastName(resultSet.getString("lastName"));
+				prof.setProfilePicURI(resultSet.getString("profilePictureURI"));
 				if ( !P.contains(prof) ) {
 					P.add(prof);
 				}

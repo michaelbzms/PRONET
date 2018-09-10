@@ -59,7 +59,7 @@
 							   	} %>	
 					    <% 		for (Professional p : messagedProfs) { %>
 									<li id="conv<%= p.getID() %>" class="conv_li" <% if ( chatWith != null && chatWithProf!= null && chatWithProf.getID() == p.getID() ) { %> style="background-color: #b2cdff" <% } %> > 
-										<%= p.getFirstName() %> <%= p.getLastName() %> 
+										<img class="img-thumbnail float-left conv_prof_img" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><%= p.getFirstName() %> <%= p.getLastName() %> 
 									</li>
 									<script>
 					    				$("#conv<%= p.getID() %>").on("click", function(){

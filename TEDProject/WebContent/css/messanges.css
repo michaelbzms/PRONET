@@ -125,3 +125,9 @@
 	margin-left: 3px;
 	color: #3a3c43;
 }
+
+.conv_prof_img {
+	height: 32px;
+    width: 32px;
+    margin: 0 5px;
+}
