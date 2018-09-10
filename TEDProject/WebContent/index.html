@@ -22,6 +22,7 @@
 			<form method="POST" action="/TEDProject/WelcomeServlet?register=false">
 				<label>Email: </label><input type="email" name="email"><br>
 				<label>Password: </label><input type="password" name="password"><br>
+				<input id="tmzOffset" name="tmzOffset" type="hidden" value="0">
 				<input class="btn btn-light" style="display: inline-block; margin: 0px 0px 0px 160px" type="submit" value="Log in"><br>
 			</form>
 		</div>
@@ -50,5 +51,9 @@
 		</div>
 		<p style="text-align: center"> (!) This site is still under construction! </p>	
 	</div>
+	<script> 
+		var tmzOffset = new Date().getTimezoneOffset(); 
+		document.getElementById("tmzOffset").value = tmzOffset;
+	</script>
 </body>
 </html>

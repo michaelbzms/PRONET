@@ -13,11 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 
 public final class MyUtil {
 	
+	private static int timezoneOffset = Integer.parseInt(PropertiesManager.getProperty("timezoneOffset"));
+	
 	private MyUtil() { 
 		System.out.println("This class is not meant to be instantiated");
 	}
 
 	public static String printDate(LocalDateTime date, boolean withTime) {
+		if (date == null) {		// print current time
+			date = LocalDateTime.now(ZoneOffset.UTC);
+		}
+		LocalDateTime offsetDateTime = date.plusHours(-timezoneOffset/60);			// timezoneOffset is in minutes
 		DateTimeFormatter formatter;
 		String dateFormat = PropertiesManager.getProperty("dateFormat");
 		if (withTime) {
@@ -25,7 +31,7 @@ public final class MyUtil {
 		} else {
 			formatter = DateTimeFormatter.ofPattern(dateFormat);
 		}
-		return date.format(formatter);
+		return offsetDateTime.format(formatter);
 	}
 	
 	public static LocalDateTime getLocalDateTimeFromString(String date_str, boolean withTime) {
@@ -36,7 +42,8 @@ public final class MyUtil {
 		} else {
 			formatter = DateTimeFormatter.ofPattern(dateFormat);
 		}
-		return LocalDateTime.parse(date_str, formatter);
+		LocalDateTime utcDateTime = LocalDateTime.parse(date_str, formatter);
+		return utcDateTime.plusHours(timezoneOffset/60);
 	}
 	
 	public static String getTimeAgo(LocalDateTime date) {

@@ -79,12 +79,15 @@ public class SiteFunctionality {
 		return true;
 	}
 	
-	public static boolean checkInputNumber(String input, int sizeRestriction) {
+	public static boolean checkInputNumber(String input, int sizeRestriction, boolean allowNegative) {
 		if (sizeRestriction > 0 && input.length() > sizeRestriction) {       // input must not be longer than this
 			return false;
 		}
 		for (int i = 0, n = input.length(); i < n; i++) {
 		    char c = input.charAt(i);                                        // Each character MUST be:
+			if (allowNegative && i == 0 && c == '-') {
+				continue;
+			}
 		    if ( !(c >= '0' && c <= '9') ) {
 		    	return false;                                                // if a character does not abide by the above then return false
 		    }

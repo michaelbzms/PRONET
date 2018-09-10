@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Messages</title>
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
@@ -145,13 +145,11 @@
 					    						success: function(response){
 					    							if ( response === "success" ){
 						    							console.log("Conversation updated successfully");
-						    							// get timestamp (TODO: might be different from database's timestamp)		
-														var dt = new Date();
-														var datetime = twoDigits(dt.getUTCDate()) + "/" + twoDigits(1 + dt.getUTCMonth()) + "/" + dt.getUTCFullYear() + " " + twoDigits(dt.getUTCHours()) + ":" + twoDigits(dt.getUTCMinutes()) + ":" + twoDigits(dt.getUTCSeconds());	
+														var datetime = "<%= MyUtil.printDate(null, true) %>";
 														// append text to the (must be only one) active conversation
 														$(".active_conv").append("<span class=\"home_timestamp\">" + datetime + "</span><p class=\"home_message\">" + $("#msg_input").val().replaceAll("\n","\n<br>\n") + "</p><br>");
 														// reset input value
-														 $("#msg_input").val("");
+														$("#msg_input").val("");
 														updateScroll();
 					    							} else { // else toast-notify user
 					    								window.alert(response);

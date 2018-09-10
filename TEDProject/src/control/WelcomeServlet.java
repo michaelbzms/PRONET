@@ -81,7 +81,7 @@ public class WelcomeServlet extends HttpServlet {
 				response.sendRedirect("/TEDProject/");
 			}
 			else if ( !SiteFunctionality.checkInputText(email, true, 0) || !SiteFunctionality.checkInputText(password, true, 128) || !SiteFunctionality.checkInputText(re_password, true, 128) 
-				   || !SiteFunctionality.checkInputText(firstName, true, 255) || !SiteFunctionality.checkInputText(lastName, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32) ) {
+				   || !SiteFunctionality.checkInputText(firstName, true, 255) || !SiteFunctionality.checkInputText(lastName, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32, false) ) {
 				System.out.println("Form submitted but one or more fields have illegal input characters.");
 				request.setAttribute("errorType", "illegalTextInput");
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
@@ -153,6 +153,7 @@ public class WelcomeServlet extends HttpServlet {
 		else if ( request.getParameter("register") != null ) {      // Log In
 			String email = request.getParameter("email");
 			String password = request.getParameter("password");
+			String tmzOffset = request.getParameter("tmzOffset");
 			// First try to login as an admin
 			int result = SiteFunctionality.LogIn(email, password);
 			if ( result == -1 ) {                // successful Administrator LogIn
@@ -186,7 +187,10 @@ public class WelcomeServlet extends HttpServlet {
 	            newSession.setAttribute("isAdmin", false);
 	            // set session to expire
 	            newSession.setMaxInactiveInterval(timeout_interval);
-	            // redirect to the correct uri
+	            // set timezone offset property
+	            if (SiteFunctionality.checkInputNumber(tmzOffset, 5, true)) {
+	            	PropertiesManager.setProperty("timezoneOffset", tmzOffset);
+	            }
 	            response.sendRedirect("/TEDProject/prof/NavigationServlet?page=HomePage");
 			} else {     // SHOULD NOT HAPPEN
 				request.setAttribute("errorType", "???");

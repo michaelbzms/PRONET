@@ -172,7 +172,7 @@ public class ChangeServlet extends HttpServlet {
 				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, 4096) 
-				   || !SiteFunctionality.checkInputNumber(tempProf.getPhone(), 32) 
+				   || !SiteFunctionality.checkInputNumber(tempProf.getPhone(), 32, false) 
 				   || !SiteFunctionality.checkInputText(tempProf.getProfessionalExperience(), false, 0) 
 				   || !SiteFunctionality.checkInputText(tempProf.getEducationBackground(), false, 0) 
 				   || !SiteFunctionality.checkInputText(tempProf.getSkills(), false, 0) ) {

@@ -17,6 +17,7 @@ public class PropertiesManager {
 		properties.put("dbPassword", "MYUSERSQL");
 		properties.put("saveDir", "D:/TEDProjectStorage");
 		properties.put("dateFormat", "dd/MM/yyyy");
+		properties.put("timezoneOffset", "-180");
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream in = classLoader.getResourceAsStream("config.properties");
@@ -31,6 +32,10 @@ public class PropertiesManager {
 
 	public static String getProperty(String propName) {
 		return properties.getProperty(propName);
+	}
+	
+	public static void setProperty(String propName, String value) {
+		properties.put(propName, value);
 	}
 	
 }
