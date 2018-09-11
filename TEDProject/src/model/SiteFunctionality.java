@@ -434,11 +434,14 @@ public class SiteFunctionality {
 			return null;
 		}
 		XMLProfessional xmlProf = new XMLProfessional();
-		xmlProf.setProf(db.getProfessional(profID));
-		xmlProf.setProfArticles(db.getProfArticles(profID));
+		Professional prof = db.getProfessional(profID);
+		xmlProf.setProf(prof);
+		xmlProf.setID(prof.getID());
+		xmlProf.setProfArticles(db.getXMLArticles(profID));
+		xmlProf.setProfInterests(db.getInterestedArticlesIDs(profID));
 		xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
 		xmlProf.setProfComments(db.getComments(profID, false));
-		// + more
+		xmlProf.setProfNetwork(db.getNetworkProfIDs(profID));
 		db.close();
 		return xmlProf;
 	}
@@ -451,13 +454,17 @@ public class SiteFunctionality {
 		}
 		List<XMLProfessional> profList = new ArrayList<XMLProfessional>();
 		XMLProfessional xmlProf;
+		Professional prof;
 		for (int profID : profIDs) {
 			xmlProf = new XMLProfessional();
-			xmlProf.setProf(db.getProfessional(profID));
-			xmlProf.setProfArticles(db.getProfArticles(profID));
+			prof = db.getProfessional(profID);
+			xmlProf.setProf(prof);
+			xmlProf.setID(prof.getID());
+			xmlProf.setProfArticles(db.getXMLArticles(profID));
+			xmlProf.setProfInterests(db.getInterestedArticlesIDs(profID));
 			xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
 			xmlProf.setProfComments(db.getComments(profID, false));
-			// + more
+			xmlProf.setProfNetwork(db.getNetworkProfIDs(profID));
 			profList.add(xmlProf);
 		}
 		db.close();

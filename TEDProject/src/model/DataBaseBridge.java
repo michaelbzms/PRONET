@@ -1025,6 +1025,35 @@ public class DataBaseBridge {
 		return articles;
 	}
 	
+	public List<XMLArticle> getXMLArticles(int profID) {
+		if (!connected) return null;
+		List<XMLArticle> articles = null;
+		String Query = "SELECT * FROM Articles WHERE idAuthor = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			articles = new ArrayList<XMLArticle>();
+			XMLArticle article = null;
+			while (resultSet.next()) {
+				article = new XMLArticle();
+				article.setID(resultSet.getInt("idArticle"));
+				article.setAuthorID(resultSet.getInt("idAuthor"));
+				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				article.setContent(resultSet.getString("content"));
+				if (resultSet.getBoolean("containsFiles")) {
+					List<String> filePaths = getArticleFilePaths(article.getID());
+					article.setFilePaths(filePaths);
+				}
+				articles.add(article);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return articles;
+	}
+	
 	public int addArticle(String postText, int authorID, boolean containsFiles) {
 		if (!connected) return -1;
 		String Insert = "INSERT INTO Articles (`idArticle`, `idAuthor`, `postedDate`, `content`, `containsFiles`) "
@@ -1317,7 +1346,7 @@ public class DataBaseBridge {
 	public List<Professional> getInterestedProfessionals(int articleID) {
 		if (!connected) return null;
 		List<Professional> P = new ArrayList<Professional>();
-		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureURI, ai.dateShown "
+		String Query = "SELECT p.idProfessional, p.firstName, p.lastName, p.profilePictureURI "
 				     + "FROM Professionals p, ArticleInterests ai "
 				     + "WHERE ai.idInterestShownBy = p.idProfessional AND ai.idArticle = ? " 
 				     + "ORDER BY ai.dateShown DESC;";
@@ -1338,6 +1367,52 @@ public class DataBaseBridge {
 			return null;
 		}
 		return P;
+	}
+	
+	public List<Integer> getInterestedArticlesIDs(int profID) {
+		if (!connected) return null;
+		List<Integer> articleIDs = null;
+		String Query = "SELECT idArticle FROM ArticleInterests WHERE idInterestShownBy = ? ORDER BY dateShown ASC;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			articleIDs = new ArrayList<Integer>();
+			int articleID;
+			while (resultSet.next()) {
+				articleID = resultSet.getInt("idArticle");
+				articleIDs.add(articleID);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return articleIDs;
+	}
+	
+	public List<Integer> getNetworkProfIDs(int profID) {
+		if (!connected) return null;
+		List<Integer> connectedProfIDs = null;
+		String Query = "(SELECT idProfessional1 AS idConnectedProfessional, connectionDate FROM ConnectedProfessionals WHERE idProfessional2 = ?)"
+					 + "UNION"
+					 + "(SELECT idProfessional2 AS idConnectedProfessional, connectionDate FROM ConnectedProfessionals WHERE idProfessional1 = ?)"
+					 + "ORDER BY connectionDate ASC;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			connectedProfIDs = new ArrayList<Integer>();
+			int connectedProfID;
+			while (resultSet.next()) {
+				connectedProfID = resultSet.getInt("idConnectedProfessional");
+				connectedProfIDs.add(connectedProfID);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return connectedProfIDs;
 	}
 	
 	public int getCommentAuthorID(int commentID) {
@@ -1378,6 +1453,27 @@ public class DataBaseBridge {
 			return -1;
 		}
 		return authorID;
+	}
+	
+	public List<String> getArticleFilePaths(int articleID) {
+		if (!connected) return null;
+		List<String> filePaths = null;
+		String Query = "SELECT filePath FROM ArticleFilePaths WHERE idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			filePaths = new ArrayList<String>();
+			String filePath;
+			while (resultSet.next()) {
+				filePath = resultSet.getString("filePath");
+				filePaths.add(filePath);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return filePaths;
 	}
 
 }

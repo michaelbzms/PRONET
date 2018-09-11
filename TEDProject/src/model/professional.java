@@ -17,7 +17,8 @@ public class Professional {
 	private boolean profExpVisibility = true, edBackgroundVisibility = true, skillsVisibility = true;
 	
 	/* Setters & Getters*/
-	@XmlAttribute
+	//@XmlAttribute
+	@XmlTransient
 	public int getID() { return ID; }
 	public void setID(int iD) { ID = iD; }
 	
