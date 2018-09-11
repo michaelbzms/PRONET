@@ -34,7 +34,7 @@
 	<%	return;
 	}	
 	boolean sessionProfInterest = db.getInterest(articleID, sessionProf.getID()); %>
-	<div class="article">
+	<div id="article<%= articleID %>" class="article">
 		<div class="d-flex flex-row vertical_center">
 			<div>
 				<a href="/TEDProject/ProfileLink?ProfID=<%= authorProf.getID() %>">
@@ -88,6 +88,29 @@
 	   		});
 	   	</script>
 		<button id="commentButton<%= articleID %>" type="button" class="btn btn-sm btn-outline-primary comment_button ml-1">Comment</button>
+		<% if (article.getAuthorID() == sessionProf.getID()) { %>
+			<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-danger ml-2">Delete</button>
+			<script>
+		   		$("#deleteArticle<%= articleID %>").on("click", function(){
+		   			var result = confirm("Are you sure you want to delete this article?");
+		   			if (result) {
+			   			$.ajax({
+	   						url: "/TEDProject/AJAXServlet?action=deleteArticle",
+	   						type: "post",
+	   						data: { ArticleID: <%= articleID %>,
+	   							 	AuthorID: <%= sessionProf.getID() %> },
+	   						success: function(response){
+	   							if ( response === "success" ){
+	   								$("#article<%= articleID %>").fadeOut();
+	   							} else {
+	   								window.alert(response);
+	   							}
+	   						},
+	   					});
+		   			}
+		   		});
+	  		</script>
+	  	<% } %>
 		<div class="ml-2">
 			<% List<Professional> interestedProfs = db.getInterestedProfessionals(articleID);
 			   List<Comment> comments = db.getComments(articleID, true); %>
@@ -168,7 +191,7 @@
 			 <% if (comments != null) {	   	
 				   for (Comment c : comments) { 
 				   		Professional commentAuthorProf = db.getProfessional(c.getAuthorID()); %>
-						<div class="comment">
+						<div id="comment<%= c.getID() %>" class="comment">
 							<div class="d-flex flex-row vertical_center">
 								<div>
 									<a href="/TEDProject/ProfileLink?ProfID=<%= commentAuthorProf.getID() %>">
@@ -178,6 +201,30 @@
 								<div>
 									<a href="/TEDProject/ProfileLink?ProfID=<%= commentAuthorProf.getID() %>"><%= commentAuthorProf.getFirstName() %> <%= commentAuthorProf.getLastName() %></a> 
 									&nbsp;<small class="text-secondary"><%= MyUtil.getTimeAgo(c.getDateWritten()) %></small>
+									<% if (commentAuthorProf.getID() == sessionProf.getID()) { %>
+										&ensp;<button id="deleteComment<%= c.getID() %>" class="btn btn-sm btn-outline-danger mt-1">X</button>
+										<script>
+									   		$("#deleteComment<%= c.getID() %>").on("click", function(){
+									   			var result = confirm("Are you sure you want to delete this comment?");
+									   			if (result) {
+										   			$.ajax({
+								   						url: "/TEDProject/AJAXServlet?action=deleteComment",
+								   						type: "post",
+								   						data: { CommentID: <%= c.getID() %>,
+								   							 	AuthorID: <%= sessionProf.getID() %> },
+								   						success: function(response){
+								   							if ( response === "success" ){
+								   								$("#comment<%= c.getID() %>").fadeOut();
+								   							} else {
+								   								window.alert(response);
+								   							}
+								   						},
+								   					});
+										   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) - 1);
+									   			}
+									   		});
+							   			</script>
+									<% } %>
 								</div>
 							</div> 
 							<div class="content_container">

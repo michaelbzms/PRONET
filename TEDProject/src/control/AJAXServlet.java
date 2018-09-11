@@ -55,7 +55,7 @@ public class AJAXServlet extends HttpServlet {
 			out.write("Error: null action!");
 		} else {
 			RequestDispatcher RequetsDispatcherObj;
-			String articleIDstr;
+			String articleIDstr, authorIDstr;
 			switch(action) {
 				case "searchProfessional":
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/SearchResults.jsp");
@@ -179,10 +179,33 @@ public class AJAXServlet extends HttpServlet {
 						RequetsDispatcherObj.forward(request, response);
 					}
 					break;
+				case "deleteArticle":
+					articleIDstr = request.getParameter("ArticleID");
+					authorIDstr = request.getParameter("AuthorID");
+					if (articleIDstr == null || authorIDstr == null) {
+						out.write("AJAX delete comment request reached server with invalid parameters");
+						System.out.println("AJAX delete comment request reached server with invalid parameters");
+					} else {
+						int articleID = -1;
+						int authorID = -1;
+						try {
+							articleID = Integer.parseInt(articleIDstr);
+							authorID = Integer.parseInt(authorIDstr);
+						} catch ( NumberFormatException e ) {
+							e.printStackTrace();	
+							return;
+						}
+						if ( SiteFunctionality.deleteArticle(articleID, authorID) < 0 ) {
+							out.write("failed to delete article");
+							break;
+						}
+						out.write("success");
+					}
+					break;
 				case "addComment":
 					String commentText = request.getParameter("commentText");
 					articleIDstr = request.getParameter("ArticleID");
-					String authorIDstr = request.getParameter("AuthorID");
+					authorIDstr = request.getParameter("AuthorID");
 					if (commentText == null || articleIDstr == null || authorIDstr == null) {
 						out.write("AJAX add comment request reached server with invalid parameters");
 						System.out.println("AJAX add comment request reached server with invalid parameters");
@@ -201,6 +224,29 @@ public class AJAXServlet extends HttpServlet {
 						commentText = commentText.replace("\n", "\n<br>\n");
 						if ( SiteFunctionality.addComment(articleID, authorID, commentText) < 0 ) {
 							out.write("failed to add comment");
+							break;
+						}
+						out.write("success");
+					}
+					break;
+				case "deleteComment":
+					String commentIDstr = request.getParameter("CommentID");
+					String sessionProfIDstr = request.getParameter("AuthorID");
+					if (commentIDstr == null || sessionProfIDstr == null) {
+						out.write("AJAX delete comment request reached server with invalid parameters");
+						System.out.println("AJAX delete comment request reached server with invalid parameters");
+					} else {
+						int commentID = -1;
+						int sessionProfID = -1;
+						try {
+							commentID = Integer.parseInt(commentIDstr);
+							sessionProfID = Integer.parseInt(sessionProfIDstr);
+						} catch ( NumberFormatException e ) {
+							e.printStackTrace();	
+							return;
+						}
+						if ( SiteFunctionality.deleteComment(commentID, sessionProfID) < 0 ) {
+							out.write("failed to delete comment");
 							break;
 						}
 						out.write("success");

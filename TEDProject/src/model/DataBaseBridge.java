@@ -722,18 +722,7 @@ public class DataBaseBridge {
 	
 	public boolean deleteWorkAd(int adID) {
 		if (!connected) return false;
-		// First delete all applications to that that ad:
-		String deleteString = "DELETE FROM Applications WHERE idAd = ?;";
-		try {
-			PreparedStatement statement = connection.prepareStatement(deleteString);
-			statement.setInt(1, adID);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-		// Then delete the ad itself:
-		deleteString = "DELETE FROM Ads WHERE idAd = ?;";
+		String deleteString = "DELETE FROM Ads WHERE idAd = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(deleteString);
 			statement.setInt(1, adID);
@@ -1084,6 +1073,20 @@ public class DataBaseBridge {
 		return true;
 	}
 	
+	public boolean deleteArticle(int articleID) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM Articles WHERE idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, articleID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public int[] getWallArticlesIDsFor(int profID) {
 		if (!connected) return null;
 		List<Integer> articleIDs = null;
@@ -1157,6 +1160,20 @@ public class DataBaseBridge {
 			statement.setInt(2, profID);
 			statement.setString(3, text);
 			statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean deleteComment(int commentID) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM ArticleComments WHERE idComment = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, commentID);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1321,6 +1338,46 @@ public class DataBaseBridge {
 			return null;
 		}
 		return P;
+	}
+	
+	public int getCommentAuthorID(int commentID) {
+		if (!connected) return -1;
+		int authorID = -1;
+		String Query = "SELECT idWrittenBy FROM ArticleComments WHERE idComment = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, commentID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return -1;
+			} else {
+				authorID = resultSet.getInt("idWrittenBy");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return authorID;
+	}
+	
+	public int getArticleAuthorID(int articleID) {
+		if (!connected) return -1;
+		int authorID = -1;
+		String Query = "SELECT idAuthor FROM Articles WHERE idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return -1;
+			} else {
+				authorID = resultSet.getInt("idAuthor");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return authorID;
 	}
 
 }

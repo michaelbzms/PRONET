@@ -353,6 +353,25 @@ public class SiteFunctionality {
 		return db.addArticle(postText, prof.getID(), containsFiles);
 	}
 	
+	public static int deleteArticle(int articleID, int sessionProfID) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		// Check if sessionProfID is the author of the article
+		if ( db.getArticleAuthorID(articleID) != sessionProfID ) {
+			return -2;
+		}
+		if ( db.deleteArticle(articleID) ) {
+			db.close(); 
+			return 0;	
+		} else {				// database error
+			db.close(); 
+			return -1;
+		}
+	}
+	
 	public static int addComment(int articleID, int authorID, String commentText) {
 		DataBaseBridge db = new DataBaseBridge();
 		if ( !db.checkIfConnected() ) {
@@ -360,6 +379,25 @@ public class SiteFunctionality {
 			return -503;
 		}
 		if ( db.createComment(articleID, authorID, commentText) ) {
+			db.close(); 
+			return 0;	
+		} else {				// database error
+			db.close(); 
+			return -1;
+		}
+	}
+	
+	public static int deleteComment(int commentID, int sessionProfID) {
+		DataBaseBridge db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		// Check if sessionProfID is the author of the comment
+		if ( db.getCommentAuthorID(commentID) != sessionProfID ) {
+			return -2;
+		}
+		if ( db.deleteComment(commentID) ) {
 			db.close(); 
 			return 0;	
 		} else {				// database error
