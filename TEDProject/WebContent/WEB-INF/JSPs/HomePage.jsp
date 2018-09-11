@@ -61,7 +61,7 @@
 						</div>
 						<div class="side_tab" style="max-height: 800px; overflow-y: auto">
 							<h4 class="neon_header">My Connections</h4>
-							<div class="grid_container_mini justify-content-center">
+							<div class="grid_container_mini justify-content-left">
 							<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
 							   if ( Connections != null ) { 
 								   for (Professional p : Connections) { %>

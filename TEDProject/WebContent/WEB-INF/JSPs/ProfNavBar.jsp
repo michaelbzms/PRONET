@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ page import="model.DataBaseBridge, model.SiteFunctionality, model.Professional" %>
+
 <%! private String addIDIfActive(String activePage, String page){
 		if ( activePage.equals(page) ){
 			return "id=\"active_page\"";
@@ -38,7 +40,16 @@
 				<a <%= addIDIfActive(activePage, "Messages") %> class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Messages">Messages</a>
 			</li>
 			<li class="nav-item <%= addCLASSIfActive(activePage, "Notifications")%>">
-				<a <%= addIDIfActive(activePage, "Notifications") %> class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications</a>
+				<a <%= addIDIfActive(activePage, "Notifications") %> class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications
+				<% 	{ DataBaseBridge db = new DataBaseBridge();
+					  Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
+					  int numberOfNotifications = db.getNumberOfNotifications(prof.getID());
+					  if ( numberOfNotifications > 0 ){ %>
+						<span id="numberOfNotifications" class="badge badge-danger"><%= numberOfNotifications %></span>
+				<% 	  } 
+				   	  db.close(); 
+				   	} %>
+				</a>
 			</li>
 			<li class="nav-item <%= addCLASSIfActive(activePage, "PersonalInformation") %>">
 				<a <%= addIDIfActive(activePage, "PersonalInformation") %> class="nav-link" href="/TEDProject/ProfileLink">Personal Information</a>

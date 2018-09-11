@@ -48,6 +48,7 @@
 						   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"accept" },
 						   							success: function(response){
 						   								$("#request<%= asker.getID() %>").fadeOut();
+						   								decreaseNumberOfNotifications();
 						   								setTimeout(function (){
 					    									var gotEmpty = true;
 					    									$(".request").each(function(){
@@ -58,7 +59,7 @@
 					    									if ( gotEmpty ){
 					    										$("#connection_requests_bar ul").html("You don't have any Connection Requests.");
 					    									}
-					    						 		}, 450);
+					    						 		}, 420);
 						   							}
 						   						});
 						   					});
@@ -71,6 +72,7 @@
 						   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"decline" },
 						   							success: function(response){
 						   								$("#request<%= asker.getID() %>").fadeOut();
+						   								decreaseNumberOfNotifications();
 						   								setTimeout(function (){
 					    									var gotEmpty = true;
 					    									$(".request").each(function(){
@@ -81,7 +83,7 @@
 					    									if ( gotEmpty ){
 					    										$("#connection_requests_bar ul").html("<p><i>You don't have any Connection Requests.</p></i>");
 					    									}
-					    						 		}, 450);
+					    						 		}, 420);
 						   							}
 						   						});
 						   					});
@@ -154,6 +156,7 @@
 						    						success: function(response){
 						    							if ( response === "success" ) {
 						    								$("#notification<%= i %>").fadeOut();
+						    								decreaseNumberOfNotifications();
 						    								setTimeout(function (){
 						    									var gotEmpty = true;
 						    									$(".notification").each(function(){
@@ -164,7 +167,7 @@
 						    									if ( gotEmpty ){
 						    										$("#notifications_bar ul").html("<p><i>You don't have any Notifications.</i></p>");
 						    									}
-						    						 		}, 450);
+						    						 		}, 420);
 						    							} else {
 						    								window.alert(response);
 						    							}
@@ -197,6 +200,16 @@
  		$("#markAll").on("click", function(){
  			$(".cancel").trigger("click");      // trigger click event for all "cancel" buttons
  		});
+ 		
+ 		function decreaseNumberOfNotifications(){
+ 			var num = parseInt($("#numberOfNotifications").text());
+ 			--num;
+ 			if (num > 0){
+ 				$("#numberOfNotifications").text(num.toString());
+ 			} else {
+ 				$("#numberOfNotifications").fadeOut();
+ 			}
+ 		}
  	</script>
 <%	} 
  	db.close(); %>	

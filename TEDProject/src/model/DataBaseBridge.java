@@ -1475,7 +1475,43 @@ public class DataBaseBridge {
 		}
 		return filePaths;
 	}
-
+	
+	public int getNumberOfNotifications(int profID) {
+		if (!connected) return -1;
+		String Query = "SELECT SUM(Notifications) AS Total "
+					 + "FROM ( "
+					 + " ( SELECT COUNT(*) AS Notifications FROM ConnectionRequests WHERE idReceiver = ? ) "
+					 + "UNION ALL"
+					 + " ( SELECT COUNT(*) AS Notifications FROM ArticleInterests i, Articles a "
+					 + "   WHERE a.idAuthor = ? AND a.idArticle = i.idArticle AND i.seen = false AND i.idInterestShownBy != ? ) "
+					 + "UNION ALL"
+					 + " ( SELECT COUNT(*) AS Notifications FROM Articles a, ArticleComments c "
+					 + "   WHERE a.idAuthor = ? AND a.idArticle = c.idArticle AND c.seen = false AND c.idWrittenBy != ? ) "
+					 + "UNION ALL"
+					 + " ( SELECT COUNT(*) AS Notifications FROM Applications ap, Ads ad "
+					 + "   WHERE ap.idAd = ad.idAd AND ad.idPublishedBy = ? AND ap.seen = false AND ap.idApplicant != ? ) "
+					 + " ) AS SubQueryName;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			statement.setInt(2, profID);
+			statement.setInt(3, profID);
+			statement.setInt(4, profID);
+			statement.setInt(5, profID);
+			statement.setInt(6, profID);
+			statement.setInt(7, profID);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt("Total");
+			} else {
+				return -3;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
+		}
+	}
+	
 }
 
 
