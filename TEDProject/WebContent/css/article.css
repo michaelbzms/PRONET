@@ -38,7 +38,7 @@
 .past_comments_container {
 	margin: 5px 0;
 	overflow-y: auto;
-    max-height: 400px;
+    max-height: 410px;
 }
 
 .comment {

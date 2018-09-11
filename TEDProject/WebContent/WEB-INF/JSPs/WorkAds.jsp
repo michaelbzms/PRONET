@@ -125,7 +125,7 @@
 								<span id="aplFocusPoint<%= count %>"></span>
 								<script>
 									var aplNote = document.getElementById("aplNote" + <%= count %>);
-									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);   //TODO: are you sure replace === replaceALL?
+									if (aplNote) aplNote.innerHTML = SimpleMDE.prototype.markdown(`<%= apl.getNote().replace("\\", "\\\\").replace("`", "\\`") %>`);
 							  	</script>
 							<% count++;		
 						  	} %>

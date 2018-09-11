@@ -43,6 +43,7 @@
 		<jsp:include page="Article.jsp"> 
 			<jsp:param name="ArticleID" value="<%= articleID %>" /> 
 		</jsp:include>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 	<script src="/TEDProject/Javascript/comment.js"></script>
 </body>

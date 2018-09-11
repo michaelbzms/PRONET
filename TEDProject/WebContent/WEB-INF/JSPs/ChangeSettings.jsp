@@ -40,6 +40,7 @@
 	<% } %>
 		<br>
 		<a style="display: inline-block" href="/TEDProject/prof/NavigationServlet?page=Settings">Go back to Settings</a>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 </body>
 </html>

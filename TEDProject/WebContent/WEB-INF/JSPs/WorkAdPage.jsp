@@ -43,7 +43,7 @@
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
 			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
 			<div class="ProfileOptions">
-			<% if (profID > -1) { 			// TODO: Admin should be able to delete ads?
+			<% if (profID > -1) { 
 				   if (profID == ad.getPublishedByID()) { 		// ad was published by current prof
 				   		if (!isAdmin) { %>
 							<a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd&AdID=<%= ad.getID() %>" class="btn btn-primary">Edit</a>

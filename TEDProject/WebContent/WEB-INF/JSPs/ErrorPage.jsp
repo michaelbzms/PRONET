@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<title>PRONET - Professional Networking and more</title>
 </head>
 <body>
@@ -84,6 +85,7 @@
 				<a style="display: inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>
 		<% } 
 	   } %>	
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 </body>
 </html>

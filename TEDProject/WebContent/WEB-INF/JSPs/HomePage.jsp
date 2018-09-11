@@ -59,19 +59,21 @@
 							</p>
 							<a href="/TEDProject/ProfileLink">View details</a>
 						</div>
-						<div class="side_tab" style="max-height: 500px; overflow-y: auto">
+						<div class="side_tab" style="max-height: 800px; overflow-y: auto">
 							<h4 class="neon_header">My Connections</h4>
-							<ul class="grid_container_mini">
+							<div class="grid_container_mini justify-content-center">
 							<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
 							   if ( Connections != null ) { 
 								   for (Professional p : Connections) { %>
-										<li class="grid_item_mini">
-											<img style="height: 72px; width: 72px" class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
-											<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>"><%= p.getFirstName() %><br><%= p.getLastName() %></a>		
-										</li>
+									    <a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
+											<div class="grid_item_mini text-dark">
+												<img style="height: 72px; width: 72px" class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+												<%= p.getFirstName() %><br><%= p.getLastName() %>		
+											</div>
+										</a>
 								<%	} %>
 							<% } %>
-							</ul>
+							</div>
 						</div>
 					</div>
 					<div class="col-9">

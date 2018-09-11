@@ -21,13 +21,9 @@ public class AdminAuthenticationFilter implements Filter {
 
 	private ServletContext context;
 	
-    public AdminAuthenticationFilter() {
-    	// TODO Auto-generated method stub
-    }
+    public AdminAuthenticationFilter() {}
 
-	public void destroy() {
-		// TODO Auto-generated method stub
-	}
+	public void destroy() {}
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		this.context = fConfig.getServletContext();

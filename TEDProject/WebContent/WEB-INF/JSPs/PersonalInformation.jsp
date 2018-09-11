@@ -57,7 +57,7 @@
 					   if (isSelf) { %>
 							<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
 					<% } else { %>
-							<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary" style="margin-bottom: 15px">Message</a>
+							<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary mb-2 ml-1">Message</a>
 							<br>
 						<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
 								<small class="text-info">Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></small><br>

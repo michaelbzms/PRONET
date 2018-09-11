@@ -76,6 +76,7 @@
 			<% } 
 			   db.close(); %>
 		</div>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
 	<script>
 		function selectAll(source) {

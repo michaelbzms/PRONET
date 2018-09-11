@@ -21,13 +21,9 @@ public class ProfAuthenticationFilter implements Filter {
 
 	private ServletContext context;
 	
-    public ProfAuthenticationFilter() {
-    	// TODO Auto-generated method stub
-    }
+    public ProfAuthenticationFilter() {}
 
-	public void destroy() {
-		// TODO Auto-generated method stub
-	}
+	public void destroy() {}
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		this.context = fConfig.getServletContext();

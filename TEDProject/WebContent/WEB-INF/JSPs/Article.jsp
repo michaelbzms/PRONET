@@ -4,8 +4,6 @@
 
 <%! private DataBaseBridge db = new DataBaseBridge();   // TODO: This is inefficient	%>
 
-<!-- stand-alone page or not based on boolean attribute -->
-
 <%	String articleIDstr = request.getParameter("ArticleID");
 	if ( articleIDstr == null ) {  %>
 		<p>Error: Invalid Article ID.</p>
@@ -43,10 +41,11 @@
 			</div>
 			<div>
 				<a href="/TEDProject/ProfileLink?ProfID=<%= authorProf.getID() %>"><%= authorProf.getFirstName() %> <%= authorProf.getLastName() %></a><br>
-				<a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= articleID %>"><small class="text-secondary"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small></a>
+				<a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= articleID %>">
+				<small class="text-secondary" data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(article.getPostedDate(), true) %>"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small></a>
 			</div>
 			<% if (article.getAuthorID() == sessionProf.getID()) { %>
-				<div style="margin-left: 8px">
+				<div class="ml-auto">
 					<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-secondary ml-2">✕</button>
 					<script>
 				   		$("#deleteArticle<%= articleID %>").on("click", function(){
@@ -69,7 +68,7 @@
 				   		});
 			  		</script>
 		  		</div>
-		  	<% } %>
+			<% } %>
 		</div> 
 		<div class="content_container">
 			<%= article.getContent() %>
@@ -125,7 +124,7 @@
 				<form id="comment_input_form<%= articleID %>">
 					<textarea id="comment_input_textarea<%= articleID %>" name="comment_text" class="comment_form_text" required></textarea>
 					<div class="text-right">
-						<input type="submit" value="Submit Comment" class="btn btn-primary">
+						<input type="submit" value="Submit Comment" class="btn btn-sm btn-primary">
 					</div>
 				</form>
 				<script>
@@ -188,6 +187,15 @@
 			   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) + 1);
 			   		});
 			   	</script>
+			   	<script>
+				   	$("#comment_input_form<%= articleID %>").keypress(function (e) {
+					    if(e.which == 13 && !e.shiftKey) {        
+					        $(this).closest("form").submit();
+					        e.preventDefault();
+					        return false;
+					    }
+					});	
+			   	</script>
 			</div>
 			<div id="past_comments_container<%= articleID %>" class="past_comments_container">
 			 <% if (comments != null) {	   	
@@ -202,32 +210,34 @@
 								</div>
 								<div>
 									<a href="/TEDProject/ProfileLink?ProfID=<%= commentAuthorProf.getID() %>"><%= commentAuthorProf.getFirstName() %> <%= commentAuthorProf.getLastName() %></a> 
-									&nbsp;<small class="text-secondary"><%= MyUtil.getTimeAgo(c.getDateWritten()) %></small>
-									<% if (commentAuthorProf.getID() == sessionProf.getID()) { %>
-										&ensp;<button id="deleteComment<%= c.getID() %>" class="btn btn-sm btn-outline-secondary mt-1">✕</button>
-										<script>
-									   		$("#deleteComment<%= c.getID() %>").on("click", function(){
-									   			var result = confirm("Are you sure you want to delete this comment?");
-									   			if (result) {
-										   			$.ajax({
-								   						url: "/TEDProject/AJAXServlet?action=deleteComment",
-								   						type: "post",
-								   						data: { CommentID: <%= c.getID() %>,
-								   							 	AuthorID: <%= sessionProf.getID() %> },
-								   						success: function(response){
-								   							if ( response === "success" ){
-								   								$("#comment<%= c.getID() %>").fadeOut();
-								   							} else {
-								   								window.alert(response);
-								   							}
-								   						},
-								   					});
-										   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) - 1);
-									   			}
-									   		});
-							   			</script>
-									<% } %>
+									&nbsp;<small class="text-secondary" data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(c.getDateWritten(), true) %>"><%= MyUtil.getTimeAgo(c.getDateWritten()) %></small>
 								</div>
+								<% if (commentAuthorProf.getID() == sessionProf.getID()) { %>
+									<div class="ml-auto">
+										<button id="deleteComment<%= c.getID() %>" class="btn btn-sm btn-outline-secondary mt-1">✕</button>
+									</div>
+									<script>
+								   		$("#deleteComment<%= c.getID() %>").on("click", function(){
+								   			var result = confirm("Are you sure you want to delete this comment?");
+								   			if (result) {
+									   			$.ajax({
+							   						url: "/TEDProject/AJAXServlet?action=deleteComment",
+							   						type: "post",
+							   						data: { CommentID: <%= c.getID() %>,
+							   							 	AuthorID: <%= sessionProf.getID() %> },
+							   						success: function(response){
+							   							if ( response === "success" ){
+							   								$("#comment<%= c.getID() %>").fadeOut();
+							   							} else {
+							   								window.alert(response);
+							   							}
+							   						},
+							   					});
+									   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) - 1);
+								   			}
+								   		});
+						   			</script>
+								<% } %>
 							</div> 
 							<div class="content_container">
 								<%= c.getText() %>
