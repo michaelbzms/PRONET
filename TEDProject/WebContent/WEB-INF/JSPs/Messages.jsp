@@ -33,7 +33,7 @@
 			<%  String chatWith = request.getParameter("chatWith"); 
 			    Professional chatWithProf = null;
 				if (chatWith != null) {
-					chatWithProf = db.getProfessional(Integer.parseInt(chatWith));  
+					chatWithProf = db.getBasicProfessionalInfo(Integer.parseInt(chatWith));  
 				} %>			
 				<div id="messanger">
 					<div class="conversations_list">		

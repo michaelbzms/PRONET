@@ -23,7 +23,7 @@
 		<p>Error: Article not found.</p>
 	<%	return;
 	}	
-	Professional authorProf = db.getProfessional(article.getAuthorID()); 
+	Professional authorProf = db.getBasicProfessionalInfo(article.getAuthorID()); 
 	if (authorProf == null) { %>
 		<p>Error: Article author not found.</p>
 	<%	return;
@@ -45,6 +45,31 @@
 				<a href="/TEDProject/ProfileLink?ProfID=<%= authorProf.getID() %>"><%= authorProf.getFirstName() %> <%= authorProf.getLastName() %></a><br>
 				<a href="/TEDProject/prof/NavigationServlet?page=Article&ArticleID=<%= articleID %>"><small class="text-secondary"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small></a>
 			</div>
+			<% if (article.getAuthorID() == sessionProf.getID()) { %>
+				<div style="margin-left: 8px">
+					<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-secondary ml-2">✕</button>
+					<script>
+				   		$("#deleteArticle<%= articleID %>").on("click", function(){
+				   			var result = confirm("Are you sure you want to delete this article?");
+				   			if (result) {
+					   			$.ajax({
+			   						url: "/TEDProject/AJAXServlet?action=deleteArticle",
+			   						type: "post",
+			   						data: { ArticleID: <%= articleID %>,
+			   							 	AuthorID: <%= sessionProf.getID() %> },
+			   						success: function(response){
+			   							if ( response === "success" ){
+			   								$("#article<%= articleID %>").fadeOut();
+			   							} else {
+			   								window.alert(response);
+			   							}
+			   						},
+			   					});
+				   			}
+				   		});
+			  		</script>
+		  		</div>
+		  	<% } %>
 		</div> 
 		<div class="content_container">
 			<%= article.getContent() %>
@@ -88,29 +113,6 @@
 	   		});
 	   	</script>
 		<button id="commentButton<%= articleID %>" type="button" class="btn btn-sm btn-outline-primary comment_button ml-1">Comment</button>
-		<% if (article.getAuthorID() == sessionProf.getID()) { %>
-			<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-danger ml-2">Delete</button>
-			<script>
-		   		$("#deleteArticle<%= articleID %>").on("click", function(){
-		   			var result = confirm("Are you sure you want to delete this article?");
-		   			if (result) {
-			   			$.ajax({
-	   						url: "/TEDProject/AJAXServlet?action=deleteArticle",
-	   						type: "post",
-	   						data: { ArticleID: <%= articleID %>,
-	   							 	AuthorID: <%= sessionProf.getID() %> },
-	   						success: function(response){
-	   							if ( response === "success" ){
-	   								$("#article<%= articleID %>").fadeOut();
-	   							} else {
-	   								window.alert(response);
-	   							}
-	   						},
-	   					});
-		   			}
-		   		});
-	  		</script>
-	  	<% } %>
 		<div class="ml-2">
 			<% List<Professional> interestedProfs = db.getInterestedProfessionals(articleID);
 			   List<Comment> comments = db.getComments(articleID, true); %>
@@ -190,7 +192,7 @@
 			<div id="past_comments_container<%= articleID %>" class="past_comments_container">
 			 <% if (comments != null) {	   	
 				   for (Comment c : comments) { 
-				   		Professional commentAuthorProf = db.getProfessional(c.getAuthorID()); %>
+				   		Professional commentAuthorProf = db.getBasicProfessionalInfo(c.getAuthorID()); %>
 						<div id="comment<%= c.getID() %>" class="comment">
 							<div class="d-flex flex-row vertical_center">
 								<div>
@@ -202,7 +204,7 @@
 									<a href="/TEDProject/ProfileLink?ProfID=<%= commentAuthorProf.getID() %>"><%= commentAuthorProf.getFirstName() %> <%= commentAuthorProf.getLastName() %></a> 
 									&nbsp;<small class="text-secondary"><%= MyUtil.getTimeAgo(c.getDateWritten()) %></small>
 									<% if (commentAuthorProf.getID() == sessionProf.getID()) { %>
-										&ensp;<button id="deleteComment<%= c.getID() %>" class="btn btn-sm btn-outline-danger mt-1">X</button>
+										&ensp;<button id="deleteComment<%= c.getID() %>" class="btn btn-sm btn-outline-secondary mt-1">✕</button>
 										<script>
 									   		$("#deleteComment<%= c.getID() %>").on("click", function(){
 									   			var result = confirm("Are you sure you want to delete this comment?");

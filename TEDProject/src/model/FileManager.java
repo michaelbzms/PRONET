@@ -19,7 +19,7 @@ public class FileManager {
 	
 	public static boolean editProfilePicture(Professional tempProf, Part filePart, String saveLocation, String userUploadFilePath, int profID) {     // (!) modifies tempProf accordingly
 		DataBaseBridge db = new DataBaseBridge();
-		Professional prof = db.getProfessional(profID);
+		Professional prof = db.getBasicProfessionalInfo(profID);
 		db.close();
 		if ( prof.getProfilePicURI() == null || !(new File(saveLocation + "/profile/" + prof.getProfile_pic_name())).exists()  || prof.getProfilePicURI().equals(projectURL + "/images/defaultProfilePic.png") ) {
 			// if previous picture was the default picture (or simply does not exist) then must choose a new unique name and save the picture under it

@@ -193,7 +193,7 @@ public class ChangeServlet extends HttpServlet {
 						}
 					} else {      // else leave the profilePicFilePath as is (== reset it to the same value)
 						DataBaseBridge db = new DataBaseBridge();
-						Professional prof = db.getProfessional(profID);
+						Professional prof = db.getBasicProfessionalInfo(profID);
 						db.close();
 						tempProf.setProfilePicURI(prof.getProfilePicURI());
 					}
