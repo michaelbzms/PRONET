@@ -60,13 +60,20 @@ label {
 	border-radius: 5px;
 	box-shadow: 2px 2px 5px 0px #0e1956;
 	color: #e5eeff;
-	padding: 10px;
+	padding: 15px;
 	margin: 16px 0px 16px 0px;
 	border-style: solid;
 	border-color: black;
 	border-width: 2px;
-	width: 400px;
+	width: 430px;
 	margin:0 auto;
+}
+
+.main_container .form .choose_file_button {
+	cursor: pointer;
+	display: inline-block;
+	width: calc(100% - 160px - 30px);	/* take up all div minus the label and the padding */
+	margin-left: -4px;
 }​
 
 .buttonContainer {

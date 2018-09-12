@@ -13,19 +13,21 @@
 </head>
 <body>
 	<div class="main_container">
+		<nav class="navbar navbar-expand-xl bg-light justify-content-between">
+			<div class="container-fluid">
+			    <div class="navbar-header">
+			    	<a class="navbar-brand" href="#">PRONET</a>
+			    </div>
+		        <form class="form-inline" method="POST" action="/TEDProject/WelcomeServlet?register=false">
+			    	<input class="form-control mr-1" type="email" name="email" placeholder="Email">
+					<input class="form-control mr-1" type="password" name="password" placeholder="Password">
+					<input id="tmzOffset" type="hidden" name="tmzOffset" value="0">
+					<input class="btn btn-primary" type="submit" value="Log in">
+				</form>
+		    </div>
+	    </nav>
 		<h1 style="align: center">WELCOME TO PRONET</h1>
 		<p style="text-align: center">Pronet is a PROfessional NETworking site developed as part of the university class project "Internet Technologies".</p>
-		<br>
-		<div class="form">
-			<!-- TODO: This form should go to navbar! -->
-			<h2>LOG IN</h2>
-			<form method="POST" action="/TEDProject/WelcomeServlet?register=false">
-				<label>Email: </label><input type="email" name="email"><br>
-				<label>Password: </label><input type="password" name="password"><br>
-				<input id="tmzOffset" name="tmzOffset" type="hidden" value="0">
-				<input class="btn btn-light" style="display: inline-block; margin: 0px 0px 0px 160px" type="submit" value="Log in"><br>
-			</form>
-		</div>
 		<br>
 		<div class="form">
 			<h2>SIGN UP</h2>
@@ -35,25 +37,30 @@
 				<label>Email: </label><input type="email" name="email"><br>
 				<label>Password: </label><input type="password" name="password"><br>
 				<label>Repeat Password: </label><input type="password" name="repeat_password"><br>
-				<label>Phone Number: </label><input type="number" name="phone_number"><br>
-				Profile Img:   
-				<input style="display: inline-block; cursor: pointer; margin-bottom: 15px; float: right" 
-					   type="file" name="profile_picture" accept="image/*"><br>
-				<input class="btn btn-light" style="display: inline-block; margin: 0px 0px 0px 160px" type="submit" value="Sign up"><br>
+				<label>Phone Number: </label><input type="text" name="phone_number"><br>
+				<label>Profile Picture:</label>   
+				<input class="choose_file_button" type="file" name="profile_picture" accept="image/*"><br>
+				<!-- input class="ml-1" type="checkbox" required> I have read and accept the terms and conditions.<br-->
+				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Sign up">
 			</form>
 		</div>
 		<br>
-		<div class="alert alert-danger" style="text-align: center">
+		<div class="alert alert-danger" style="text-align: center">	<!-- TODO: This alert -->
 			<h3>Disclaimer</h3>
 			This site uses cookies. We're legally obliged to tell you that.<br>
 			Also, this disclaimer should probably be a pop-up. We'll fix that sometime later.<br>
 			<h6>Something something GDPR.</h6>
 		</div>
-		<p style="text-align: center"> (!) This site is still under construction! </p>	
+		<div id="includedFooter"></div>
 	</div>
 	<script> 
 		var tmzOffset = new Date().getTimezoneOffset(); 
 		document.getElementById("tmzOffset").value = tmzOffset;
 	</script>
+	<script> 
+	    $(function(){
+	      $("#includedFooter").load("footer.html"); 
+	    });
+    </script>
 </body>
 </html>
