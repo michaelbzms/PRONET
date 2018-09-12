@@ -84,7 +84,7 @@ public class FileManager {
 				type = "img";
 			} else if ( contentType.substring(0, j).equals("video") ) {
 				type = "vid";
-			} else if ( contentType.substring(0, j).equals("video") ) {
+			} else if ( contentType.substring(0, j).equals("audio") ) {
 				type = "aud";
 			} else {      // if file is not an image or a video or an audio, then
 				// do NOT save it

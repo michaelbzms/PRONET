@@ -978,6 +978,7 @@ public class DataBaseBridge {
 		if (!connected) return null;
 		Article article = null;
 		String Query = "SELECT * FROM Articles WHERE idArticle = ?;";
+		String fileQuery = "SELECT filePath FROM ArticleFilePaths WHERE idArticle = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			statement.setInt(1, articleID);
@@ -991,6 +992,14 @@ public class DataBaseBridge {
 				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
 				article.setContent(resultSet.getString("content"));
 				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
+				if ( article.getContainsFiles() ) {   // if containsFiles then fetch those file's paths (URIs)
+					statement = connection.prepareStatement(fileQuery);
+					statement.setInt(1, articleID);
+					resultSet = statement.executeQuery();
+					while(resultSet.next()) {
+						article.addFileURI(resultSet.getString("filePath"));
+					}
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -999,12 +1008,14 @@ public class DataBaseBridge {
 		return article;
 	}
 	
-	public List<Article> getProfArticles(int profID) {
+	public List<Article> getProfArticles(int profID) {       // TODO: Do we want to fetch files here?
 		if (!connected) return null;
 		List<Article> articles = null;
 		String Query = "SELECT * FROM Articles WHERE idAuthor = ?;";
+//		String fileQuery = "SELECT filePath FROM ArticleFilePaths WHERE idArticle = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
+//			PreparedStatement statement2 = connection.prepareStatement(fileQuery);
 			statement.setInt(1, profID);
 			ResultSet resultSet = statement.executeQuery();
 			articles = new ArrayList<Article>();
@@ -1016,6 +1027,13 @@ public class DataBaseBridge {
 				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
 				article.setContent(resultSet.getString("content"));
 				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
+//				if ( article.getContainsFiles() ) {   // if containsFiles then fetch those file's paths (URIs)
+//					statement2.setInt(1, article.getID());
+//					ResultSet resultSet2 = statement2.executeQuery();
+//					while(resultSet2.next()) {
+//						article.addFileURI(resultSet.getString("filePath"));
+//					}
+//				}
 				articles.add(article);
 			}
 		} catch (SQLException e) {

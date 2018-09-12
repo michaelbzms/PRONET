@@ -66,3 +66,26 @@
     width: 32px;
     margin: 0 5px;
 }
+
+.articleFilesDiv{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.article_img{
+	display: inline-block;
+	max-height: 400px;
+	max-width: 400px;
+}
+
+.article_vid{
+	display: inline-block;
+	max-height: 400px;
+	max-width: 400px;
+}
+
+.article_aud{
+	display: inline-block;
+	max-height: 400px;
+	max-width: 400px;
+}

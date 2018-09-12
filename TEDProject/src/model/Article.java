@@ -1,6 +1,9 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Article {
 	
@@ -10,6 +13,7 @@ public class Article {
 	private LocalDateTime postedDate = null;
 	private String content = null;
 	private boolean containsFiles = false;
+	private List<String> fileURIs = new ArrayList<String>();
 
 	/* Setters & Getters */
 	public int getID() { return ID; }
@@ -26,5 +30,9 @@ public class Article {
 	
 	public boolean getContainsFiles() { return containsFiles; }
 	public void setContainsFiles(boolean containsFiles) { this.containsFiles = containsFiles; }
+	
+	public final List<String> getFileURIs() { return fileURIs; }      // returns a final -> const referance
+	public void addFileURI(String newURI) { fileURIs.add(newURI); }
+	public boolean removeFileURI(String URI) { return fileURIs.remove(URI); }
 	
 }
