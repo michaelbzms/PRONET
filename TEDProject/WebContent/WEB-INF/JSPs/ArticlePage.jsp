@@ -22,15 +22,25 @@
 </head>
 <body>
 	<div class="main_container">
-		<% HttpSession currentSession = request.getSession(false);
-		   int profID;
-		   if (request.getSession(false) != null && currentSession.getAttribute("ProfID") != null) {
-		   		profID = (int) currentSession.getAttribute("ProfID");
-		   } else {	%>
-				<h2 class="my_h2">SESSION ENDED</h2>
-				<p>Your session has ended. Please login again.</p>
-			<% 	return;
-		   }
+	<%  HttpSession currentSession = request.getSession(false);
+	    int profID;
+	    if (request.getSession(false) != null && currentSession.getAttribute("ProfID") != null) {
+	   		profID = (int) currentSession.getAttribute("ProfID");
+	    } else {	%>
+		 	<h2 class="my_h2">SESSION ENDED</h2>
+		 	<p>Your session has ended. Please login again.</p>
+		 <% return;
+	    }
+	    DataBaseBridge db = new DataBaseBridge();
+		Professional prof = db.getBasicProfessionalInfo(profID);
+		if ( !db.checkIfConnected() ) { %>
+			<h2>DATABASE ERROR</h2>	
+			<p>It appears that our database is down. Please contact the site's administrators.</p>
+	<%	} else if ( prof == null ) {  %>
+			<h2>INTERNAL ERROR</h2>	
+			<p>Could not retrieve your info from our data base. How did you login?</p>
+	<% 	} else { 
+		   Professional authorProf = db.getBasicProfessionalInfo(profID);
 		   int articleID = Integer.parseInt(request.getAttribute("ArticleID").toString());		// TODO: checks
 
 		   boolean isAdmin = ( currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
@@ -39,12 +49,20 @@
 				<jsp:include page="ProfNavBar.jsp"> 
 					<jsp:param name="activePage" value="PersonalInformation"/> 
 				</jsp:include>
-		<% } %>
-		<jsp:include page="Article.jsp"> 
-			<jsp:param name="ArticleID" value="<%= articleID %>" /> 
-		</jsp:include>
-		<jsp:include page="/footer.html"></jsp:include>
+		 <% } %>
+		   
+			<jsp:include page="Article.jsp"> 
+				<jsp:param name="ArticleID" value="<%= articleID %>" /> 
+			</jsp:include>
+			<jsp:include page="/footer.html"></jsp:include>
+			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>"></script>
+			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
+			<script src="/TEDProject/Javascript/openCommentForm.js"></script>
+			<script id="submitCommentScript" src="/TEDProject/Javascript/submitComment.js" data-profID="<%= prof.getID() %>" data-profProfilePicURI="<%= prof.getProfilePicURI() %>"
+					data-profFullName="<%= prof.getFirstName() %> <%= prof.getLastName() %>"></script>
+		   	<script src="/TEDProject/Javascript/commentSendOnEnter.js"></script>
+	<%  }
+	    db.close(); %>
 	</div>
-	<script src="/TEDProject/Javascript/comment.js"></script>
 </body>
 </html>

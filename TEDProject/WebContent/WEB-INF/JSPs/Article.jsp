@@ -54,43 +54,6 @@
 			<%= article.getContent() %>
 		</div>
 		<form id="like_button<%= articleID %>" class="d-inline"><button type="submit" class="btn btn-sm <% if (sessionProfInterest) { %> btn-primary <% } else { %> btn-outline-primary <% } %> ml-1">I'm interested</button></form>
-		<script>
-	   		$("#like_button<%= articleID %>").on("submit", function(e){			
-	   			e.preventDefault();
-	   			$.ajax({
-					url: "/TEDProject/AJAXServlet?action=toggleInterest",
-					type: "post",
-					data: { ArticleID: <%= articleID %>,
-						 	ProfID: <%= sessionProf.getID() %> },
-					success: function(response){
-						if ( response === "success" ){
-							console.log("Showed interest successfully");
-						} else {
-							window.alert(response);
-						}
-					},
-				});
-				if (this.firstChild.classList.contains("btn-outline-primary")) {
-					this.firstChild.classList.add("btn-primary");
-					this.firstChild.classList.remove("btn-outline-primary");
-		   			$("#interestsCount<%= articleID %>").html(parseInt($("#interestsCount<%= articleID %>").html(), 10) + 1);
-		   			$("#interestsCount<%= articleID %>_2").html(parseInt($("#interestsCount<%= articleID %>_2").html(), 10) + 1);
-					document.getElementById('selfInterest<%= articleID %>').removeAttribute('style');
-		   			if (document.getElementById('noInterestP<%= articleID %>')) {
-						document.getElementById('noInterestP<%= articleID %>').setAttribute('style', 'display: none');
-		   			}
-				} else {
-					this.firstChild.classList.add("btn-outline-primary");
-					this.firstChild.classList.remove("btn-primary");
-		   			$("#interestsCount<%= articleID %>").html(parseInt($("#interestsCount<%= articleID %>").html(), 10) - 1);
-		   			$("#interestsCount<%= articleID %>_2").html(parseInt($("#interestsCount<%= articleID %>_2").html(), 10) - 1);
-					document.getElementById('selfInterest<%= articleID %>').setAttribute('style', 'display: none !important');
-		   			if (document.getElementById('noInterestP<%= articleID %>')) {
-						document.getElementById('noInterestP<%= articleID %>').removeAttribute('style');
-		   			}
-				}
-	   		});
-	   	</script>
 		<button id="commentButton<%= articleID %>" type="button" class="btn btn-sm btn-outline-primary comment_button ml-1">Comment</button>
 		<div class="ml-2">
 			<% List<Professional> interestedProfs = db.getInterestedProfessionals(articleID);
