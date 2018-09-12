@@ -1059,31 +1059,22 @@ public class DataBaseBridge {
 		String Insert = "INSERT INTO Articles (`idArticle`, `idAuthor`, `postedDate`, `content`, `containsFiles`) "
 					  + "VALUES (default, ?, ?, ?, ?);";
 		try {
-			PreparedStatement statement = connection.prepareStatement(Insert);
+			PreparedStatement statement = connection.prepareStatement(Insert, Statement.RETURN_GENERATED_KEYS);
 			statement.setInt(1, authorID);
 			statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.setString(3, postText);
 			statement.setBoolean(4, containsFiles);
 			statement.executeUpdate();
+			ResultSet rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				return rs.getInt(1);		// return articleID of the just created article
+			} else {
+				return -3;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -2;
 		}
-		String getIDQuery = "SELECT LAST_INSERT_ID();";     // LAST_INSERT_ID concerns only this connection, so other queries wont affect it (I think)
-		int articleID = -1;
-		try {
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(getIDQuery);
-			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
-				return -4;
-			} else {
-				articleID = resultSet.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -3;
-		}
-		return articleID;
 	}
 	
 	public boolean addArticleFile(int articleID, String fileURI) {
@@ -1180,21 +1171,26 @@ public class DataBaseBridge {
 		return comments;
 	}
 	
-	public boolean createComment(int articleID, int profID, String text) {
-		if (!connected) return false;
+	public int createComment(int articleID, int profID, String text) {
+		if (!connected) return -1;
 		String insertString = "INSERT INTO ArticleComments (idComment, idArticle, idWrittenBy, comment, dateWritten) VALUES (default, ?, ?, ?, ?)";
 		try {
-			PreparedStatement statement = connection.prepareStatement(insertString);
+			PreparedStatement statement = connection.prepareStatement(insertString, Statement.RETURN_GENERATED_KEYS);
 			statement.setInt(1, articleID);
 			statement.setInt(2, profID);
 			statement.setString(3, text);
 			statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.executeUpdate();
+			ResultSet rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				return rs.getInt(1);		// return commentID of the just created comment
+			} else {
+				return -3;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return -2;
 		}
-		return true;
 	}
 	
 	public boolean deleteComment(int commentID) {

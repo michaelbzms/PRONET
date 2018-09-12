@@ -378,13 +378,9 @@ public class SiteFunctionality {
 			System.out.println("> Database error: database down");
 			return -503;
 		}
-		if ( db.createComment(articleID, authorID, commentText) ) {
-			db.close(); 
-			return 0;	
-		} else {				// database error
-			db.close(); 
-			return -1;
-		}
+		int newCommentID = db.createComment(articleID, authorID, commentText);
+		db.close();
+		return newCommentID;
 	}
 	
 	public static int deleteComment(int commentID, int sessionProfID) {

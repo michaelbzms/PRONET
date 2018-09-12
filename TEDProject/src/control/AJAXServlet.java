@@ -209,7 +209,7 @@ public class AJAXServlet extends HttpServlet {
 					if (commentText == null || articleIDstr == null || authorIDstr == null) {
 						out.write("AJAX add comment request reached server with invalid parameters");
 						System.out.println("AJAX add comment request reached server with invalid parameters");
-					} else if ( !SiteFunctionality.checkInputText(commentText, false, 0) ) {    // TODO: size restriction policy for article posts?
+					} else if ( !SiteFunctionality.checkInputText(commentText, false, 0) ) {    // TODO: size restriction policy for comments?
 						out.write("illegal comment text input characters");
 					} else {
 						int articleID = -1;
@@ -222,11 +222,12 @@ public class AJAXServlet extends HttpServlet {
 							return;
 						}
 						commentText = commentText.replace("\n", "\n<br>\n");
-						if ( SiteFunctionality.addComment(articleID, authorID, commentText) < 0 ) {
+						int newCommentID = SiteFunctionality.addComment(articleID, authorID, commentText);
+						if ( newCommentID < 0 ) {
 							out.write("failed to add comment");
 							break;
 						}
-						out.write("success");
+						out.write(Integer.toString(newCommentID));
 					}
 					break;
 				case "deleteComment":

@@ -47,26 +47,6 @@
 			<% if (article.getAuthorID() == sessionProf.getID()) { %>
 				<div class="ml-auto">
 					<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-secondary ml-2">✕</button>
-					<script>
-				   		$("#deleteArticle<%= articleID %>").on("click", function(){
-				   			var result = confirm("Are you sure you want to delete this article?");
-				   			if (result) {
-					   			$.ajax({
-			   						url: "/TEDProject/AJAXServlet?action=deleteArticle",
-			   						type: "post",
-			   						data: { ArticleID: <%= articleID %>,
-			   							 	AuthorID: <%= sessionProf.getID() %> },
-			   						success: function(response){
-			   							if ( response === "success" ){
-			   								$("#article<%= articleID %>").fadeOut();
-			   							} else {
-			   								window.alert(response);
-			   							}
-			   						},
-			   					});
-				   			}
-				   		});
-			  		</script>
 		  		</div>
 			<% } %>
 		</div> 
@@ -127,75 +107,6 @@
 						<input type="submit" value="Submit Comment" class="btn btn-sm btn-primary">
 					</div>
 				</form>
-				<script>
-					$("#commentButton<%= articleID %>").on("click", function(){
-					    commentForm = document.getElementById("comment_form<%= articleID %>");
-					    if (commentForm.style.height !== "0px") {
-					    	$(commentForm).animate({
-				   	            height: '0px'
-				   	        });
-					    } else {
-					    	$(commentForm).animate({ 
-					    		height : commentForm.scrollHeight+'px' 
-					    	});
-					    	setTimeout(function() { 
-					    		commentForm.style.height = "auto"; 
-					    	}, 500);
-					    }
-					});
-				</script>
-				<script>
-			   		$("#comment_input_form<%= articleID %>").on("submit", function(e){			
-			   			e.preventDefault();
-			   			$.ajax({
-	   						url: "/TEDProject/AJAXServlet?action=addComment",
-	   						type: "post",
-	   						data: { commentText: $("#comment_input_textarea<%= articleID %>").val(), 
-	   							  	ArticleID: <%= articleID %>,
-	   							 	AuthorID: <%= sessionProf.getID() %> },
-	   						success: function(response){
-	   							if ( response === "success" ){
-	   								console.log("Commented successfully");
-	   								// reset form's fields
-	   								$("#comment_input_textarea<%= articleID %>").val("");
-	   							} else {
-	   								window.alert(response);
-	   							}
-	   						},
-	   					});
-			   			$(this.parentElement).animate({
-			   	            height: '0px'
-			   	        });
-			   			$("#past_comments_container<%= articleID %>").prepend($(`
-			   				<div class="comment">
-								<div class="d-flex flex-row vertical_center">
-									<div>
-										<a href="/TEDProject/ProfileLink?ProfID=<%= sessionProf.getID() %>">
-											<img class="img-thumbnail float-left comment_prof_img" src="<%= sessionProf.getProfilePicURI() %>" alt="Profile picture">
-										</a>
-									</div>
-									<div>
-										<a href="/TEDProject/ProfileLink?ProfID=<%= sessionProf.getID() %>"><%= sessionProf.getFirstName() %> <%= sessionProf.getLastName() %></a> 
-										&nbsp;<small class="text-secondary">just now</small>
-									</div>
-								</div> 
-								<div class="content_container">
-									`+ $("#comment_input_textarea<%= articleID %>").val() +`
-								</div>
-							</div>
-						`).fadeIn('slow'));
-			   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) + 1);
-			   		});
-			   	</script>
-			   	<script>
-				   	$("#comment_input_form<%= articleID %>").keypress(function (e) {
-					    if(e.which == 13 && !e.shiftKey) {        
-					        $(this).closest("form").submit();
-					        e.preventDefault();
-					        return false;
-					    }
-					});	
-			   	</script>
 			</div>
 			<div id="past_comments_container<%= articleID %>" class="past_comments_container">
 			 <% if (comments != null) {	   	
@@ -214,29 +125,9 @@
 								</div>
 								<% if (commentAuthorProf.getID() == sessionProf.getID()) { %>
 									<div class="ml-auto">
-										<button id="deleteComment<%= c.getID() %>" class="btn btn-sm btn-outline-secondary mt-1">✕</button>
+										<button id="deleteComment<%= articleID %>_<%= c.getID() %>" class="btn btn-sm btn-outline-secondary mt-1">✕</button>
 									</div>
-									<script>
-								   		$("#deleteComment<%= c.getID() %>").on("click", function(){
-								   			var result = confirm("Are you sure you want to delete this comment?");
-								   			if (result) {
-									   			$.ajax({
-							   						url: "/TEDProject/AJAXServlet?action=deleteComment",
-							   						type: "post",
-							   						data: { CommentID: <%= c.getID() %>,
-							   							 	AuthorID: <%= sessionProf.getID() %> },
-							   						success: function(response){
-							   							if ( response === "success" ){
-							   								$("#comment<%= c.getID() %>").fadeOut();
-							   							} else {
-							   								window.alert(response);
-							   							}
-							   						},
-							   					});
-									   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) - 1);
-								   			}
-								   		});
-						   			</script>
+
 								<% } %>
 							</div> 
 							<div class="content_container">
@@ -290,4 +181,26 @@
 			    </div>
 			</div>
 		</div>
+		<script>
+	   		$(document).on("click", "[id^='deleteComment<%= articleID %>']", function(){
+	   			var result = confirm("Are you sure you want to delete this comment?");
+	   			if (result) {
+					var commentID = ($(this).attr('id')).replace("deleteComment<%= articleID %>_", "");
+		   			$.ajax({
+   						url: "/TEDProject/AJAXServlet?action=deleteComment",
+   						type: "post",
+   						data: { CommentID: commentID,
+   							 	AuthorID: <%= sessionProf.getID() %> },
+   						success: function(response){
+   							if ( response === "success" ){
+   								$("#comment" + commentID).fadeOut();
+   							} else {
+   								window.alert(response);
+   							}
+   						},
+   					});
+		   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) - 1);
+	   			}
+	   		});
+		</script>
 	</div>

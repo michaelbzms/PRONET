@@ -199,6 +199,99 @@
 				// Markdown inteferes with AJAX form! 
 				// var post = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 			</script>
+			<script>
+		   		$(document).on("click", "[id^='deleteArticle']", function(){
+		   			var result = confirm("Are you sure you want to delete this article?");
+		   			if (result) {
+						var articleID = ($(this).attr('id')).replace("deleteArticle", "");
+			   			$.ajax({
+	   						url: "/TEDProject/AJAXServlet?action=deleteArticle",
+	   						type: "post",
+	   						data: { ArticleID: articleID,
+	   							 	AuthorID: <%= prof.getID() %> },
+	   						success: function(response){
+	   							if ( response === "success" ){
+	   								$("#article" + articleID).fadeOut();
+	   							} else {
+	   								window.alert(response);
+	   							}
+	   						},
+	   					});
+		   			}
+		   		});
+	  		</script>
+			<script>
+				$(document).on("click", "[id^='commentButton']", function(){ 
+					var articleID = ($(this).attr('id')).replace("commentButton", "");
+				    commentForm = document.getElementById("comment_form" + articleID);
+				    if (commentForm.style.height !== "0px") {
+				    	$(commentForm).animate({
+			   	            height: '0px'
+			   	        });
+				    } else {
+				    	$(commentForm).animate({ 
+				    		height : commentForm.scrollHeight+'px' 
+				    	});
+				    	setTimeout(function() { 
+				    		commentForm.style.height = "auto"; 
+				    	}, 500);
+				    }
+				});
+			</script>
+			<script>
+		   		$(document).on("submit", "[id^='comment_input_form']", function(e){			
+		   			e.preventDefault();
+					var articleID = ($(this).attr('id')).replace("comment_input_form", "");
+		   			$.ajax({
+   						url: "/TEDProject/AJAXServlet?action=addComment",
+   						type: "post",
+   						data: { commentText: $("#comment_input_textarea" + articleID).val(), 
+   							  	ArticleID: articleID,
+   							 	AuthorID: <%= prof.getID() %> },
+   						success: function(newCommentID){
+   							if ( $.isNumeric(newCommentID) ){
+   					   			$("#past_comments_container" + articleID).prepend($(`
+  						   				<div id="comment` + newCommentID + `" class="comment">
+  											<div class="d-flex flex-row vertical_center">
+  												<div>
+  													<a href="/TEDProject/ProfileLink?ProfID=<%= prof.getID() %>">
+  														<img class="img-thumbnail float-left comment_prof_img" src="<%= prof.getProfilePicURI() %>" alt="Profile picture">
+  													</a>
+  												</div>
+  												<div>
+  													<a href="/TEDProject/ProfileLink?ProfID=<%= prof.getID() %>"><%= prof.getFirstName() %> <%= prof.getLastName() %></a> 
+  													&nbsp;<small class="text-secondary">just now</small>
+  												</div>
+  												<div class="ml-auto">
+  													<button id="deleteComment` + articleID + "_" + newCommentID + `" class="btn btn-sm btn-outline-secondary mt-1">✕</button>
+  												</div>
+  											</div> 
+  											<div class="content_container">
+  												`+ $("#comment_input_textarea" + articleID).val() +`
+  											</div>
+  										</div>
+  									`).fadeIn('slow'));
+   								$("#comment_input_textarea" + articleID).val("");
+   							} else {
+   								window.alert(newCommentID);
+   							}
+   						},
+   					});
+		   			$(this.parentElement).animate({
+		   	            height: '0px'
+		   	        });
+		   			$("#commentsCount" + articleID).html(parseInt($("#commentsCount" + articleID).html(), 10) + 1);
+		   		});
+		   	</script>
+		   	<script>
+			   	$(document).on("keypress", "[id^='comment_input_form']", function (e) {
+				    if(e.which == 13 && !e.shiftKey) {        
+				        $(this).closest("form").submit();
+				        e.preventDefault();
+				        return false;
+				    }
+				});	
+		   	</script>
 	<%	}
 		db.close(); %>
 </body>
