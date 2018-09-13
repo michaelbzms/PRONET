@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 // import JDBC packets
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -1114,8 +1115,30 @@ public class DataBaseBridge {
 	public boolean deleteArticle(int articleID) {
 		if (!connected) return false;
 		String deleteString = "DELETE FROM Articles WHERE idArticle = ?;";
+		String getFilesQuery = "SELECT filePath FROM ArticleFilePaths WHERE idArticle = ?;";
+		String deleteFilesString = "DELETE FROM ArticleFilePaths WHERE idArticle = ?;";
 		try {
-			PreparedStatement statement = connection.prepareStatement(deleteString);
+			// get any files that article has and delete them from the fileSystem
+			PreparedStatement statement = connection.prepareStatement(getFilesQuery);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				String fileURI = resultSet.getString("filePath");
+				String fileName = MyUtil.getFileName(fileURI);
+				String filePath = PropertiesManager.getProperty("saveDir") + "/article/" + fileName;
+				File file = new File(filePath);
+	    		if (file.delete()) {
+	    			System.out.println(filePath + " is deleted!");
+	    		} else {
+	    			System.out.println("(!) Delete operation for " + filePath + " failed.");
+	    		}
+			}
+			// delete filePaths of article from db (may be unnecessary due to cascade option but just in case)
+			statement = connection.prepareStatement(deleteFilesString);
+			statement.setInt(1, articleID);
+			statement.executeUpdate();
+			// delete article from db
+			statement = connection.prepareStatement(deleteString);
 			statement.setInt(1, articleID);
 			statement.executeUpdate();
 		} catch (SQLException e) {

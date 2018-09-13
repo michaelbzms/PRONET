@@ -70,6 +70,7 @@
 .articleFilesDiv{
 	display: flex;
 	flex-wrap: wrap;
+	margin: 20px 0px 20px 0px;
 }
 
 .article_img{
@@ -86,6 +87,6 @@
 
 .article_aud{
 	display: inline-block;
-	max-height: 400px;
+	max-height: 200px;
 	max-width: 400px;
 }

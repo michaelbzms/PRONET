@@ -98,4 +98,63 @@ public final class MyUtil {
         return true;
 	}
 	
+	// file URI Parsing
+	public static int getFileType(final String fileURI) {       // parse URI String to find out its type	
+		int i = fileURI.lastIndexOf('?') , start = -1, end = -1;
+		if (i > 0) {
+			i++;
+			while( i + 4 < fileURI.length() ) {           // repeatedly read the first five characters
+				char c1 = fileURI.charAt(i), 
+					 c2 = fileURI.charAt(i+1), 
+					 c3 = fileURI.charAt(i+2),
+					 c4 = fileURI.charAt(i+3),
+					 c5 = fileURI.charAt(i+4);
+				if ( c1 == 'f' && c2 == 'i' && c3 == 'l' && c4 == 'e' && c5 == '=' ) {   // until reached "file=" or end of String
+					i += 5;
+					start = i;
+					for ( ; i < fileURI.length() && fileURI.charAt(i) != '&' && !(fileURI.charAt(i) >= '0' && fileURI.charAt(i) <= '9') ; i++);   // while not met the end or a number
+					end = i;
+					break;
+				}
+				i++;
+			}
+		}
+		if ( start == -1 || end == -1 ) return -1;   // should not happen
+		String type = fileURI.substring(start, end);
+		// DEBUG: System.out.println("Parsing found type: " + type);
+		if ( type.equals("img") ){
+			return 1;
+		} else if ( type.equals("vid") ){
+			return 2;
+		} else if ( type.equals("aud") ){
+			return 3;
+		} else {
+			return 0;        // unknown type
+		}
+	}
+	
+	public static String getFileName(String fileURI){
+		int i = fileURI.lastIndexOf('?') , start = -1, end = -1;
+		if (i > 0) {
+			i++;
+			while( i + 4 < fileURI.length() ) {           // repeatedly read the first five characters
+				char c1 = fileURI.charAt(i), 
+					 c2 = fileURI.charAt(i+1), 
+					 c3 = fileURI.charAt(i+2),
+					 c4 = fileURI.charAt(i+3),
+					 c5 = fileURI.charAt(i+4);
+				if ( c1 == 'f' && c2 == 'i' && c3 == 'l' && c4 == 'e' && c5 == '=' ) {   // until reached "file=" or end of String
+					i += 5;
+					start = i;
+					for ( ; i < fileURI.length() && fileURI.charAt(i) != '&' ; i++);
+					end = i;
+					break;
+				}
+				i++;
+			}
+		}
+		if ( start == -1 || end == -1 ) return null;   // should not happen
+		return fileURI.substring(start, end);
+	}
+	
 }

@@ -9,65 +9,6 @@
 		db.close();
 	} %>
 
-<%! private int getFileType(final String fileURI) {       // parse URI String to find out its type	
-		int i = fileURI.lastIndexOf('?') , start = -1, end = -1;
-		if (i > 0) {
-			i++;
-			while( i + 4 < fileURI.length() ) {           // repeatedly read the first five characters
-				char c1 = fileURI.charAt(i), 
-					 c2 = fileURI.charAt(i+1), 
-					 c3 = fileURI.charAt(i+2),
-					 c4 = fileURI.charAt(i+3),
-					 c5 = fileURI.charAt(i+4);
-				if ( c1 == 'f' && c2 == 'i' && c3 == 'l' && c4 == 'e' && c5 == '=' ) {   // until reached "file=" or end of String
-					i += 5;
-					start = i;
-					for ( ; i < fileURI.length() && fileURI.charAt(i) != '&' && !(fileURI.charAt(i) >= '0' && fileURI.charAt(i) <= '9') ; i++);   // while not met the end or a number
-					end = i;
-					break;
-				}
-				i++;
-			}
-		}
-		if ( start == -1 || end == -1 ) return -1;   // should not happen
-		String type = fileURI.substring(start, end);
-		// DEBUG: System.out.println("Parsing found type: " + type);
-		if ( type.equals("img") ){
-			return 1;
-		} else if ( type.equals("vid") ){
-			return 2;
-		} else if ( type.equals("aud") ){
-			return 3;
-		} else {
-			return 0;        // unknown type
-		}
-	}	%>
-	
-<%! private String getFileName(String fileURI){
-		int i = fileURI.lastIndexOf('?') , start = -1, end = -1;
-		if (i > 0) {
-			i++;
-			while( i + 4 < fileURI.length() ) {           // repeatedly read the first five characters
-				char c1 = fileURI.charAt(i), 
-					 c2 = fileURI.charAt(i+1), 
-					 c3 = fileURI.charAt(i+2),
-					 c4 = fileURI.charAt(i+3),
-					 c5 = fileURI.charAt(i+4);
-				if ( c1 == 'f' && c2 == 'i' && c3 == 'l' && c4 == 'e' && c5 == '=' ) {   // until reached "file=" or end of String
-					i += 5;
-					start = i;
-					for ( ; i < fileURI.length() && fileURI.charAt(i) != '&' ; i++);
-					end = i;
-					break;
-				}
-				i++;
-			}
-		}
-		if ( start == -1 || end == -1 ) return null;   // should not happen
-		return fileURI.substring(start, end);
-	} %>
-
-<% //////////////////////////////////////////////////////////////// %>
 
 <%	String articleIDstr = request.getParameter("ArticleID");
 	if ( articleIDstr == null ) {  %>
@@ -124,19 +65,18 @@
 					<div class="articleFilesDiv">
 				   	<%	List<String> fileURIs = article.getFileURIs(); 
 				   		for ( String URI : fileURIs ) { 
-					   		System.out.println("Loading file: " + getFileName(URI) + " with context type: " + Files.probeContentType(Paths.get((getFileName(URI)))));
-				   			switch( getFileType(URI) ){
+				   			switch( MyUtil.getFileType(URI) ){
 				   				case 1:    // image  %>
 				   					<img class="article_img" src="<%= URI %>">
 				   		<%			break;
 				   				case 2:    // video  %>
 				   					<video class="article_vid" controls>
-				   						<source src="<%= URI %>" type="<%= Files.probeContentType(Paths.get((getFileName(URI)))) %>">
+				   						<source src="<%= URI %>" type="<%= Files.probeContentType(Paths.get((MyUtil.getFileName(URI)))) %>">
 				   					</video>
 				   		<%			break;
 				   				case 3:    // audio  %>
 				   					<audio class="article_aud" controls>
-				   						<source src="<%= URI %>" type="<%= Files.probeContentType(Paths.get((getFileName(URI)))) %>">
+				   						<source src="<%= URI %>" type="<%= Files.probeContentType(Paths.get((MyUtil.getFileName(URI)))) %>">
 				   					</audio>
 				   		<%			break;
 				   				default:   // unsupported  %>

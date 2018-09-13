@@ -21,13 +21,15 @@ import model.SiteFunctionality;
 
 
 @WebServlet("/AJAXServlet")
-@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/files", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)      // this location is only a temporary save location in case we ran out of memory
+@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/files", fileSizeThreshold = 1024*1024, maxFileSize = 50*1024*1024)      // this location is only a temporary save location in case we ran out of memory
 public class AJAXServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String ArticleSaveDirectory = FileServlet.SaveDirectory + "/article";
 	private File Uploads = new File(ArticleSaveDirectory);
     private boolean warned = false;
-
+    private static final long FILE_SIZE_LIMIT = 50000000 ; // this is 50MBs, in bytes. We won't save any file got bigger than this. (Note: tomcat will not even accept to receive via HTTP an oversized file)
+    
+    
     public AJAXServlet() {
         super();
         if (!Uploads.exists()){
@@ -37,18 +39,17 @@ public class AJAXServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Got an AJAX GET request!!!");
-	    response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
-	    response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
-	    PrintWriter out = response.getWriter();	    
-	    out.write("AJAX SAYS HI!");       // Write response body.
+	    response.setContentType("text/plain");
+	    response.setCharacterEncoding("UTF-8");
+	    PrintWriter out = response.getWriter();
+	    out.write("use post method instead");
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// System.out.println("Got an AJAX POST request!!!");
-	    response.setContentType("text/plain");  // Set content type of the response so that jQuery knows what it can expect.
-	    response.setCharacterEncoding("UTF-8"); // You want world domination, huh?
+	    response.setContentType("text/plain");
+	    response.setCharacterEncoding("UTF-8");
 	    PrintWriter out = response.getWriter();
 		String action = request.getParameter("action");
 		if (action == null) {
@@ -136,20 +137,30 @@ public class AJAXServlet extends HttpServlet {
 						out.write("illegal post text input characters");
 					} else {
 						postText = postText.replace("\n", "\n<br>\n");
-						
 						// remove all non-file Parts
-						fileParts.removeIf((Part filePart) -> !filePart.getName().equals("file_input"));
-						
+						fileParts.removeIf((Part filePart) -> !filePart.getName().equals("file_input"));	
 						boolean containsFiles = false;
 						for (Part filePart : fileParts) {
 							String userUploadFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();  // MSIE fix
-							if ( !userUploadFileName.isEmpty() ) {
-								// debug:
-								//System.out.println("- filePart: " + filePart.getName() + " , submitted file name: " + filePart.getSubmittedFileName() + ", type: " + filePart.getContentType());
+							int fileVerdict = checkFilePartAcceptable(filePart);
+							if ( !userUploadFileName.isEmpty() && fileVerdict == 0 ) {   // acceptable filePart
 								containsFiles = true;
+							} else if ( !userUploadFileName.isEmpty() ) {                // unnacceptable filePart
+								out.write("Error: One (or more) input file(s) is unnacceptable from our server:\n\"" + userUploadFileName + "\": ");
+								switch ( fileVerdict ) {
+									case 1:
+										out.append("Unsupported file type. We only accept images, videos and audio files.");
+										break;
+									case 2:
+										out.append("File size too big. Individual file limit is " + (FILE_SIZE_LIMIT / 1000000) + " MBs.");
+										break;
+									default:
+										out.append("Unknown error");
+										break;
+								}
+								return;
 							}
 						}
-						
 						DataBaseBridge db = new DataBaseBridge();
 						int articleID = SiteFunctionality.addArticle(request, db, postText, containsFiles);
 						if ( articleID < 0 ) {
@@ -326,4 +337,18 @@ public class AJAXServlet extends HttpServlet {
 		}
 	}
 
+	
+	private static int checkFilePartAcceptable(Part filePart) {
+		String contentType = filePart.getContentType();
+		int j = contentType.indexOf('/');
+		if ( !contentType.substring(0, j).equals("image") && !contentType.substring(0, j).equals("video") && !contentType.substring(0, j).equals("audio") ) {
+			return 1;   // unsupported file format
+		}
+		long size = filePart.getSize();
+		if ( size > FILE_SIZE_LIMIT ) {
+			return 2;
+		}
+		return 0;
+	}
+	
 }
