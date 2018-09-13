@@ -163,7 +163,7 @@ public class FileServlet extends HttpServlet {
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			System.err.println("FileServlet could NOT fetch requested file!");
+			System.err.println("FileServlet could NOT fetch requested file:" + filepath);
 			e.printStackTrace();
 			return false;
 		}

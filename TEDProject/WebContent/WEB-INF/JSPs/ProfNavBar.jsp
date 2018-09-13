@@ -57,9 +57,9 @@
 			<li class="nav-item <%= addCLASSIfActive(activePage, "Settings") %>">
 				<a <%= addIDIfActive(activePage, "Settings") %> class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Settings">Settings</a>
 			</li>
-			<li class="nav-item">
+			<li class="nav-item ml-xl-1">
 				<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-					<input class="btn btn-primary ml-1" type="submit" value="Logout" >
+					<input class="btn btn-primary" type="submit" value="Logout" >
 				</form>
 			</li>
 		</ul>
