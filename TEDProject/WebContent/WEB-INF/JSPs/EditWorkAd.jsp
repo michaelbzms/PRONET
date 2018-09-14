@@ -7,13 +7,13 @@
 	<title>PRONET - Personal Information</title>
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd" %>
 	<!-- CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -69,13 +69,12 @@
 					<a href="/TEDProject/prof/NavigationServlet?page=WorkAds" class="btn btn-secondary">Cancel</a>
 				</div>
 			</form>
+			<script>
+				var description = new SimpleMDE({ element: document.getElementById("description"), showIcons: ["code", "table"] });
+			</script>
 		<% } 
 			db.close(); %>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>
-	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-	<script>
-		var description = new SimpleMDE({ element: document.getElementById("description"), showIcons: ["code", "table"] });
-	</script>
 </body>
 </html>

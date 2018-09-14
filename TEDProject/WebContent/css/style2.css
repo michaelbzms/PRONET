@@ -108,13 +108,27 @@ label {
 	box-shadow: 0px -3px 2px -2px #6397ff;
 }
 
-.profile_thumbnail {
+.profile_edit_thumbnail {
 	height: 200px;
 	width: 200px;
 	margin: 38px;
 	float: left;
 }
 
+.profile_thumbnail {
+	height: 200px;
+	width: 200px;
+	margin: 10px;
+}
+
+.mylabel{
+	display: inline-block;
+	font-weight: 600;
+	font-size: 110%;
+	width: 220px;
+	text-align: left;
+	margin-bottom: 5px;
+}
 
 /* add over any bootstrap changes: */
 nav{

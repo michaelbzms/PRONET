@@ -7,7 +7,7 @@
 	<title>PRONET - Personal Information</title>
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
@@ -15,17 +15,17 @@
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
-		<% int adID = Integer.parseInt(request.getAttribute("AdID").toString());
-		   DataBaseBridge db = new DataBaseBridge();
-		   WorkAd ad = db.getWorkAd(adID);
-		   if (ad == null) { %>
-		   		<h2 class="my_h2">INVALID WORK AD REQUEST</h2>
-				<p>Requested work ad does not exist.</p>
-		<% } else {
+	<% int adID = Integer.parseInt(request.getAttribute("AdID").toString());
+	   DataBaseBridge db = new DataBaseBridge();
+	   WorkAd ad = db.getWorkAd(adID);
+	   if (ad == null) { %>
+	   		<h2 class="my_h2">INVALID WORK AD REQUEST</h2>
+			<p>Requested work ad does not exist.</p>
+	<% } else {
 			HttpSession currentSession = request.getSession(false);
 			int profID;
 			if (request.getSession(false) != null && currentSession.getAttribute("ProfID") != null) {
@@ -114,32 +114,18 @@
 							Cancel Application</a>
 					</div>
 				<% }
-			   } 
-		   } 
-		   db.close(); %>
-		   <jsp:include page="/footer.html"></jsp:include>
-	</div>
-	<% if (ad != null) { %>
+		   } %>
 		<script>
 			var adDescription = document.getElementById("adDescription");
 			if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
 			var applyNote = document.getElementById("applyNote");
 			if (applyNote) var applyNoteSMDE = new SimpleMDE({ element: applyNote, showIcons: ["code", "table"] });
 		</script>
-	<% } %>
-	<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
-	<script>
-		scrollingElement = (document.scrollingElement || document.body);
-		function scrollSmoothToBottom() {
-		   $(scrollingElement).animate({
-		      scrollTop: document.body.scrollHeight
-		   }, 1000);
-		}
-		$.fn.scrollTo = function(speed) {
-		    $('html, body').animate({
-		        scrollTop: parseInt($(this).offset().top)
-		    }, speed);
-		};
-	</script>
+		<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
+		<script src="/TEDProject/Javascript/util.js"></script>
+	<% } 
+	   db.close(); %>
+	   <jsp:include page="/footer.html"></jsp:include>
+	</div>
 </body>
 </html>

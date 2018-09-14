@@ -7,7 +7,7 @@
 	<title>PRONET - Home Page</title>
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Article" %>
 	<!-- CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
@@ -16,16 +16,7 @@
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-	<style>
-		#article_input_editor{
-			width: 100%;
-			height: 10vh;
-			resize: none;
-			margin: 5px 0px 10px 0px;
-			box-shadow: 0px 0px 3px 0px #6397ff;
-		}
-	</style>
+	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge();
@@ -207,6 +198,7 @@
 			<script id="submitCommentScript" src="/TEDProject/Javascript/submitComment.js" data-profID="<%= prof.getID() %>" data-profProfilePicURI="<%= prof.getProfilePicURI() %>"
 					data-profFullName="<%= prof.getFirstName() %> <%= prof.getLastName() %>"></script>
 		   	<script src="/TEDProject/Javascript/commentSendOnEnter.js"></script>
+   			<script id="deleteCommentScript" src="/TEDProject/Javascript/deleteCommentScript.js" data-profID="<%= prof.getID() %>"></script>
 	<%	}
 		db.close(); %>
 </body>

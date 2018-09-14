@@ -178,26 +178,4 @@
 			    </div>
 			</div>
 		</div>
-		<script>
-	   		$(document).on("click", "[id^='deleteComment<%= articleID %>']", function(){
-	   			var result = confirm("Are you sure you want to delete this comment?");
-	   			if (result) {
-					var commentID = ($(this).attr('id')).replace("deleteComment<%= articleID %>_", "");
-		   			$.ajax({
-   						url: "/TEDProject/AJAXServlet?action=deleteComment",
-   						type: "post",
-   						data: { CommentID: commentID,
-   							 	AuthorID: <%= sessionProf.getID() %> },
-   						success: function(response){
-   							if ( response === "success" ){
-   								$("#comment" + commentID).fadeOut();
-   							} else {
-   								window.alert(response);
-   							}
-   						},
-   					});
-		   			$("#commentsCount<%= articleID %>").html(parseInt($("#commentsCount<%= articleID %>").html(), 10) - 1);
-	   			}
-	   		});
-		</script>
 	</div>

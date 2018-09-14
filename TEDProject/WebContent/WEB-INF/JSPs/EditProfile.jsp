@@ -7,25 +7,13 @@
 	<title>PRONET - Personal Information</title>
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 	<!-- CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">	
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<style>
-	
-	.mylabel{
-		display: inline-block;
-		font-weight: 600;
-		font-size: 110%;
-		width: 220px;
-		text-align: left;
-		margin-bottom: 5px;
-	}
-	
-	</style>
+	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -71,14 +59,13 @@
 					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>
 				</div>
 			</form>
+			<script>
+				var profExpSMDE = new SimpleMDE({ element: document.getElementById("profExp"), showIcons: ["code", "table"] });
+				var edBackgroundSMDE = new SimpleMDE({ element: document.getElementById("edBackground"), showIcons: ["code", "table"] });
+				var skillsSMDE = new SimpleMDE({ element: document.getElementById("skills"), showIcons: ["code", "table"] });
+			</script>
 		<% } %>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>
-	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-	<script>
-		var profExpSMDE = new SimpleMDE({ element: document.getElementById("profExp"), showIcons: ["code", "table"] });
-		var edBackgroundSMDE = new SimpleMDE({ element: document.getElementById("edBackground"), showIcons: ["code", "table"] });
-		var skillsSMDE = new SimpleMDE({ element: document.getElementById("skills"), showIcons: ["code", "table"] });
-	</script>
 </body>
 </html>

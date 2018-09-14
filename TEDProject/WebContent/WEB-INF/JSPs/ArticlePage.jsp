@@ -13,7 +13,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<style>
 		.past_comments_container {		/* override max-height declared in article.css */
-		    max-height: 2000px;
+		    max-height: 3000px;
 		}
 	</style>
 	<!-- JS -->
@@ -26,7 +26,7 @@
 	    int profID;
 	    if (request.getSession(false) != null && currentSession.getAttribute("ProfID") != null) {
 	   		profID = (int) currentSession.getAttribute("ProfID");
-	    } else {	%>
+	    } else { %>
 		 	<h2 class="my_h2">SESSION ENDED</h2>
 		 	<p>Your session has ended. Please login again.</p>
 		 <% return;
@@ -55,6 +55,7 @@
 				<jsp:param name="ArticleID" value="<%= articleID %>" /> 
 			</jsp:include>
 			<jsp:include page="/footer.html"></jsp:include>
+			
 			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>"></script>
 			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
 			<script src="/TEDProject/Javascript/openCommentForm.js"></script>
