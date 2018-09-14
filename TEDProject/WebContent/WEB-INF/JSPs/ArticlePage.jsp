@@ -47,7 +47,7 @@
 		   // Navbar only for professionals
 		   if (currentSession != null && !isAdmin) { %>
 				<jsp:include page="ProfNavBar.jsp"> 
-					<jsp:param name="activePage" value="HomePage"/> 
+					<jsp:param name="activePage" value="null"/> 
 				</jsp:include>
 		 <% } %>
 		   

@@ -18,16 +18,16 @@
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 </head>
 <body>
-	<% 	DataBaseBridge db = new DataBaseBridge();
-		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
-		if ( !db.checkIfConnected() ) { %>
-			<h2 class="my_h2">DATABASE ERROR</h2>	
-			<p>It appears that our database is down. Please contact the site's administrators.</p>
-	<%	} else if ( prof == null ) {  %>
-			<h2 class="my_h2">INTERNAL ERROR</h2>	
-			<p>Could not retrieve your info from our data base. How did you login?</p>
-	<% 	} else { %>
-			<div class="main_container">
+	<div class="main_container">
+		<% 	DataBaseBridge db = new DataBaseBridge();
+			Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
+			if ( !db.checkIfConnected() ) { %>
+				<h2 class="my_h2">DATABASE ERROR</h2>	
+				<p>It appears that our database is down. Please contact the site's administrators.</p>
+		<%	} else if ( prof == null ) {  %>
+				<h2 class="my_h2">INTERNAL ERROR</h2>	
+				<p>Could not retrieve your info from our data base. How did you login?</p>
+		<% 	} else { %>
 				<jsp:include page="ProfNavBar.jsp"> 
 					<jsp:param name="activePage" value="WorkAds"/> 
 				</jsp:include>
@@ -40,7 +40,7 @@
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">
 							  		<div class="d-flex w-100 justify-content-between">
 							  			<h5 class="mb-1"><%= ad.getTitle() %></h5>
-							  			<small><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
+							  			<small data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(ad.getPostedDate(), true) %>"><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
 							  		</div>
 							  		<small>Published by <object><a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a></object></small>
 							  	</a>
@@ -60,7 +60,7 @@
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">
 							  		<div class="d-flex w-100 justify-content-between">
 							  			<h5 class="mb-1"><%= ad.getTitle() %></h5>
-							  			<small><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
+							  			<small data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(ad.getPostedDate(), true) %>"><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
 							  		</div>
 							  		<small>Published by <object><a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a></object></small>
 							  	</a>
@@ -74,7 +74,7 @@
 				<div>
 					<div class="justify-content-between">
 						<a href="/TEDProject/prof/NavigationServlet?page=EditWorkAd" class="btn btn-primary float-right">Create New</a>
-						<h2 class="my_h2" style="padding-top: 6px">My Work Ads</h2>
+						<h2 class="my_h2 pt-1">My Work Ads</h2>
 					</div>
 					<div class="list-group ad_list_container">
 					<% List<WorkAd> myWorkAds = db.getWorkAds(prof.getID(), 0);
@@ -83,7 +83,7 @@
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">
 							  		<div class="d-flex w-100 justify-content-between">
 							  			<h5 class="mb-1"><%= ad.getTitle() %></h5>
-							  			<small><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
+							  			<small data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(ad.getPostedDate(), true) %>"><%= MyUtil.getTimeAgo(ad.getPostedDate()) %></small>
 							  		</div>
 							  	</a>
 						<%	} %>			
@@ -113,7 +113,7 @@
 								  				<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= appliedAd.getID() %>" class="btn btn-outline-danger" 
 										   			onclick="return confirm('Are you sure you want to cancel your application to &quot;<%= appliedAd.getTitle() %>&quot;?')">
 													Cancel Application</a>
-								  				<small class="timeAgo_block"><%= MyUtil.getTimeAgo(apl.getApplyDate()) %></small>
+								  				<small class="timeAgo_block" data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(apl.getApplyDate(), true) %>"><%= MyUtil.getTimeAgo(apl.getApplyDate()) %></small>
 								  			</div>
 								  		</div>
 								  	</div>
@@ -134,10 +134,10 @@
 					<%  } %>
 				 	</div>
 				</div>
-				<jsp:include page="/footer.html"></jsp:include>
-			</div>
-	<% 	}
-		db.close(); %>
+		<% 	}
+			db.close(); %>
+		<jsp:include page="/footer.html"></jsp:include>
+	</div>
 	<script src="/TEDProject/Javascript/apl_accordion.js"></script>   
 </body>
 </html>

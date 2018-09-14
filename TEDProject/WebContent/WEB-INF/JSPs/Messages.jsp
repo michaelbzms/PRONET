@@ -42,7 +42,7 @@
 						   else {  %>
 						   		<ul>
 						<%	   	if ( chatWith != null && chatWithProf == null ){ %>
-							   		<li id="404prof" class=conv_li style="background-color: #b2cdff">Unknown professional</li>
+							   		<li id="404prof" class="conv_li" style="background-color: #b2cdff">Unknown professional</li>
 							   		<script>
 					    				$("#404prof").on("click", function(){
 					    					// Make the corresponding conversation active and the rest hidden

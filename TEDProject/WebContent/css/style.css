@@ -69,10 +69,21 @@ label {
 	margin:0 auto;
 }
 
-.main_container .form .choose_file_button {
-	cursor: pointer;
+.pwd_form {
+	width: 450px;
+}
+
+.main_container .form .form_field {
 	display: inline-block;
 	width: calc(100% - 160px - 30px);	/* take up all div minus the label and the padding */
+}
+
+.pwd_form_field {
+	width: 190px;
+}
+
+.main_container .form .choose_file_button {
+	cursor: pointer;
 	margin-left: -4px;
 }​
 
@@ -82,10 +93,10 @@ label {
 	margin: 10px;
 }
 
-
 .ProfileOptions{
 	margin: 15px;
 	display: block;
+	text-align: center;
 }
 
 .footer{
@@ -107,6 +118,14 @@ label {
 	border-radius: 5px;
 	background-color: white;
 	box-shadow: 0px 0px 3px 1px #6397ff;
+	max-height: 800px;
+	overflow-y: auto;
+}
+
+.side_tab_thumbnail {
+	height: 120px;
+	width: 120px;
+	margin: 5px 0px 5px 0px;
 }
 
 .article_input{
@@ -132,6 +151,25 @@ label {
 .vertical_center {
 	display: flex;
     align-items: center;
+}
+
+.changeButton {
+	padding: 10px;
+	margin: 10px;
+	text-align: center;
+}
+
+.profile_edit_thumbnail {
+	height: 200px;
+	width: 200px;
+	margin: 38px;
+	float: left;
+}
+
+.profile_thumbnail {
+	height: 200px;
+	width: 200px;
+	margin: 10px;
 }
 
 /* add over any bootstrap changes: */

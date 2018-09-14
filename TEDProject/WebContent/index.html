@@ -26,26 +26,26 @@
 				</form>
 		    </div>
 	    </nav>
-		<h1 style="align: center">WELCOME TO PRONET</h1>
-		<p style="text-align: center">Pronet is a PROfessional NETworking site developed as part of the university class project "Internet Technologies".</p>
+		<h1>WELCOME TO PRONET</h1>
+		<p class="text-center">Pronet is a PROfessional NETworking site developed as part of the university class project "Internet Technologies".</p>
 		<br>
 		<div class="form">
 			<h2>SIGN UP</h2>
 			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data">
-				<label>First name: </label><input type="text" name="firstname"><br>
-				<label>Last name: </label><input type="text" name="lastname"><br>
-				<label>Email: </label><input type="email" name="email"><br>
-				<label>Password: </label><input type="password" name="password"><br>
-				<label>Repeat Password: </label><input type="password" name="repeat_password"><br>
-				<label>Phone Number: </label><input type="text" name="phone_number"><br>
+				<label>First name: </label><input class="form_field" type="text" name="firstname"><br>
+				<label>Last name: </label><input class="form_field" type="text" name="lastname"><br>
+				<label>Email: </label><input class="form_field" type="email" name="email"><br>
+				<label>Password: </label><input class="form_field" type="password" name="password"><br>
+				<label>Repeat Password: </label><input class="form_field" type="password" name="repeat_password"><br>
+				<label>Phone Number: </label><input class="form_field" type="text" name="phone_number"><br>
 				<label>Profile Picture:</label>   
-				<input class="choose_file_button" type="file" name="profile_picture" accept="image/*"><br>
+				<input class="choose_file_button form_field" type="file" name="profile_picture" accept="image/*"><br>
 				<!-- input class="ml-1" type="checkbox" required> I have read and accept the terms and conditions.<br-->
 				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Sign up">
 			</form>
 		</div>
 		<br>
-		<div class="alert alert-danger" style="text-align: center">	<!-- TODO: This alert -->
+		<div class="alert alert-danger text-center">	<!-- TODO: This alert -->
 			<h3>Disclaimer</h3>
 			This site uses cookies. We're legally obliged to tell you that.<br>
 			Also, this disclaimer should probably be a pop-up. We'll fix that sometime later.<br>

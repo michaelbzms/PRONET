@@ -108,6 +108,13 @@ label {
 	box-shadow: 0px -3px 2px -2px #6397ff;
 }
 
+.profile_thumbnail {
+	height: 200px;
+	width: 200px;
+	margin: 38px;
+	float: left;
+}
+
 
 /* add over any bootstrap changes: */
 nav{

@@ -14,18 +14,6 @@
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<style>
-	
-	.mylabel{
-		display: inline-block;
-		font-weight: 600;
-		font-size: 110%;
-		width: 220px;
-		text-align: left;
-		margin-bottom: 5px;
-	}
-	
-	</style>
 </head>
 <body>
 	<div class="main_container">
@@ -73,13 +61,10 @@
 				<% } else {		%>
 					<h1 class="my_h1"><%= ad.getTitle() %></h1>
 				<% } %>
-				<!--  <h2 class="my_h2">Title:</h2>
-				<input type="text" class="form-control" name="title" <% if (ad != null) { %> value="<%= ad.getTitle() %>" readonly <% } %>>
-				//-->
 				<br>
 				<h2 class="my_h2">Description</h2>
-			    <textarea id="description" name="description"><%= (ad != null) ? ad.getDescription() : "" %></textarea><br>
-			    <div class="buttonContainer" style="text-align: center">
+			    <textarea id="description" name="description"><%= (ad != null) ? ad.getDescription() : "" %></textarea>
+			    <div class="buttonContainer text-center">
 					<input type="submit" value=<%= (ad == null) ? "Post Work Ad" : "Save" %> class="btn btn-primary">
 					<a href="/TEDProject/prof/NavigationServlet?page=WorkAds" class="btn btn-secondary">Cancel</a>
 				</div>

@@ -60,7 +60,7 @@
 								</p>
 								<a href="/TEDProject/ProfileLink">View details</a>
 							</div>
-							<div class="side_tab" style="max-height: 800px; overflow-y: auto">
+							<div class="side_tab">
 								<h4 class="neon_header">My Connections</h4>
 								<div class="grid_container_mini justify-content-left">
 								<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());

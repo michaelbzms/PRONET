@@ -41,7 +41,7 @@
 			</jsp:include>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<br>
-			<img class="img-thumbnail" style="height: 200px; width: 200px; margin: 38px; float: left" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
+			<img class="img-thumbnail profile_edit_thumbnail" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
 			<form method=POST action="/TEDProject/ChangeServlet?attr=profile" enctype="multipart/form-data">
 				<!-- Change basic information  -->		
 				<div id="edit_input" style="margin-left: 32%">

@@ -9,7 +9,7 @@
 	<title>PRONET - Professional Networking and more</title>
 </head>
 <body>
-	<div class="main_container" style="text-align: center">
+	<div class="main_container text-center">
 	<% if ( request != null &&  request.getAttribute("errorType") != null ) { %>
 		<% if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
 			<h2>LOGIN FAILED</h2>
@@ -79,11 +79,11 @@
 					 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
 					 || request.getAttribute("errorType").equals("nullSession")
 			   ) ) ) { %>
-				<a style="display: inline-block" href="/TEDProject">Go back to welcome page</a>
+				<a class="d-inline-block" href="/TEDProject">Go back to welcome page</a>
 		<% } else  if ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
-				<a style="display: inline-block" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
+				<a class="d-inline-block" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
 		<% } else { %>
-				<a style="display: inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>
+				<a class="d-inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>		<!-- TODO: Fix or go back to Homepage -->
 		<% } 
 	   } %>	
 		<jsp:include page="/footer.html"></jsp:include>

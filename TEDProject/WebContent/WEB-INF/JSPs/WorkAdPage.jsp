@@ -37,7 +37,7 @@
 			// Navbar only for professionals
 			if (profID > -1 && !isAdmin) { %>
 				<jsp:include page="ProfNavBar.jsp"> 
-					<jsp:param name="activePage" value="WorkAds"/> 
+					<jsp:param name="activePage" value="null"/> 
 				</jsp:include>
 		<% } %>
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
@@ -123,7 +123,8 @@
 		<script>
 			var adDescription = document.getElementById("adDescription");
 			if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
-			var applyNoteSMDE = new SimpleMDE({ element: document.getElementById("applyNote"), showIcons: ["code", "table"] });
+			var applyNote = document.getElementById("applyNote");
+			if (applyNote) var applyNoteSMDE = new SimpleMDE({ element: applyNote, showIcons: ["code", "table"] });
 		</script>
 	<% } %>
 	<script src="/TEDProject/Javascript/apl_accordion.js"></script>    

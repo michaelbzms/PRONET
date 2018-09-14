@@ -19,10 +19,10 @@
 		<jsp:include page="ProfNavBar.jsp"> 
 			<jsp:param name="activePage" value="Settings"/> 
 		</jsp:include>
-		<div class="buttonContainer" style="padding: 10px; text-align: center; margin: 10px">
+		<div class="buttonContainer changeButton">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change Email</a>
 		</div>
-		<div class="buttonContainer" style="padding: 10px; text-align: center; margin: 10px">
+		<div class="buttonContainer changeButton">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=password" class="btn btn-primary btn-lg">Change Password</a>
 		</div>
 		<jsp:include page="/footer.html"></jsp:include>
