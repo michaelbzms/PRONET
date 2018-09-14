@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<!-- JS -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
 </head>

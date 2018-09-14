@@ -433,7 +433,7 @@ public class SiteFunctionality {
 		Professional prof = db.getProfessional(profID);
 		xmlProf.setProf(prof);
 		xmlProf.setID(prof.getID());
-		xmlProf.setProfArticles(db.getXMLArticles(profID));
+		xmlProf.setProfArticles(db.getProfArticles(profID));
 		xmlProf.setProfInterests(db.getInterestedArticlesIDs(profID));
 		xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
 		xmlProf.setProfComments(db.getComments(profID, false));
@@ -456,7 +456,7 @@ public class SiteFunctionality {
 			prof = db.getProfessional(profID);
 			xmlProf.setProf(prof);
 			xmlProf.setID(prof.getID());
-			xmlProf.setProfArticles(db.getXMLArticles(profID));
+			xmlProf.setProfArticles(db.getProfArticles(profID));
 			xmlProf.setProfInterests(db.getInterestedArticlesIDs(profID));
 			xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
 			xmlProf.setProfComments(db.getComments(profID, false));

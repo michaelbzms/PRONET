@@ -4,6 +4,7 @@ function selectAll(source) {
 		checkboxes[i].checked = source.checked;
 	}
 }
+
 function checkIfAnyChecked() {
 	checkboxes = document.getElementsByName('profID');
 	for(var i=0, n=checkboxes.length;i<n;i++) {
@@ -15,6 +16,7 @@ function checkIfAnyChecked() {
     alert("At least one Professional must be selected."); 
     return false;
 }
+
 setInterval(function() {
   if (Cookies.get("fileDownloading")) {    
     Cookies.remove("fileDownloading", { path: '/TEDProject/admin' });		// clean the cookie for future downoads

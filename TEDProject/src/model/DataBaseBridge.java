@@ -1009,14 +1009,14 @@ public class DataBaseBridge {
 		return article;
 	}
 	
-	public List<Article> getProfArticles(int profID) {       // TODO: Do we want to fetch files here?
+	public List<Article> getProfArticles(int profID) {
 		if (!connected) return null;
 		List<Article> articles = null;
 		String Query = "SELECT * FROM Articles WHERE idAuthor = ?;";
-//		String fileQuery = "SELECT filePath FROM ArticleFilePaths WHERE idArticle = ?;";
+		String fileQuery = "SELECT filePath FROM ArticleFilePaths WHERE idArticle = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
-//			PreparedStatement statement2 = connection.prepareStatement(fileQuery);
+			PreparedStatement statement2 = connection.prepareStatement(fileQuery);
 			statement.setInt(1, profID);
 			ResultSet resultSet = statement.executeQuery();
 			articles = new ArrayList<Article>();
@@ -1028,41 +1028,12 @@ public class DataBaseBridge {
 				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
 				article.setContent(resultSet.getString("content"));
 				article.setContainsFiles(resultSet.getBoolean("containsFiles"));
-//				if ( article.getContainsFiles() ) {   // if containsFiles then fetch those file's paths (URIs)
-//					statement2.setInt(1, article.getID());
-//					ResultSet resultSet2 = statement2.executeQuery();
-//					while(resultSet2.next()) {
-//						article.addFileURI(resultSet.getString("filePath"));
-//					}
-//				}
-				articles.add(article);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return articles;
-	}
-	
-	public List<XMLArticle> getXMLArticles(int profID) {
-		if (!connected) return null;
-		List<XMLArticle> articles = null;
-		String Query = "SELECT * FROM Articles WHERE idAuthor = ?;";
-		try {
-			PreparedStatement statement = connection.prepareStatement(Query);
-			statement.setInt(1, profID);
-			ResultSet resultSet = statement.executeQuery();
-			articles = new ArrayList<XMLArticle>();
-			XMLArticle article = null;
-			while (resultSet.next()) {
-				article = new XMLArticle();
-				article.setID(resultSet.getInt("idArticle"));
-				article.setAuthorID(resultSet.getInt("idAuthor"));
-				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
-				article.setContent(resultSet.getString("content"));
-				if (resultSet.getBoolean("containsFiles")) {
-					List<String> filePaths = getArticleFilePaths(article.getID());
-					article.setFilePaths(filePaths);
+				if ( article.getContainsFiles() ) {   		// if containsFiles then fetch those file's paths (URIs)
+					statement2.setInt(1, article.getID());
+					ResultSet resultSet2 = statement2.executeQuery();
+					while(resultSet2.next()) {
+						article.addFileURI(resultSet2.getString("filePath"));
+					}
 				}
 				articles.add(article);
 			}
@@ -1550,5 +1521,3 @@ public class DataBaseBridge {
 	}
 	
 }
-
-

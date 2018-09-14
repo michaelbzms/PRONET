@@ -16,7 +16,7 @@ public class XMLProfessional {
 
 	private int ID;
 	private Professional prof = null;
-	private List<XMLArticle> profArticles = null;
+	private List<Article> profArticles = null;
 	private List<WorkAd> profWorkAds = null;
 	private List<Integer> profInterests = null;
 	private List<Comment> profComments = null;
@@ -32,8 +32,8 @@ public class XMLProfessional {
 
 	@XmlElementWrapper(name = "articles") 
 	@XmlElement(name = "article")
-	public List<XMLArticle> getProfArticles() { return profArticles; }
-	public void setProfArticles(List<XMLArticle> profArticles) { this.profArticles = profArticles;	}
+	public List<Article> getProfArticles() { return profArticles; }
+	public void setProfArticles(List<Article> profArticles) { this.profArticles = profArticles;	}
 
 	@XmlElementWrapper(name = "workAds") 
 	@XmlElement(name = "workAd")
