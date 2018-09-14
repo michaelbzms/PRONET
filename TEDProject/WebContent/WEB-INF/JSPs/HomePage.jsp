@@ -34,10 +34,10 @@
 				</jsp:include>
 				<div class="row">
 					<div class="col-3">
-						<div class="sticky-top" style="top: 10px">
+						<div class="sticky-top">
 							<div class="side_tab">
 								<h4 class="neon_header"><%= prof.getFirstName() %>  <%= prof.getLastName() %></h4>
-								<img class="img-thumbnail" style="height: 120px; width: 120px; margin: 5px 0px 5px 0px" src="<%= prof.getProfilePicURI() %>" alt="Profile picture"><br>
+								<img class="img-thumbnail side_tab_thumbnail" src="<%= prof.getProfilePicURI() %>" alt="Profile picture"><br>
 								<p>
 									<% if ( prof.getEmploymentStatus() != null ) { %>
 										<%= prof.getEmploymentStatus() %><br> 
@@ -59,7 +59,7 @@
 									   for (Professional p : Connections) { %>
 										    <a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
 												<div class="grid_item_mini text-dark">
-													<img style="height: 72px; width: 72px" class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+													<img class="img-thumbnail side_tab_connection_thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
 													<%= p.getFirstName() %><br><%= p.getLastName() %>		
 												</div>
 											</a>
@@ -73,8 +73,7 @@
 						<div class="article_input">
 							<form id="article_input_form" method="post" enctype="multipart/form-data">
 						   		<textarea id="article_input_editor" name="text" autofocus></textarea><br>
-							   	<input id="article_file_input" type="file" name="file_input" accept="/*" multiple
-							   		   style="display: inline-block; cursor: pointer; float: left">
+							   	<input id="article_file_input" class="homepage_file_input" type="file" name="file_input" accept="/*" multiple>
 						   		<div class="buttonContainer text-right">
 						   			<input type="submit" value="Post" class="btn btn-primary">
 							   	</div>

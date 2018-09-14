@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
 	<!-- JS -->
+	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
 	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
 </head>
@@ -29,19 +30,24 @@
 			</jsp:include>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<br>
-			<img class="img-thumbnail profile_edit_thumbnail" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
 			<form method=POST action="/TEDProject/ChangeServlet?attr=profile" enctype="multipart/form-data">
-				<!-- Change basic information  -->		
-				<div id="edit_input" style="margin-left: 32%">
-					<div class="mylabel">Employment Status:</div><input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"><br>
-					<div class="mylabel">Employment Institution: </div><input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"><br>
-					<div class="mylabel">Description: </div><textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea><br>
-					<div class="mylabel">Email: </div><%= Prof.getEmail() %> <br>
-					<div class="mylabel">Phone Number: </div><input type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"><br> 
-					<!-- Change image -->
-					<div class="mylabel">New Profile Picture: </div><input type="file" name="profile_picture" accept="image/*"><br>
-					<br>
+				<!-- Change basic information  -->
+				<div class="row mt-2">
+					<div class="col-4 text-center m-auto">
+						<img class="img-thumbnail profile_thumbnail" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture">
+					</div>
+					<div id="edit_input" class="col-8">
+						<div class="mylabel">Employment Status:</div><input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"><br>
+						<div class="mylabel">Employment Institution: </div><input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"><br>
+						<div class="mylabel">Description: </div><textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea><br>
+						<div class="mylabel">Email: </div><%= Prof.getEmail() %> <br>
+						<div class="mylabel">Phone Number: </div><input type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"><br> 
+						<!-- Change image -->
+						<div class="mylabel">New Profile Picture: </div><input type="file" name="profile_picture" accept="image/*"><br>
+						<br>
+					</div>
 				</div>
+				<br>
 				
 				<!-- Markdown editor for text fields -->
 				<h2 class="my_h2">Professional Experience</h2>

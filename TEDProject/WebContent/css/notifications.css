@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+.notifications_list {
+	max-height: 50vh;
+	overflow-y: auto;
+}
+
+.notification_time {
+	float: right;
+	color: #007bff;
+	margin-right: 10px;
+}
+
+.notification_text {
+	float: left;
+	clear: left;
+	font-style: italic;
+	overflow: hidden;
+}

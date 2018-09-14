@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-
 body{
 	background: radial-gradient(#5b96ff, #3161b7, #1b3a72);
 	background-size: cover;
@@ -159,17 +158,26 @@ label {
 	text-align: center;
 }
 
-.profile_edit_thumbnail {
-	height: 200px;
-	width: 200px;
-	margin: 38px;
-	float: left;
-}
-
 .profile_thumbnail {
 	height: 200px;
 	width: 200px;
-	margin: 10px;
+}
+
+.side_tab_thumbnail {
+	height: 120px;
+	width: 120px;
+	margin: 5px 0px 5px 0px;
+}
+
+.side_tab_connection_thumbnail {
+	height: 72px;
+	width: 72px;
+}
+
+.homepage_file_input {
+	display: inline-block;
+	cursor: pointer;
+	float: left;
 }
 
 .mylabel{

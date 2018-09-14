@@ -40,7 +40,7 @@
 		<% } %>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<p class="text-center font-weight-bold">
-				<img class="img-thumbnail profile_thumbnail" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
+				<img class="img-thumbnail profile_thumbnail m-2" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
 				<% if ( Prof.getEmploymentStatus() != null ) { %>
 					<%= Prof.getEmploymentStatus() %><br> 
 				<% } %>
