@@ -40,53 +40,12 @@
 						   				<button class="btn btn-outline-primary" id="accept<%= asker.getID() %>" value="accept">accept</button>
 						   				<button class="btn btn-outline-secondary" id="decline<%= asker.getID() %>" value="decline">decline</button>
 						   				<script> 
-						   					<!-- JS script for accepting/rejecting friend requests -->   					
 						   					$("#accept<%= asker.getID() %>").on("click", function(){
-						   						// send AJAX post information to server
-						   						$.ajax({
-						   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
-						   							type: "post",
-						   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"accept" },
-						   							success: function(response){
-						   								$("#request<%= asker.getID() %>").fadeOut();
-						   								decreaseNumberOfNotifications();
-						   								setTimeout(function (){
-					    									var gotEmpty = true;
-					    									$(".request").each(function(){
-					    										if ( $(this).is(":visible") ){
-					    											gotEmpty = false;
-					    										}
-					    									});
-					    									if ( gotEmpty ){
-					    										$("#connection_requests_bar ul").html("You don't have any Connection Requests.");
-					    									}
-					    						 		}, 420);
-						   							}
-						   						});
+						   						answer_request(true, <%= asker.getID() %>, <%= prof.getID() %>);     // accept request
 						   					});
 						   					
 						   					$("#decline<%= asker.getID() %>").on("click", function(){
-						   						// send AJAX post information to server
-						   						$.ajax({
-						   							url: "/TEDProject/AJAXServlet?action=connectionRequest",
-						   							type: "post",
-						   							data: { AskerID: <%= asker.getID() %>, ReceiverID: <%= prof.getID() %>, decision:"decline" },
-						   							success: function(response){
-						   								$("#request<%= asker.getID() %>").fadeOut();
-						   								decreaseNumberOfNotifications();
-						   								setTimeout(function (){
-					    									var gotEmpty = true;
-					    									$(".request").each(function(){
-					    										if ( $(this).is(":visible") ){
-					    											gotEmpty = false;
-					    										}
-					    									});
-					    									if ( gotEmpty ){
-					    										$("#connection_requests_bar ul").html("<p><i>You don't have any Connection Requests.</p></i>");
-					    									}
-					    						 		}, 420);
-						   							}
-						   						});
+						   						answer_request(false, <%= asker.getID() %>, <%= prof.getID() %>);    // decline request
 						   					});
 						   				</script>
 						   			</div>
@@ -144,37 +103,7 @@
 				   						<script>
 				   							// when marked as "seen" this should also be reflected in the database
 				   							$("#cancel<%= i %>").on("click", function(){
-				   								
-												$.ajax({
-						    						url: "/TEDProject/AJAXServlet?action=markAsSeen",
-						    						type: "post",
-						    						data: {  
-						    							type: "<%= n.getType() %>",
-						    							commentORapplicationID: <%= n.getNotificationID() %>,     // null or idComment or idApplication
-						    							interestBy: <%= n.getNotifiedByProfID() %>,               // idInterestShownBy
-						    							articleID: <%= n.getPostID() %>                           // idArticle
-						    						},
-						    						success: function(response){
-						    							if ( response === "success" ) {
-						    								$("#notification<%= i %>").fadeOut();
-						    								decreaseNumberOfNotifications();
-						    								setTimeout(function (){
-						    									var gotEmpty = true;
-						    									$(".notification").each(function(){
-						    										if ( $(this).is(":visible") ){
-						    											gotEmpty = false;
-						    										}
-						    									});
-						    									if ( gotEmpty ){
-						    										$("#notifications_bar ul").html("<p><i>You don't have any Notifications.</i></p>");
-						    									}
-						    						 		}, 420);
-						    							} else {
-						    								window.alert(response);
-						    							}
-						    						}
-												});
-				   								
+				   								mark_as_seen(<%= i %>, "<%= n.getType() %>", <%= n.getNotificationID() %>, <%= n.getNotifiedByProfID() %>, <%= n.getPostID() %>)
 				   							});
 				   						</script>
 				   					</li>   
@@ -197,21 +126,7 @@
 			<br>
 			<jsp:include page="/footer.html"></jsp:include>
 		</div>
-	<script>
- 		$("#markAll").on("click", function(){
- 			$(".cancel").trigger("click");      // trigger click event for all "cancel" buttons
- 		});
- 		
- 		function decreaseNumberOfNotifications(){
- 			var num = parseInt($("#numberOfNotifications").text());
- 			--num;
- 			if (num > 0){
- 				$("#numberOfNotifications").text(num.toString());
- 			} else {
- 				$("#numberOfNotifications").fadeOut();
- 			}
- 		}
- 	</script>
+	<script src="/TEDProject/Javascript/notifications.js"></script>
 <%	} 
  	db.close(); %>	
 </body>

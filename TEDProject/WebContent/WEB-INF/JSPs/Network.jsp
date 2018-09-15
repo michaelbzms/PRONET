@@ -33,7 +33,8 @@
 					<input type="text" name="searchString" id="searchString">
 					<input type="submit" value="search">
 					<script>
-						$("#search_form").on("submit", function(){
+						$("#search_form").on("submit", function(e){
+							e.preventDefault();
 							$.ajax({
 								url: "/TEDProject/AJAXServlet?action=searchProfessional",
 								type: "post",
@@ -42,8 +43,6 @@
 									$("#search_results").html(response);      // print results to search_results div
 								}
 							});
-							
-							return false;
 						});
 					</script>
 				</form>

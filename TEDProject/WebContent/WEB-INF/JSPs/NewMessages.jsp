@@ -1,16 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, java.time.LocalDateTime, model.DataBaseBridge, model.Message, model.MyUtil" %>
-<%  // This JSP is loaded very often (ex every 2 secs) %>
-
-<%! private DataBaseBridge newMessagesConnection = new DataBaseBridge();    // this connection will close by finalize when this jsp servlet gets destroyed %>
-
-<%! @Override
+<%  // Warning: This JSP is loaded very often (ex every 2 secs)  %>
+<%! private DataBaseBridge newMessagesConnection = new DataBaseBridge();    // this connection will close by finalize when this jsp servlet gets destroyed
+ 	
+	@Override
 	public void finalize(){               // kind of like a destructor
 		newMessagesConnection.close();
-	} %>
-
-
+	} 
+%>
 <%	String latestGotStr = request.getParameter("latestGot");
 	String homeprofIDstr = request.getParameter("homeprof");
 	String awayprofIDstr = request.getParameter("awayprof");
@@ -32,8 +30,10 @@
 			latestGot = MyUtil.getLocalDateTimeFromString(latestGotStr, true);
 		}
 		List<Message> messages = newMessagesConnection.getNewAwayMessagesAfter(latestGot, homeprofID, awayprofID);
-		if ( messages == null ) { %>
-			<p>Error: DataBase down</p>
+		if ( messages == null ) { // should not happen %>
+			DATABASE_DOWN
+	<%	} else if ( messages.isEmpty() ) { // NO_NEW_MESSAGES is scanned for on client's side and if it is found then nothing is appened to message feed %>
+			NO_NEW_MESSAGES
 	<%	} else {
 			for ( Message msg : messages ) { %>
 				<!-- (!) The following span must NOT be changed: do NOT add any kind of white space -->
