@@ -58,8 +58,10 @@
 		</div> 
 		<div class="content_container">
 			<% 	if ( article.getContent() != null && !article.getContent().isEmpty() ) { %>
-				  	<%= article.getContent() %>
-				  	<br>
+					<p id="articleContent<%= articleID %>"><%= article.getContent() %></p>
+					<script>
+						document.getElementById("articleContent<%= articleID %>").innerHTML = SimpleMDE.prototype.markdown(`<%= article.getContent().replace("\\", "\\\\").replace("`", "\\`") %>`);
+				  	</script>
 			<% 	} %>
 			<% 	if ( article.getContainsFiles() ) { %>
 					<div class="articleFilesDiv">

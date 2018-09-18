@@ -127,6 +127,11 @@ label {
 	margin-bottom: 5px;
 }
 
+.CodeMirror, 
+.CodeMirror-scroll {
+	min-height: 200px;
+}
+
 /* add over any bootstrap changes: */
 nav{
 	border-style: solid; 

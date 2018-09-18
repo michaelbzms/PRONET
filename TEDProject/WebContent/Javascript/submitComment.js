@@ -27,7 +27,7 @@ $(document).on("submit", "[id^='comment_input_form']", function(e){
 								</div>
 							</div> 
 							<div class="content_container">
-								`+ $("#comment_input_textarea" + articleID).val() +`
+								`+ ($("#comment_input_textarea" + articleID).val()).replaceAll("\n", "\n<br>\n") +`
 							</div>
 						</div>
 					`).fadeIn('slow'));

@@ -56,6 +56,7 @@
 			</jsp:include>
 			<jsp:include page="/footer.html"></jsp:include>
 			
+   			<script src="/TEDProject/Javascript/util.js"></script>
 			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>"></script>
 			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
 			<script src="/TEDProject/Javascript/openCommentForm.js"></script>

@@ -72,7 +72,7 @@
 					<div class="col-9">
 						<div class="article_input">
 							<form id="article_input_form" method="post" enctype="multipart/form-data">
-						   		<textarea id="article_input_editor" name="text" autofocus></textarea><br>
+						   		<textarea id="article_input_editor" name="text"></textarea><br>
 							   	<input id="article_file_input" class="homepage_file_input" type="file" name="file_input" accept="/*" multiple>
 						   		<div class="buttonContainer text-right">
 						   			<input type="submit" value="Post" class="btn btn-primary">
@@ -81,8 +81,11 @@
 							   		$("#article_input_form").on("submit", function(e){
 							   			e.preventDefault();
 							   			
+							   			articleEditor.toTextArea()
 							   			// get form's data
-							   			var formData = new FormData($(this)[0]);							   			
+							   			var formData = new FormData($(this)[0]);
+							   			articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+							   			articleEditor.value("");
 							   			// DEBUG: Print formData to console
 							   			//for (var pair of formData.entries()) {
 							   			//    console.log(pair[0]+ ', ' + pair[1]); 
@@ -99,7 +102,7 @@
 				    							if ( !isNaN(articleID) ){        // if response is a number then it is the ID of the article we just posted successfully
 				    								console.log("Made a post successfully");
 				    								// reset form's fields
-				    								$("#article_input_editor").val("");
+				    								//$("#article_input_editor").val("");
 				    								$("#article_file_input").val("");
 				    								// get article just posted with ajax and prepend it to our wall
 				    								$.ajax({
@@ -188,9 +191,9 @@
 				<jsp:include page="/footer.html"></jsp:include>
 			</div>
 			<script>
-				// Markdown inteferes with AJAX form! 
-				// var post = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+				var articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 			</script>
+   			<script src="/TEDProject/Javascript/util.js"></script>
 			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>"></script>
 			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
 			<script src="/TEDProject/Javascript/openCommentForm.js"></script>
