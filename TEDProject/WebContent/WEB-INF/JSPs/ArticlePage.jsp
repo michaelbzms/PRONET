@@ -62,6 +62,8 @@
 			<script id="submitCommentScript" src="/TEDProject/Javascript/submitComment.js" data-profID="<%= prof.getID() %>" data-profProfilePicURI="<%= prof.getProfilePicURI() %>"
 					data-profFullName="<%= prof.getFirstName() %> <%= prof.getLastName() %>"></script>
 		   	<script src="/TEDProject/Javascript/commentSendOnEnter.js"></script>
+   			<script id="deleteCommentScript" src="/TEDProject/Javascript/deleteCommentScript.js" data-profID="<%= prof.getID() %>"></script>
+   			<script src="/TEDProject/Javascript/imageModalScript.js"></script>
 	<%  }
 	    db.close(); %>
 	</div>

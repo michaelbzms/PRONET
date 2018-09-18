@@ -198,6 +198,7 @@
 					data-profFullName="<%= prof.getFirstName() %> <%= prof.getLastName() %>"></script>
 		   	<script src="/TEDProject/Javascript/commentSendOnEnter.js"></script>
    			<script id="deleteCommentScript" src="/TEDProject/Javascript/deleteCommentScript.js" data-profID="<%= prof.getID() %>"></script>
+   			<script src="/TEDProject/Javascript/imageModalScript.js"></script>
 	<%	}
 		db.close(); %>
 </body>

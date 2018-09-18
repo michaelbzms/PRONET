@@ -57,17 +57,33 @@
 			<% } %>
 		</div> 
 		<div class="content_container">
-			<% 	if ( article.getContent() != null ) { %>
+			<% 	if ( article.getContent() != null && !article.getContent().isEmpty() ) { %>
 				  	<%= article.getContent() %>
+				  	<br>
 			<% 	} %>
-				<br>
 			<% 	if ( article.getContainsFiles() ) { %>
 					<div class="articleFilesDiv">
 				   	<%	List<String> fileURIs = article.getFileURIs(); 
 				   		for ( String URI : fileURIs ) { 
 				   			switch( MyUtil.getFileType(URI) ){
 				   				case 1:    // image  %>
-				   					<img class="article_img" src="<%= URI %>">
+				   					<img id="<%= (MyUtil.getFileName(URI)).replace(".", "_") %>" class="article_img" src="<%= URI %>"  data-toggle="tooltip" data-placement="top" title="Click to enlarge!">
+				   					<div class="modal fade" id="modal_<%= (MyUtil.getFileName(URI)).replace(".", "_") %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="padding: 0 16px !important;">
+										<div class="modal-dialog image_modal_dialog" role="document">
+									    	<div class="modal-content image_modal_content">
+										        <div class="modal-header">
+											       <h5 class="modal-title">Posted by <a href="/TEDProject/ProfileLink?ProfID=<%= authorProf.getID() %>"><%= authorProf.getFirstName() %> <%= authorProf.getLastName() %></a>
+											       &nbsp;<small class="text-secondary" data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(article.getPostedDate(), true) %>"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small></h5>
+											       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											       		<span aria-hidden="true">&times;</span>
+											       </button>
+											    </div>
+											    <div class="modal-body text-center">
+											        <img class="modal_img" src="<%= URI %>">
+											    </div>
+									    	</div>
+									    </div>
+									</div>
 				   		<%			break;
 				   				case 2:    // video  %>
 				   					<video class="article_vid" controls>
@@ -139,7 +155,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
-		        		<h5 class="modal-title" id="exampleModalLongTitle">Interested Professionals (<span id="interestsCount<%= articleID %>_2"><%= interestedProfs.size() %></span>)</h5>
+		        		<h5 class="modal-title">Interested Professionals (<span id="interestsCount<%= articleID %>_2"><%= interestedProfs.size() %></span>)</h5>
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>

@@ -68,25 +68,52 @@
 }
 
 .articleFilesDiv{
-	display: flex;
-	flex-wrap: wrap;
 	margin: 20px 0px 20px 0px;
+	height: auto;
+	width: auto;
+	display: table;
 }
 
 .article_img{
 	display: inline-block;
-	max-height: 400px;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	height: auto;
 	max-width: 400px;
+	object-fit: contain;
+	cursor: pointer;
 }
 
 .article_vid{
 	display: inline-block;
+	margin-right: 3px;
+	margin-bottom: 3px;
 	max-height: 400px;
 	max-width: 400px;
 }
 
 .article_aud{
 	display: inline-block;
+	margin-right: 3px;
+	margin-bottom: 3px;
 	max-height: 200px;
 	max-width: 400px;
+}
+
+.image_modal_dialog {
+	max-width: none;
+	width: auto;
+	display: table;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.image_modal_content {
+	max-width: none;
+}
+
+.modal_img {
+	height: auto;
+    max-width: 100%;
+    object-fit: contain;
 }

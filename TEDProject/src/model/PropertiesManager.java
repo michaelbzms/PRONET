@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -28,6 +29,11 @@ public class PropertiesManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Failed to load properties from config.properties - Using default properties.");
+		}
+		// Create required folders:
+		File dirPath = new File(getProperty("saveDir") + "/profile");
+		if (! dirPath.exists()) {
+			dirPath.mkdirs();
 		}
 	}
 
