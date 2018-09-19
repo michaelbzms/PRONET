@@ -132,6 +132,32 @@ label {
 	min-height: 200px;
 }
 
+.custom-file-label {
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.custom-file-input {
+	cursor: pointer;
+}
+
+#edit_input .form-control {
+    display: inline-block;
+	width: calc(100% - 300px);
+	margin-bottom: 5px;
+}
+
+#edit_input .custom-file {
+    display: inline-block;
+    width: calc(100% - 230px);
+}
+
+#edit_input .custom-file-label {
+    width: calc(100% - 70px);
+}
+
 /* add over any bootstrap changes: */
 nav{
 	border-style: solid; 

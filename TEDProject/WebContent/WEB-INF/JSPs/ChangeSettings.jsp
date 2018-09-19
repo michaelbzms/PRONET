@@ -20,8 +20,8 @@
 		<h2>Change Email</h2>
 		<div class="form">
 			<form method="POST" action="/TEDProject/ChangeServlet?attr=email">
-				<label>Password: </label><input class="form_field" type="password" name="password"><br>
-				<label>New Email: </label><input class="form_field" type="email" name="newEmail"><br>
+				<label>Password: </label><input class="form_field" type="password" name="password" required><br>
+				<label>New Email: </label><input class="form_field" type="email" name="newEmail" required><br>
 				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Submit">
 			</form>
 		</div>
@@ -29,9 +29,9 @@
 		<h2>Change Password</h2>
 		<div class="form pwd_form">
 			<form method="POST" action="/TEDProject/ChangeServlet?attr=password">
-				<label class="pwd_form_field">Current Password: </label><input class="form_field" type="password" name="currentPassword"><br>
-				<label class="pwd_form_field">New Password: </label><input class="form_field" type="password" name="newPassword"><br>
-				<label class="pwd_form_field">Confirm New Password: </label><input class="form_field" type="password" name="reNewPassword"><br>
+				<label class="pwd_form_field">Current Password: </label><input class="form_field" type="password" name="currentPassword" required><br>
+				<label class="pwd_form_field">New Password: </label><input class="form_field" type="password" name="newPassword" required><br>
+				<label class="pwd_form_field">Confirm New Password: </label><input class="form_field" type="password" name="reNewPassword" required><br>
 				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Submit">
 			</form>
 		</div>

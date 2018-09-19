@@ -49,10 +49,10 @@
 				<% if ( Prof.getEmploymentInstitution() != null ) { %>
 					<%= Prof.getEmploymentInstitution() %><br> 
 				<% } %>
-				<% if ( Prof.getDescription() != null ) { %>
-					<%= Prof.getDescription() %><br> 
-				<% } %>
 			</p>
+			<% if ( Prof.getDescription() != null ) { %>
+				<p class="text-center"><%= Prof.getDescription() %><br></p>
+			<% } %>
 			<div class="ProfileOptions">
 			<% if (currentSession != null) { 
 				   if (!isAdmin) {

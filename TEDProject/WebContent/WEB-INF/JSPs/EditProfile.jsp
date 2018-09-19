@@ -38,13 +38,20 @@
 						<img class="img-thumbnail profile_thumbnail" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture">
 					</div>
 					<div id="edit_input" class="col-8">
-						<div class="mylabel">Employment Status:</div><input type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"><br>
-						<div class="mylabel">Employment Institution: </div><input type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"><br>
-						<div class="mylabel">Description: </div><textarea name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea><br>
-						<div class="mylabel">Email: </div><%= Prof.getEmail() %> <br>
-						<div class="mylabel">Phone Number: </div><input type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"><br> 
-						<!-- Change image -->
-						<div class="mylabel">New Profile Picture: </div><input type="file" name="profile_picture" accept="image/*"><br>
+						<label class="mylabel">Employment Status:</label>
+						<input class="form-control" type="text" name="employmentStatus" value="<%= Prof.getEmploymentStatus() != null ? Prof.getEmploymentStatus() : "" %>"><br>
+						<label class="mylabel">Employment Institution:</label>
+						<input class="form-control" type="text" name="employmentInstitution" value="<%= Prof.getEmploymentInstitution() != null ? Prof.getEmploymentInstitution() : ""%>"><br>
+						<label class="mylabel mb-2">Description:</label>
+						<textarea class="form-control" name="description"><%= Prof.getDescription() != null ? Prof.getDescription() : ""%></textarea><br>
+						<label class="mylabel mb-2 mr-2">Email:</label><%= Prof.getEmail() %> <br>
+						<label class="mylabel">Phone Number:</label>
+						<input class="form-control" type="text" name="phoneNumber" value="<%= Prof.getPhone() %>"><br> 
+						<label class="mylabel">New Profile Picture:</label>
+						<div class="custom-file">
+						    <input id="article_file_input" class="custom-file-input" type="file" name="profile_picture" accept="image/*">
+						    <label class="custom-file-label" for="inputGroupFile01"><i>Choose file</i></label>
+						</div>
 						<br>
 					</div>
 				</div>
@@ -71,6 +78,7 @@
 				var edBackgroundSMDE = new SimpleMDE({ element: document.getElementById("edBackground"), showIcons: ["code", "table"] });
 				var skillsSMDE = new SimpleMDE({ element: document.getElementById("skills"), showIcons: ["code", "table"] });
 			</script>
+			<script id="fileInputUpdateLabelScript" src="/TEDProject/Javascript/fileInputUpdateLabelScript.js" data-emptyText="<i>No file chosen</i>"></script>
 		<% } %>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>

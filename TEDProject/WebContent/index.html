@@ -20,8 +20,8 @@
 			    	<a class="navbar-brand" href="/TEDProject">PRONET</a>
 			    </div>
 		        <form class="form-inline" method="POST" action="/TEDProject/WelcomeServlet?register=false">
-			    	<input class="form-control mr-1" type="email" name="email" placeholder="Email">
-					<input class="form-control mr-1" type="password" name="password" placeholder="Password">
+			    	<input class="form-control mr-1" type="email" name="email" placeholder="Email" required>
+					<input class="form-control mr-1" type="password" name="password" placeholder="Password" required>
 					<input id="tmzOffset" type="hidden" name="tmzOffset" value="0">
 					<input class="btn btn-primary" type="submit" value="Log in">
 				</form>
@@ -33,15 +33,15 @@
 		<div class="form">
 			<h2>SIGN UP</h2>
 			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data">
-				<label class="pl-1">First name: </label><input class="form_field" type="text" name="firstname"><br>
-				<label class="pl-1">Last name: </label><input class="form_field" type="text" name="lastname"><br>
-				<label class="pl-1">Email: </label><input class="form_field" type="email" name="email"><br>
-				<label class="pl-1">Password: </label><input class="form_field" type="password" name="password"><br>
-				<label class="pl-1">Repeat Password: </label><input class="form_field" type="password" name="repeat_password"><br>
-				<label class="pl-1">Phone Number: </label><input class="form_field" type="text" name="phone_number"><br>
-				<label class="pl-1">Profile Picture:</label>   
+				<label class="pl-1">First name: </label><input class="form_field" type="text" name="firstname" required><br>
+				<label class="pl-1">Last name: </label><input class="form_field" type="text" name="lastname" required><br>
+				<label class="pl-1">Email: </label><input class="form_field" type="email" name="email" required><br>
+				<label class="pl-1">Password: </label><input class="form_field" type="password" name="password" required><br>
+				<label class="pl-1">Repeat Password: </label><input class="form_field" type="password" name="repeat_password" required><br>
+				<label class="pl-1">Phone Number: </label><input class="form_field" type="text" name="phone_number" required><br>
+				<label class="pl-1">Profile Picture:</label>
 				<div class="custom-file index_upload" style="width: calc(100% - 160px - 10px);">
-				    <input id="article_file_input" class="custom-file-input" type="file" name="profile_picture" accept="image/*">
+				    <input id="article_file_input" class="custom-file-input" type="file" name="profile_picture" accept="image/*" required>
 				    <label class="custom-file-label" for="inputGroupFile01"><i>No file chosen</i></label>
 				</div>
 				<!-- input class="ml-1" type="checkbox" required> I have read and accept the terms and conditions. TODO <br-->
