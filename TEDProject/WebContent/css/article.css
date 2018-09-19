@@ -117,3 +117,8 @@
     max-width: 100%;
     object-fit: contain;
 }
+
+.custom-file-label {
+	width: 70%;
+}
+

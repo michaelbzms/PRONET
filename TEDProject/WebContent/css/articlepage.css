@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+.past_comments_container {
+    max-height: 3000px;
+}
+
+.article_img,
+.article_vid,
+.article_aud {
+	max-width: 550px;
+}

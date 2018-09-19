@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Settings</title>
+	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>

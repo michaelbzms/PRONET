@@ -1,6 +1,5 @@
 /* Global variables */
 var profID =  document.getElementById('messages_script').getAttribute('data-profID');
-console.log("profID = " + profID);
 var alerted_once = false;
 
 // when attempted to chat with an unknown professor:

@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
+	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">

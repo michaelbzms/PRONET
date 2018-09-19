@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Professional Networking and more</title>
+	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
@@ -32,16 +33,19 @@
 		<div class="form">
 			<h2>SIGN UP</h2>
 			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data">
-				<label>First name: </label><input class="form_field" type="text" name="firstname"><br>
-				<label>Last name: </label><input class="form_field" type="text" name="lastname"><br>
-				<label>Email: </label><input class="form_field" type="email" name="email"><br>
-				<label>Password: </label><input class="form_field" type="password" name="password"><br>
-				<label>Repeat Password: </label><input class="form_field" type="password" name="repeat_password"><br>
-				<label>Phone Number: </label><input class="form_field" type="text" name="phone_number"><br>
-				<label>Profile Picture:</label>   
-				<input class="choose_file_button form_field" type="file" name="profile_picture" accept="image/*"><br>
-				<!-- input class="ml-1" type="checkbox" required> I have read and accept the terms and conditions.<br-->
-				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Sign up">
+				<label class="pl-1">First name: </label><input class="form_field" type="text" name="firstname"><br>
+				<label class="pl-1">Last name: </label><input class="form_field" type="text" name="lastname"><br>
+				<label class="pl-1">Email: </label><input class="form_field" type="email" name="email"><br>
+				<label class="pl-1">Password: </label><input class="form_field" type="password" name="password"><br>
+				<label class="pl-1">Repeat Password: </label><input class="form_field" type="password" name="repeat_password"><br>
+				<label class="pl-1">Phone Number: </label><input class="form_field" type="text" name="phone_number"><br>
+				<label class="pl-1">Profile Picture:</label>   
+				<div class="custom-file index_upload" style="width: calc(100% - 160px - 10px);">
+				    <input id="article_file_input" class="custom-file-input" type="file" name="profile_picture" accept="image/*">
+				    <label class="custom-file-label" for="inputGroupFile01"><i>No file chosen</i></label>
+				</div>
+				<!-- input class="ml-1" type="checkbox" required> I have read and accept the terms and conditions. TODO <br-->
+				<input class="btn btn-light d-block mt-3 mb-1 ml-auto mr-auto" type="submit" value="Sign up">
 			</form>
 		</div>
 		<br>
@@ -53,6 +57,7 @@
 		</div>
 		<div id="includedFooter"></div>
 	</div>
+	<script id="fileInputUpdateLabelScript" src="/TEDProject/Javascript/fileInputUpdateLabelScript.js" data-emptyText="<i>No file chosen</i>"></script>
 	<script> 
 		var tmzOffset = new Date().getTimezoneOffset(); 
 		document.getElementById("tmzOffset").value = tmzOffset;

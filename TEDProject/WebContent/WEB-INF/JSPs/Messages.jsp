@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Messages</title>
+	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.MyUtil" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>

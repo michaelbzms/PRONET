@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PRONET - Home Page</title>
+	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Article" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
@@ -34,7 +35,7 @@
 				</jsp:include>
 				<div class="row">
 					<div class="col-3">
-						<div class="sticky-top">
+						<div class="sticky-top sticky_side_container">
 							<div class="side_tab">
 								<h4 class="neon_header"><%= prof.getFirstName() %>  <%= prof.getLastName() %></h4>
 								<img class="img-thumbnail side_tab_thumbnail" src="<%= prof.getProfilePicURI() %>" alt="Profile picture"><br>
@@ -72,9 +73,12 @@
 					<div class="col-9">
 						<div class="article_input">
 							<form id="article_input_form" method="post" enctype="multipart/form-data">
-						   		<textarea id="article_input_editor" name="text"></textarea><br>
-							   	<input id="article_file_input" class="homepage_file_input" type="file" name="file_input" accept="/*" multiple>
-						   		<div class="buttonContainer text-right">
+						   		<textarea id="article_input_editor" name="text"></textarea>
+							   	<div class="custom-file">
+								    <input id="article_file_input" class="custom-file-input" type="file" name="file_input" accept="/*" multiple>
+								    <label class="custom-file-label" for="inputGroupFile01"><i>Choose file(s) to upload</i></label>
+								</div>
+						   		<div class="buttonContainer text-right mr-1">
 						   			<input type="submit" value="Post" class="btn btn-primary">
 							   	</div>
 							   	<script>
@@ -84,12 +88,15 @@
 							   			articleEditor.toTextArea()
 							   			// get form's data
 							   			var formData = new FormData($(this)[0]);
-							   			articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
-							   			articleEditor.value("");
 							   			// DEBUG: Print formData to console
 							   			//for (var pair of formData.entries()) {
 							   			//    console.log(pair[0]+ ', ' + pair[1]); 
 							   			//}
+							   			
+							   			// reset editor
+							   			articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+							   			articleEditor.value("");
+	    								$(".custom-file-label").html("<i>Choose file(s) to upload</i>");
 							   			
 							   			// send them via AJAX to AJAXServlet		   			
 							   			$.ajax({
@@ -100,10 +107,6 @@
 				    						success: function(response){
 				    							var articleID = parseInt(response);
 				    							if ( !isNaN(articleID) ){        // if response is a number then it is the ID of the article we just posted successfully
-				    								console.log("Made a post successfully");
-				    								// reset form's fields
-				    								//$("#article_input_editor").val("");
-				    								$("#article_file_input").val("");
 				    								// get article just posted with ajax and prepend it to our wall
 				    								$.ajax({
 							    						url: "/TEDProject/AJAXServlet?action=loadArticle",
@@ -193,6 +196,7 @@
 			<script>
 				var articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 			</script>
+			<script id="fileInputUpdateLabelScript" src="/TEDProject/Javascript/fileInputUpdateLabelScript.js" data-emptyText="<i>No files chosen</i>"></script>
    			<script src="/TEDProject/Javascript/util.js"></script>
 			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>"></script>
 			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>

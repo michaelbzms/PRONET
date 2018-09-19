@@ -23,7 +23,7 @@ import model.SiteFunctionality;
 
 
 @WebServlet("/WelcomeServlet")
-@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/images", fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)    // this location is only a temporary save location if we ran out of memory!
+@MultipartConfig(fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)    // this location is only a temporary save location if we ran out of memory!
 public class WelcomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String UploadSaveDirectory = PropertiesManager.getProperty("saveDir");

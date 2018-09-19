@@ -74,16 +74,11 @@ label {
 
 .main_container .form .form_field {
 	display: inline-block;
-	width: calc(100% - 160px - 30px);	/* take up all div minus the label and the padding */
+	width: calc(100% - 160px - 10px);		/* take up all div minus the label and the padding */
 }
 
 .pwd_form_field {
 	width: 190px;
-}
-
-.main_container .form .choose_file_button {
-	cursor: pointer;
-	margin-left: -4px;
 }​
 
 .buttonContainer {
@@ -192,6 +187,26 @@ label {
 .CodeMirror, 
 .CodeMirror-scroll {
 	min-height: 200px;
+}
+
+.sticky_side_container {
+	top: 15px;
+	z-index: unset;
+}
+
+.custom-file-label {
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.custom-file-input {
+	cursor: pointer;
+}
+
+.index_upload {
+    margin-left: -4px;
 }
 
 /* add over any bootstrap changes: */

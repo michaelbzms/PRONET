@@ -21,7 +21,7 @@ import model.SiteFunctionality;
 
 
 @WebServlet("/AJAXServlet")
-@MultipartConfig(location = "D:/eclipse-workspace/TEDProject/WebContent/files", fileSizeThreshold = 1024*1024, maxFileSize = 50*1024*1024)      // this location is only a temporary save location in case we ran out of memory
+@MultipartConfig(fileSizeThreshold = 1024*1024, maxFileSize = 50*1024*1024)
 public class AJAXServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String ArticleSaveDirectory = FileServlet.SaveDirectory + "/article";
@@ -136,7 +136,6 @@ public class AJAXServlet extends HttpServlet {
 					} else if ( !SiteFunctionality.checkInputText(postText, false, 0) ) {    // TODO: size restriction policy for article posts?
 						out.write("illegal post text input characters");
 					} else {
-						postText = postText.replace("\n", "\n<br>\n");
 						// remove all non-file Parts
 						fileParts.removeIf((Part filePart) -> !filePart.getName().equals("file_input"));	
 						boolean containsFiles = false;
