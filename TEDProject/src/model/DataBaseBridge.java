@@ -1152,6 +1152,25 @@ public class DataBaseBridge {
 		return IDs;
 	}
 	
+	public int getNumberOfComments(int articleID, int profID) {
+		if (!connected) return -1;
+		String Query = "SELECT COUNT(*) AS 'count' FROM ArticleComments WHERE idArticle = ? AND idWrittenBy = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			if ( resultSet.next() ) {
+				return resultSet.getInt("count");
+			} else {
+				return -3;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
+		}
+	}
+	
 	public List<Comment> getComments(int ID, boolean articleComments) {		// if articleComments is false then it returns prof comments (ID = profID instead of articleID)
 		if (!connected) return null;
 		List<Comment> comments = null;
