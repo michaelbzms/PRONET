@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -156,5 +158,17 @@ public final class MyUtil {
 		if ( start == -1 || end == -1 ) return null;   // should not happen
 		return fileURI.substring(start, end);
 	}
+	
+//	public static ArrayList<String> removeDuplicatesFromList(ArrayList<String> list) {
+//        ArrayList<String> resultList = new ArrayList<String>();
+//        HashSet<String> set = new HashSet<String>();
+//        for (String item : list) {
+//            if (!set.contains(item)) {
+//                resultList.add(item);
+//                set.add(item);
+//            }
+//        }
+//        return resultList;
+//    }
 	
 }
