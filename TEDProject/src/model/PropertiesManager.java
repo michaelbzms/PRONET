@@ -17,6 +17,8 @@ public class PropertiesManager {
 		properties.put("dbUser", "myuser");
 		properties.put("dbPassword", "MYUSERSQL");
 		properties.put("saveDir", "D:/TEDProjectStorage");
+		properties.put("stopwordsFile", "engStopwords.csv");
+		properties.put("stopwordsFileSep", ",");
 		properties.put("sessionTimeoutMin", "20");
 		properties.put("dateFormat", "dd/MM/yyyy");
 		properties.put("timezoneOffset", "-180");
