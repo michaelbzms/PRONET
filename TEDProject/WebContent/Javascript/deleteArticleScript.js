@@ -10,6 +10,9 @@ $(document).on("click", "[id^='deleteArticle']", function(){
 			success: function(response){
 				if ( response === "success" ){
 					$("#article" + articleID).fadeOut();
+					if (document.getElementById('deleteArticleScript').getAttribute('data-redirect') === "true") {
+						window.location.replace("/TEDProject/prof/NavigationServlet?page=HomePage");
+					}
 				} else {
 					window.alert(response);
 				}

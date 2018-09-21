@@ -706,13 +706,14 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public boolean updateWorkAd(int adID, String description) {		// TODO: also update datetime?
+	public boolean updateWorkAd(int adID, String description) {
 		if (!connected) return false;
-		String updateString = "UPDATE Ads SET description = ? WHERE idAd = ?;";
+		String updateString = "UPDATE Ads SET description = ?, postedDate = ? WHERE idAd = ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(updateString);
 			statement.setString(1, description);
-			statement.setInt(2, adID);
+			statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));	// update datePosted as "now"	
+			statement.setInt(3, adID);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1075,6 +1076,22 @@ public class DataBaseBridge {
 			PreparedStatement statement = connection.prepareStatement(Insert);
 			statement.setString(1, fileURI);
 			statement.setInt(2, articleID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean updateArticle(int articleID, String postText) {
+		if (!connected) return false;
+		String updateString = "UPDATE Articles SET content = ?, postedDate = ? WHERE idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(updateString);
+			statement.setString(1, postText);
+			statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));	// update postedDate as "now"	
+			statement.setInt(3, articleID);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

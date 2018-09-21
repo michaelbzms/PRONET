@@ -51,8 +51,9 @@
 				<small class="text-secondary" data-toggle="tooltip" data-placement="top" title="<%= MyUtil.printDate(article.getPostedDate(), true) %>"><%= MyUtil.getTimeAgo(article.getPostedDate()) %></small></a>
 			</div>
 			<% if (article.getAuthorID() == sessionProf.getID()) { %>
-				<div class="ml-auto">
-					<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-secondary ml-2">✕</button>
+				<div class="ml-auto mr-1">
+					<a href="/TEDProject/prof/NavigationServlet?page=EditArticle&ArticleID=<%= articleID %>" class="btn btn-sm btn-outline-primary">Edit</a>
+					<button id="deleteArticle<%= articleID %>" type="button" class="btn btn-sm btn-outline-secondary ml-1">✕</button>
 		  		</div>
 			<% } %>
 		</div> 

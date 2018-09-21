@@ -353,6 +353,25 @@ public class SiteFunctionality {
 		return db.addArticle(postText, prof.getID(), containsFiles);
 	}
 	
+	public static int updateArticle(int articleID, int profID, String content) {
+		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
+		if ( !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		// Check if profID is the author of the article
+		if ( db.getArticleAuthorID(articleID) != profID ) {
+			return -4;
+		}
+		if ( db.updateArticle(articleID, content) ) {		// Successful update
+			db.close(); 
+			return 0;	
+		} else {				// database error
+			db.close(); 
+			return -1;
+		}
+	}
+	
 	public static int deleteArticle(int articleID, int sessionProfID) {
 		DataBaseBridge db = new DataBaseBridge();
 		if ( !db.checkIfConnected() ) {

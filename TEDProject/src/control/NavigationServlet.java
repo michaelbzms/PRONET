@@ -100,6 +100,15 @@ public class NavigationServlet extends HttpServlet {
 					return;
 				}
 				break;
+			case "EditArticle":
+				attr = request.getParameter("ArticleID");
+				if (attr != null) {
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/EditArticlePage.jsp");
+					request.setAttribute("ArticleID", attr);
+					RequetsDispatcherObj.forward(request, response);
+					return;
+				}
+				break;
 		}
 		request.setAttribute("errorType", "invalidPageRequest");
 		RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");

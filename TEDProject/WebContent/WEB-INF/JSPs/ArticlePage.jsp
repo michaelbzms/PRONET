@@ -40,15 +40,22 @@
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { 
 		   Professional authorProf = db.getBasicProfessionalInfo(profID);
-		   int articleID = Integer.parseInt(request.getAttribute("ArticleID").toString());		// TODO: checks
-
 		   boolean isAdmin = ( currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
 		   // Navbar only for professionals
 		   if (currentSession != null && !isAdmin) { %>
 				<jsp:include page="ProfNavBar.jsp"> 
 					<jsp:param name="activePage" value="null"/> 
 				</jsp:include>
-		 <% } %>
+		 <% } 
+		 
+		   int articleID = -1;
+		   if (request.getAttribute("ArticleID") != null) {
+			   articleID = Integer.parseInt(request.getAttribute("ArticleID").toString());
+		   } else { %>
+			   <h2 class="my_h2">INVALID ARTICLE</h2>
+			   <p>The requested Article does not exist.</p>
+			 <% return;
+		   } %>		   
 		   
 			<jsp:include page="Article.jsp"> 
 				<jsp:param name="ArticleID" value="<%= articleID %>" /> 
@@ -56,7 +63,7 @@
 			<jsp:include page="/footer.html"></jsp:include>
 			
    			<script src="/TEDProject/Javascript/util.js"></script>
-			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>"></script>
+			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="true"></script>
 			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
 			<script src="/TEDProject/Javascript/openCommentForm.js"></script>
 			<script id="submitCommentScript" src="/TEDProject/Javascript/submitComment.js" data-profID="<%= prof.getID() %>" data-profProfilePicURI="<%= prof.getProfilePicURI() %>"

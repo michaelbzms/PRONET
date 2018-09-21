@@ -11,74 +11,35 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.SiteFunctionality;
 
-@WebServlet("/prof/WorkAdManagementServlet")
-public class WorkAdManagementServlet extends HttpServlet {
+@WebServlet("/prof/EditArticleServlet")
+public class EditArticleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public WorkAdManagementServlet() {
+    public EditArticleServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher RequetsDispatcherObj;
-		String action = request.getParameter("action");
-		String workdAdIDstr = request.getParameter("AdID");
-		if (action == null || (workdAdIDstr == null && !action.equals("create")) || request.getSession(false) == null || request.getSession(false).getAttribute("ProfID") == null) {	
+		String articleIDstr = request.getParameter("ArticleID");
+		if (articleIDstr == null || request.getSession(false) == null || request.getSession(false).getAttribute("ProfID") == null) {	
 			request.setAttribute("errorType", "invalidPageRequest");
 			RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
 			return;
 		}
 		int profID = (int) request.getSession(false).getAttribute("ProfID");
-		int adID = -1;
-		if (workdAdIDstr != null) {
-			adID = Integer.parseInt(workdAdIDstr);
-		}
+		int articleID = Integer.parseInt(articleIDstr);
 		int result;
-		String title, description;
-		switch(action) {
-			case "create":
-				title = request.getParameter("title");
-				description = request.getParameter("description");
-				if ( title.isEmpty() || description.isEmpty() ) {
-					result = -2;
-				} else if ( !SiteFunctionality.checkInputText(title, true, 127) ) {
-					result = -3;
-				} else {
-					result = SiteFunctionality.createWorkAd(profID, title, description);
-				}
-				break;
-			case "edit":
-				description = request.getParameter("description");
-				if ( description.isEmpty() ) {
-					result = -2;
-				} else {
-					result = SiteFunctionality.updateWorkAd(adID, profID, description);
-				}
-				break;
-			case "delete":
-				result = SiteFunctionality.removeWorkAd(adID, profID);
-				break;
-			case "apply":
-				description = request.getParameter("applyNote");
-				if ( description.isEmpty() ) {
-					result = -2;
-				} else {
-					result = SiteFunctionality.applyToWorkAd(adID, profID, description);
-				}
-				break;
-			case "cancel":
-				result = SiteFunctionality.removeApplication(profID, adID);
-				break;
-			default:	
-				request.setAttribute("errorType", "invalidPageRequest");
-				RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
-				RequetsDispatcherObj.forward(request, response);
-				return;
-		}
+		String articleContent = request.getParameter("articleContent");
+		if ( articleContent.isEmpty() ) {		// TODO: do we want to prevent empty posts?
+			result = -2;
+		} else {
+			result = SiteFunctionality.updateArticle(articleID, profID, articleContent);
+		}			
 		switch (result) {
 			case 0:     // success
-				response.sendRedirect("/TEDProject/prof/NavigationServlet?page=WorkAds");
+				response.sendRedirect("/TEDProject/prof/NavigationServlet?page=Article&ArticleID=" + articleID);
 				break;
 			case -1:
 			case -503:      // database error

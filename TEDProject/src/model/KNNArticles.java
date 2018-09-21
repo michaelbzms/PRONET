@@ -8,7 +8,7 @@ public class KNNArticles {
 	
 	/* --- Description ---------------------------------------------------------------------------------------------------------------------- *
 	 * The ultimate goal of KKNArticles is to receive previously ordered by time articles ('ArticleIDs') and to re-order them in a fashion    *
-	 * which prioriotizes articles posted by K professionals who are most "alike" the logged in professional, in that they have interacted    *
+	 * which prioritizes articles posted by K professionals who are most "alike" the logged in professional, in that they have interacted    *
 	 * (by showing interest and/or commenting) on the same articles as the logged in professional                                             *
 	 * -------------------------------------------------------------------------------------------------------------------------------------- */
 	
@@ -70,8 +70,8 @@ public class KNNArticles {
     
     /* --- reorderArticleIDs() -------------------------------------------------- *
 	 * Reorder ArticleIDs referenced in fit() such that:                          *
-	 * articles posted by or shown interest by the K nearest neighbours           *
-	 * receive an "ordering bonus" based on their amount of similarit             *
+	 * articles posted by or shown interest by the K nearest neighbors            *
+	 * receive an "ordering bonus" based on their amount of similarity            *
 	 * -------------------------------------------------------------------------- */
     public int reorderArticleIDs(DataBaseBridge db){
     	if ( db == null || !db.checkIfConnected() ) return -1;
