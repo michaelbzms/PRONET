@@ -59,7 +59,7 @@
 			<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=<%= (ad == null) ? "create" : ("edit&AdID=" + ad.getID()) %>">
 				<% if (ad == null) {	%>
 					<h2 class="my_h2">Title</h2>
-					<input type="text" class="form-control" name="title">
+					<input type="text" class="form-control" name="title" required>
 				<% } else {		%>
 					<h1 class="my_h1"><%= ad.getTitle() %></h1>
 				<% } %>

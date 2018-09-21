@@ -6,11 +6,12 @@
 	<meta charset="UTF-8">
 	<title>PRONET - Personal Information</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
-	<%@ page import="model.Professional, model.DataBaseBridge, model.MyUtil" %>
+	<%@ page import="model.Professional, model.DataBaseBridge, model.MyUtil, java.util.List" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
@@ -101,6 +102,36 @@
 					<h2 class="my_h2">Skills</h2>
 					<p id="skills"><%= Prof.getSkills() %></p>
 					<br>
+			<% } %>
+			<% if ( isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID) && !isSelf) ) { 	// TODO: show this to self as well? I suggest no %>
+				<div class="connections_bar">
+					<h2 class="my_h2">Connections</h2>
+					<div class="grid_container_container">
+						<ul id="connections_grid" class="grid_container">
+						<% List<Professional> Connections = db.getConnectedProfessionalsFor(profID);
+						   if ( Connections != null ) { 
+							   for (Professional p : Connections) { %>
+									<li class="grid_item">
+										<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+										<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
+										<% if (p.getEmploymentStatus() != null) { %> 
+											<%= p.getEmploymentStatus() %> 
+										<% } else { %> 
+											N/A  
+										<% } %>
+										<br> 
+										<% if (p.getEmploymentInstitution() != null) { %> <%= p.getEmploymentInstitution() %> 
+										<% } else { %> 
+											N/A
+										<% } %>
+										<br>
+										<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
+									</li>
+							<%	} %>
+						<% } %>
+						</ul>
+					</div>
+				</div>
 			<% } %>
 			<!-- Back button only for admin -->
 			<% if (isAdmin) { %>

@@ -67,7 +67,10 @@
 									<%	} %>
 								<% } %>
 								</div>
-							</div>
+							</div>							
+							<div class="buttonContainer text-center mt-1">
+					   			<button type="button" class="btn btn-primary" onclick="scrollToTop();">Back to top</button>
+						   	</div>
 						</div>
 					</div>
 					<div class="col-9">

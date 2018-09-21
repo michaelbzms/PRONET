@@ -8,3 +8,9 @@ $.fn.scrollTo = function(speed) {
         scrollTop: parseInt($(this).offset().top)
     }, speed);
 };
+
+scrollToTop = function() {
+    $('html, body').animate({
+    	scrollTop : 0
+	}, 800);
+};
