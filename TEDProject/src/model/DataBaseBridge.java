@@ -1152,6 +1152,29 @@ public class DataBaseBridge {
 		return IDs;
 	}
 	
+	public List<Integer> getArticlesInvolvingProfID(int profID){
+		if (!connected) return null;
+		List<Integer> articleIDs = null;
+		String Query = "SELECT a.idArticle FROM Articles a "
+					 + "WHERE a.idAuthor = ? OR "
+					 + 	     "EXISTS (SELECT * FROM ArticleInterests ai "
+					 +               "WHERE a.idArticle = ai.idArticle AND ai.idInterestShownBy = ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			statement.setInt(2, profID);
+			ResultSet resultSet = statement.executeQuery();
+			articleIDs = new ArrayList<Integer>();
+			while (resultSet.next()) {
+				articleIDs.add(resultSet.getInt("idArticle"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return articleIDs;
+	}
+	
 	public int getNumberOfComments(int articleID, int profID) {
 		if (!connected) return -1;
 		String Query = "SELECT COUNT(*) AS 'count' FROM ArticleComments WHERE idArticle = ? AND idWrittenBy = ?;";

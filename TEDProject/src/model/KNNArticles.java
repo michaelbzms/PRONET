@@ -2,6 +2,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KNNArticles {
 	
@@ -13,7 +14,8 @@ public class KNNArticles {
 	
 	private int K;                                      // parameter K
     private int[][] connected_prof_vectors = null;      // vectors for each connected professional to logged in professionals
-	private int[] ArticleIDs = null;                    // the ArticleIDs that we show on logged in professional's HomePage (order matters)
+	private int[] connected_prof_IDs = null;            // the professional IDs for each prof of connected_prof_vector
+    private int[] ArticleIDs = null;                    // the ArticleIDs that we show on logged in professional's HomePage (order matters)
 	private int[] loggedprof_vector = null;             // the vector for the logged in professional
 	
 	public KNNArticles(int k){
@@ -48,8 +50,10 @@ public class KNNArticles {
         	this.K = connectedProfs.size();
         }
         connected_prof_vectors = new int[connectedProfs.size()][];
+        connected_prof_IDs = new int[connectedProfs.size()];
         int k = 0;
         for ( Professional connected_prof : connectedProfs ) {
+        	connected_prof_IDs[k] = connected_prof.getID();
         	connected_prof_vectors[k] = new int[ArticleIDs.length];
             for (int i = 0 ; i < ArticleIDs.length ; i++) {
             	connected_prof_vectors[k][i] = ( (db.getInterest(ArticleIDs[i], connected_prof.getID())) ? 3 : 0 ) + db.getNumberOfComments(ArticleIDs[i], connected_prof.getID());
@@ -84,20 +88,32 @@ public class KNNArticles {
     	int[][] K_neighbours = findKNearestNeighbours();
     	// use KNNs to give bonus to articles posted or shown Interest by them
     	for (int i = 0 ; i < K ; i++) {
-    		List<Integer> articleIDsForBonus = null; //db.getArticlesInvolvingProfID(K_neighbours[0][i]);   //TODO implement db function 'getArticlesInvolvingProfID(int profID)'
+    		List<Integer> articleIDsForBonus = db.getArticlesInvolvingProfID(connected_prof_IDs[K_neighbours[0][i]]);   // get articles posted by or shown interest by the i-th K-Neighbour
     		for (int articleID : articleIDsForBonus) {
-    			int bonus = articleBonuses.get(articleID);
-    			bonus += K_neighbours[1][i];         // get a bonus depending on how similar you are TODO: find a better 'formula'
-    			articleBonuses.put(articleID, bonus);
+    			Integer bonusptr = articleBonuses.get(articleID);
+    			if ( bonusptr != null ) {                // only if articleID is already there
+    				int bonus = bonusptr;
+    				bonus += K_neighbours[1][i];         // get a bonus depending on how similar you are. TODO: find a better 'formula' than this?
+    				articleBonuses.put(articleID, bonus);
+    			}
     		}
     	}
-    	//TODO (reorder ArticleIDs based on their bonuses)
+    	// reorder ArticleIDs base on their bonuses
+    	
+    	// TODO:
+
+    	// I wanted to sort HashMap articleBonuses based on their values, but apparently it is impossible because HashMaps are ordered only by keys, which makes sense as they are HashTables
+    	// So I guess the answer is store <Integer, Integer> pairs on a different data structure together (as one object) and sort comparing their second field (their bonus value)
+    	// However I have not found an easy not-reinventing-the-wheel way to do that yet
+    	// Everyone is saying something like this but i dont understand how and if it works:
+    	// List sortedAryicles = articleBonuses.entrySet().stream().sorted((o1, o2)->articleBonuses.get(o1).compareTo(articleBonuses.get(o2))).collect(Collectors.toList());
+    	
     	return 0;
     }
 
     
-    // find the indexes (in random order) and the distance of the K most similar 'connected_prof_vectors' to 'loggedprof_vector'
-    private int[][] findKNearestNeighbours() {     // O(K*N) where N = ArticleIDs.length  -> linear to N if K << N.
+    // find the indexes of connected_prof_IDs (in random order) and the distance of the K most similar 'connected_prof_vectors' to 'loggedprof_vector'
+    private int[][] findKNearestNeighbours() {     // O(K*N*M) where N = connected_prof_vectors.length and M = ArticleIDs.length
     	int[][] K_neighbours = new int[2][K];      // [0] is for the professional's indexes and [1] is for their similarity measurement
     	for (int j = 0 ; j < K ; j++ ) { 
     		K_neighbours[0][j] = -1;
@@ -105,7 +121,7 @@ public class KNNArticles {
     	}
     	for (int i = 0 ; i < connected_prof_vectors.length ; i++) {
     		// calculate i-th's connected prof's similarity to logged in prof
-    		int sim = similarity(loggedprof_vector, connected_prof_vectors[i]);
+    		int sim = similarity(loggedprof_vector, connected_prof_vectors[i]);    // O(M)
     		// find the minimum currently stored similarity between the K similarities we keep track of (if found empty spot then use that immediately)
     		int min = -1, minpos = -1;
     		for (int j = 0 ; j < K ; j++) {
@@ -126,7 +142,6 @@ public class KNNArticles {
     			K_neighbours[0][minpos] = i;
     		}
     	}
-    	// sort K_neighbours O(KlogK) -> O(1) for K << N.
     	return K_neighbours;
     }	
 	
