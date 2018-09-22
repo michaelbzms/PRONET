@@ -23,10 +23,10 @@
 	<% 	DataBaseBridge db = new DataBaseBridge();
 		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
 		if ( !db.checkIfConnected() ) { %>
-			<h2>DATABASE ERROR</h2>	
+			<h2 class="my_h2">DATABASE ERROR</h2>	
 			<p>It appears that our database is down. Please contact the site's administrators.</p>
 	<%	} else if ( prof == null ) {  %>
-			<h2>INTERNAL ERROR</h2>	
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
 			<div class="main_container">
@@ -68,21 +68,23 @@
 								<% } %>
 								</div>
 							</div>							
-							<div class="buttonContainer text-center mt-1">
+							<div class="buttonContainer mt-0">
 					   			<button type="button" class="btn btn-primary" onclick="scrollToTop();">Back to top</button>
 						   	</div>
 						</div>
 					</div>
 					<div class="col-9">
-						<div class="article_input">
+						<div id="articleInputContainer" class="article_input">
 							<form id="article_input_form" method="post" enctype="multipart/form-data">
 						   		<textarea id="article_input_editor" name="text"></textarea>
-							   	<div class="custom-file">
-								    <input id="article_file_input" class="custom-file-input" type="file" name="file_input" accept="/*" multiple>
-								    <label class="custom-file-label" for="inputGroupFile01"><i>Choose file(s) to upload</i></label>
-								</div>
-						   		<div class="buttonContainer text-right mr-1">
-						   			<input type="submit" value="Post" class="btn btn-primary">
+						   		<div class="d-flex justify-content-between mt-1">
+								   	<div class="custom-file d-inline-block">
+									    <input id="article_file_input" class="custom-file-input" type="file" name="file_input" accept="/*" multiple="">
+									    <label class="custom-file-label" for="inputGroupFile01"><i>Choose file(s) to upload</i></label>
+									</div>
+							   		<div class="d-inline-block text-right mr-1">
+							   			<input type="submit" value="Post" class="btn btn-primary pl-3 pr-3">
+								   	</div>
 							   	</div>
 						   	</form>
 						</div>
@@ -155,6 +157,7 @@
 				var articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 			</script>
    			<script src="/TEDProject/Javascript/util.js"></script>
+   			<script src="/TEDProject/Javascript/responsiveInputHeight.js"></script>
 			<script id="fileInputUpdateLabelScript" src="/TEDProject/Javascript/fileInputUpdateLabelScript.js" data-emptyText="<i>No files chosen</i>"></script>
    			<script src="/TEDProject/Javascript/submitArticle.js"></script>
 			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="false"></script>

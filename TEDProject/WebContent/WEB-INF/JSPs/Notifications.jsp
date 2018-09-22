@@ -21,7 +21,7 @@
 <% 	DataBaseBridge db = new DataBaseBridge(); 
 	Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
 	if ( prof == null ) {  %>
-		<h2>INTERNAL ERROR</h2>	
+		<h2 class="my_h2">INTERNAL ERROR</h2>	
 		<p>Could not retrieve your info from our data base. How did you login?</p>
 <% 	} else { %>
 		<div class="main_container">
@@ -29,7 +29,7 @@
 				<jsp:param name="activePage" value="Notifications"/> 
 			</jsp:include>
 			<div id="connection_requests_bar" class="connection_requests_bar">
-				<h2>Connection Requests</h2>
+				<h2 class="my_h2">Connection Requests</h2>
 				<% List<Professional> RequestedBy = db.getConnectionRequestsFor(prof.getID()); 
 				   if ( RequestedBy != null ){ 
 				   		if (! RequestedBy.isEmpty() ) {	%>
@@ -59,13 +59,13 @@
 			 			<%  } %>
 				<%	} else { %>
 			   			<p>Ooops! It appears that we cannot load your connection requests from our database.<br>
-			   			Please contact our administrators.</p>
+			   			Please contact the administrators.</p>
 				<%	} %>
 			</div>
 			<br>
 		 	<div id="notifications_bar" class="connection_requests_bar">
 		 		<button id="markAll" class="btn btn-primary float-right">Mark all as seen</button>
-	   			<h2 class="pt-1">Notifications</h2>
+	   			<h2 class="my_h2 pt-1">Notifications</h2>
    				<%	List<Notification> notifications = db.getNotificationsFor(prof.getID());
 		    		if ( notifications != null ) {
 		   				if (! notifications.isEmpty() ) {

@@ -33,10 +33,10 @@
 	    DataBaseBridge db = new DataBaseBridge();
 		Professional prof = db.getBasicProfessionalInfo(profID);
 		if ( !db.checkIfConnected() ) { %>
-			<h2>DATABASE ERROR</h2>	
+			<h2 class="my_h2">DATABASE ERROR</h2>	
 			<p>It appears that our database is down. Please contact the site's administrators.</p>
 	<%	} else if ( prof == null ) {  %>
-			<h2>INTERNAL ERROR</h2>	
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { 
 		   Professional authorProf = db.getBasicProfessionalInfo(profID);

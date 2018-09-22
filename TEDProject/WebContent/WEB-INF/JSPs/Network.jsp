@@ -20,7 +20,7 @@
 <%	DataBaseBridge db = new DataBaseBridge(); 
 	Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
 	if ( prof == null ) {  %>
-		<h2>INTERNAL ERROR</h2>	
+		<h2 class="my_h2">INTERNAL ERROR</h2>	
 		<p>Could not retrieve your info from our data base. How did you login?</p>
 <% 	} else { %>
 		<div class="main_container">
@@ -28,7 +28,7 @@
 				<jsp:param name="activePage" value="Network"/> 
 			</jsp:include>
 			<div class="search_bar">
-				<h2>Search for professionals</h2>
+				<h2 class="my_h2">Search for professionals</h2>
 				<form id="search_form">
 					<label>Find: </label>
 					<input type="text" name="searchString" id="searchString">
@@ -52,7 +52,7 @@
 			</div>
 			<br>
 			<div class="connections_bar">
-				<h2>Connections</h2>
+				<h2 class="my_h2">Connections</h2>
 				<div class="grid_container_container">
 					<ul id="connections_grid" class="grid_container">
 					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());

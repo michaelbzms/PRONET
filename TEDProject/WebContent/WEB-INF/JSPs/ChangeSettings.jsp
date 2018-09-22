@@ -17,7 +17,7 @@
 <body>
 	<div class="main_container">
 	<% if ( request.getAttribute("attr").equals("email") ) { %>
-		<h2>Change Email</h2>
+		<h2 class="my_h2">Change Email</h2>
 		<div class="form">
 			<form method="POST" action="/TEDProject/ChangeServlet?attr=email">
 				<label>Password: </label><input class="form_field" type="password" name="password" required><br>
@@ -26,17 +26,17 @@
 			</form>
 		</div>
 	<% } else if ( request.getAttribute("attr").equals("password") ) { %>
-		<h2>Change Password</h2>
+		<h2 class="my_h2">Change Password</h2>
 		<div class="form pwd_form">
 			<form method="POST" action="/TEDProject/ChangeServlet?attr=password">
-				<label class="pwd_form_field">Current Password: </label><input class="form_field" type="password" name="currentPassword" required><br>
-				<label class="pwd_form_field">New Password: </label><input class="form_field" type="password" name="newPassword" required><br>
-				<label class="pwd_form_field">Confirm New Password: </label><input class="form_field" type="password" name="reNewPassword" required><br>
+				<label class="form_field">Current Password: </label><input class="form_field" type="password" name="currentPassword" required><br>
+				<label class="form_field">New Password: </label><input class="form_field" type="password" name="newPassword" required><br>
+				<label class="form_field">Confirm New Password: </label><input class="form_field" type="password" name="reNewPassword" required><br>
 				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Submit">
 			</form>
 		</div>
 	<% } else { %>		<!-- This should never happen -->
-		<h2>UNKNOWN ERROR</h2>
+		<h2 class="my_h2">UNKNOWN ERROR</h2>
 		<p>Well, this is embarrassing... An unknown error has occurred! :(</p>
 	<% } %>
 		<br>

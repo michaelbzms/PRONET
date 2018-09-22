@@ -33,22 +33,20 @@
 	    DataBaseBridge db = new DataBaseBridge();
 		Professional prof = db.getBasicProfessionalInfo(profID);
 		if ( !db.checkIfConnected() ) { %>
-			<h2>DATABASE ERROR</h2>	
+			<h2 class="my_h2">DATABASE ERROR</h2>	
 			<p>It appears that our database is down. Please contact the site's administrators.</p>
 	<%	} else if ( prof == null ) {  %>
-			<h2>INTERNAL ERROR</h2>	
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { 
 		   Professional authorProf = db.getBasicProfessionalInfo(profID);
-		   boolean isAdmin = ( currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
-		   // Navbar only for professionals
-		   if (currentSession != null && !isAdmin) { %>
-				<jsp:include page="ProfNavBar.jsp"> 
-					<jsp:param name="activePage" value="null"/> 
-				</jsp:include>
-		 <% } 
+		   boolean isAdmin = ( currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ); %>
 		   
-		   int articleID = -1;
+		   <jsp:include page="ProfNavBar.jsp"> 
+		   		<jsp:param name="activePage" value="null"/> 
+		   </jsp:include>
+		   
+		<% int articleID = -1;
 		   if (request.getAttribute("ArticleID") != null) {
 			   articleID = Integer.parseInt(request.getAttribute("ArticleID").toString());
 		   } else { %>
@@ -127,7 +125,7 @@
 							   		}   %>
 						   		</div>
 						 <%	} %>
-					    <div class="buttonContainer text-center">
+					    <div class="buttonContainer">
 							<input type="submit" value="Save" class="btn btn-primary">
 							<a href="/TEDProject/prof/NavigationServlet?page=HomePage" class="btn btn-secondary">Cancel</a>
 						</div>

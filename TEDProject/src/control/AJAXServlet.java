@@ -47,13 +47,15 @@ public class AJAXServlet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// System.out.println("Got an AJAX POST request!!!");
 	    response.setContentType("text/plain");
 	    response.setCharacterEncoding("UTF-8");
 	    PrintWriter out = response.getWriter();
 		String action = request.getParameter("action");
 		if (action == null) {
 			out.write("Error: null action!");
+		} else if ( request.getSession(false) == null ) {
+			out.write("Your session has ended. Please refresh the page.");
+			return;
 		} else {
 			RequestDispatcher RequetsDispatcherObj;
 			String articleIDstr, authorIDstr;

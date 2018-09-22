@@ -11,7 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
 	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
@@ -23,7 +23,7 @@
 		Professional Prof = SiteFunctionality.acquireProfFromSession(db, request);
 		db.close();
 		if ( Prof == null ) {  %>
-			<h2>INTERNAL ERROR</h2>	
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { %>
 			<jsp:include page="ProfNavBar.jsp"> 
@@ -68,7 +68,7 @@
 				<p>&ensp;<input type="checkbox" name="skillsVisibility" <% if (Prof.getSkillsVisibility()) { %> checked <% } %>> Visible to non-connected professionals</p>
 			    <textarea id="skills" name="skills"><%= Prof.getSkills() != null ? Prof.getSkills() : "" %></textarea><br>
 			    <!-- Save/Cancel changes -->
-			    <div class="buttonContainer text-center">
+			    <div class="buttonContainer">
 					<input type="submit" value="Save" class="btn btn-primary">
 					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>
 				</div>

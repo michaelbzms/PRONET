@@ -18,7 +18,7 @@ body{
 	box-shadow: 0px 0px 30px 3px #6397ff;
 }
 
-.main_container h1 {
+.my_h1 {
 	color: white;
 	text-align: center;
 	font-size: 300%;
@@ -29,7 +29,7 @@ body{
    	2px 2px 0 #0e1956; 
 }
 
-.main_container h2 {
+.my_h2 {
 	border-bottom-style: solid;
 	border-bottom-color: #162787;
 	color: #162787;
@@ -37,12 +37,12 @@ body{
 	margin: 0px 0px 10px 0px;
 }
 
-.main_container h3 {
+.my_h3 {
 	text-decoration: underline;
 	margin: 0px 0px 5px 0px;
 }
 
-.main_container h6 {
+.my_h6 {
 	margin: 0px 0px 5px 0px;
 }
 
@@ -54,7 +54,7 @@ label {
 	margin-bottom: 3px;
 }
 
-.main_container .form{
+.form{
 	background-color: #3c74d8;
 	border-radius: 5px;
 	box-shadow: 2px 2px 5px 0px #0e1956;
@@ -68,18 +68,18 @@ label {
 	margin:0 auto;
 }
 
-.pwd_form {
-	width: 450px;
-}
-
-.main_container .form .form_field {
+.form_field {
 	display: inline-block;
 	width: calc(100% - 170px);		/* take up all div minus the label and the padding */
 }
 
-.pwd_form_field {
-	width: 190px;
-}​
+.pwd_form {
+	width: 500px;
+}
+
+.pwd_form .form_field {
+	width: calc(100% - 240px);
+}
 
 .buttonContainer {
 	padding: 10px; 
@@ -112,7 +112,7 @@ label {
 	border-radius: 5px;
 	background-color: white;
 	box-shadow: 0px 0px 3px 1px #6397ff;
-	max-height: 40vh;
+	max-height: 400px;
 	overflow-y: hidden;
 }
 
@@ -150,7 +150,6 @@ label {
 .changeButton {
 	padding: 10px;
 	margin: 10px;
-	text-align: center;
 }
 
 .profile_thumbnail {
@@ -189,6 +188,11 @@ label {
 	min-height: 200px;
 }
 
+#articleInputContainer .CodeMirror, 
+#articleInputContainer .CodeMirror-scroll {
+	min-height: 100px;
+}
+
 .sticky_side_container {
 	top: 15px;
 	z-index: unset;
@@ -224,11 +228,20 @@ label {
     width: calc(100% - 70px);
 }
 
-.side_description {
+.side_description {		/* Chrome only - supports multiline ellipsis */
 	overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
+}
+
+@-moz-document url-prefix() {		/* Firefox only */
+	.side_description {
+		display: inherit;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 }
 
 /* add over any bootstrap changes: */

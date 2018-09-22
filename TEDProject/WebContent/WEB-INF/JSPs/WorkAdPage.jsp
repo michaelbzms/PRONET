@@ -11,7 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
@@ -35,12 +35,16 @@
 				profID = -1;
 			}
 			boolean isAdmin = ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
-			// Navbar only for professionals
-			if (profID > -1 && !isAdmin) { %>
-				<jsp:include page="ProfNavBar.jsp"> 
-					<jsp:param name="activePage" value="null"/> 
-				</jsp:include>
-		<% } %>
+			// Navbar for professionals or visitors
+			if (!isAdmin) { 
+				if (profID > -1) { %>
+					<jsp:include page="ProfNavBar.jsp">
+						<jsp:param name="activePage" value="null"/> 
+					</jsp:include>
+			 <% } else { %>
+			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
+			 <% } 
+		 	} %>
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
 			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
 			<div class="ProfileOptions">
@@ -56,7 +60,7 @@
 			   } %>
 			</div>
 			<br>
-		  	<p id="adDescription"><%= ad.getDescription() %></p>
+		  	<p id="adDescription" class="text-center"><%= ad.getDescription() %></p>
 		  	<br>
 			<% if (isAdmin) { %>
 				<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
@@ -88,7 +92,7 @@
 							<% count++;		
 						  	} %>
 					<%  } else {  %>
-							<p>No applications have been made to this Work Ad.</p>
+							<p><i>No applications have been made to this Work Ad.</i></p>
 					<%  } %>
 				 	</div>
 				</div>
@@ -100,7 +104,7 @@
 					<div class="collapse" id="collapseEditor">		
 						<form method=POST action="/TEDProject/prof/WorkAdManagementServlet?action=apply&AdID=<%= ad.getID() %>">
 					   		<textarea id="applyNote" name="applyNote"></textarea>
-						   	<div class="buttonContainer text-right">
+						   	<div class="buttonContainer text-right mt-0">
 								<input type="submit" value="Submit" class="btn btn-primary">
 								<button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseEditor" aria-expanded="false" aria-controls="collapseEditor">Cancel</button>
 							</div>
@@ -109,7 +113,7 @@
 					<span id="focusPoint"></span>
 				<% } else { 	// current prof has already applied		%>
 					<div class="buttonContainer">	
-						<small class="text-secondary">You have already applied for this Work Ad</small><br>
+						<small class="text-secondary"><i>You have already applied for this Work Ad</i></small><br>
 						<a href="/TEDProject/prof/WorkAdManagementServlet?action=cancel&AdID=<%= ad.getID() %>" class="btn btn-outline-danger" 
 							onclick="return confirm('Are you sure you want to cancel your application to &quot;<%= ad.getTitle() %>&quot;?')">
 							Cancel Application</a>

@@ -10,7 +10,7 @@
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
@@ -35,23 +35,27 @@
 			}
 			boolean isSelf = (sessionProfID == profID); 
 			boolean isAdmin = ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
-			// Navbar only for professionals
-			if (currentSession != null && !isAdmin) { %>
-				<jsp:include page="ProfNavBar.jsp"> 
-					<jsp:param name="activePage" value="PersonalInformation"/> 
-				</jsp:include>
-		<% } %>
+			// Navbar for professionals or visitors
+			if (!isAdmin) { 
+				if (sessionProfID > -1) { %>
+					<jsp:include page="ProfNavBar.jsp">
+						<jsp:param name="activePage" value="PersonalInformation"/> 
+					</jsp:include>
+			 <% } else { %>
+			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
+			 <% } 
+		 	} %>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<p class="text-center font-weight-bold">
 				<img class="img-thumbnail profile_thumbnail m-2" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
-				<% if ( Prof.getEmploymentStatus() != null ) { %>
+				<% if ( Prof.getEmploymentStatus() != null && !Prof.getEmploymentStatus().isEmpty() ) { %>
 					<%= Prof.getEmploymentStatus() %><br> 
 				<% } %>
-				<% if ( Prof.getEmploymentInstitution() != null ) { %>
+				<% if ( Prof.getEmploymentInstitution() != null && !Prof.getEmploymentInstitution().isEmpty() ) { %>
 					<%= Prof.getEmploymentInstitution() %><br> 
 				<% } %>
 			</p>
-			<% if ( Prof.getDescription() != null ) { %>
+			<% if ( Prof.getDescription() != null && !Prof.getDescription().isEmpty()) { %>
 				<p class="text-center"><%= Prof.getDescription() %><br></p>
 			<% } %>
 			<div class="ProfileOptions">
@@ -63,14 +67,14 @@
 							<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary mb-2 ml-1">Message</a>
 							<br>
 						<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
-								<small class="text-info">Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></small><br>
+								<small class="text-info"><i>Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></i></small><br>
 								<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
 						<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
-								<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></small><br>
+								<small class="text-info"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></i></small><br>
 								<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
 								<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
 						<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
-								<small class="text-info">Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></small><br>
+								<small class="text-info"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></i></small><br>
 								<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
 						<%  } else {		// Any other not connected prof %>		
 								<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
@@ -103,7 +107,7 @@
 					<p id="skills"><%= Prof.getSkills() %></p>
 					<br>
 			<% } %>
-			<% if ( isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID) && !isSelf) ) { 	// TODO: show this to self as well? I suggest no %>
+			<% if ( isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID) && !isSelf) ) { %>
 				<div class="connections_bar">
 					<h2 class="my_h2">Connections</h2>
 					<div class="grid_container_container">

@@ -39,10 +39,10 @@
 		</nav>
 		<div class="justify-content-between">
 			<% if (!exportPage) { %>
-				<h2>Registered Professionals 
+				<h2 class="my_h2">Registered Professionals 
 				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right pb-1">Export Professionals' data to XML</a></h2>
 			<% } else {	%>
-				<h2>Export Registered Professionals to XML</h2>
+				<h2 class="my_h2">Export Registered Professionals to XML</h2>
 			<% } %> 
 		</div>
 		<div>

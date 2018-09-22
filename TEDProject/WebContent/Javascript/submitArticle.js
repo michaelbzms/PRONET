@@ -8,6 +8,7 @@ $("#article_input_form").on("submit", function(e){
 	//for (var pair of formData.entries()) {
 	//    console.log(pair[0]+ ', ' + pair[1]); 
 	//}
+	articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 	
 	// send them via AJAX to AJAXServlet		   			
 	$.ajax({
@@ -19,7 +20,6 @@ $("#article_input_form").on("submit", function(e){
 			var articleID = parseInt(response);
 			if ( !isNaN(articleID) ){        // if response is a number then it is the ID of the article we just posted successfully
 				// reset editor
-				articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 				articleEditor.value("");
 				$(".custom-file-label").html("<i>Choose file(s) to upload</i>");
 				// get article just posted with ajax and prepend it to our wall

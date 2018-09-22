@@ -10,7 +10,7 @@
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style2.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/workads.css"/>
 	<!-- JS -->
@@ -47,7 +47,7 @@
 						  	</a>
 					<%	} %>
 				<%  } else {  %>
-						<p>There are no Work Ads from Professionals you're connected with.</p>
+						<p><i>There are no Work Ads from Professionals you're connected with.</i></p>
 				<%  } %>
 			 	</div>
 			</div>
@@ -67,7 +67,7 @@
 						  	</a>
 					<%	} %>
 				<%  } else {  %>
-						<p>No Professionals have applied to this Work Ad yet.</p>
+						<p><i>There are no Work Ads from Professionals you're not connected with.</i></p>
 				<%  } %>
 			 	</div>
 			</div>
@@ -89,7 +89,7 @@
 						  	</a>
 					<%	} %>			
 				<%  } else {  %>
-						<p>You haven't posted any Work Ads.</p>
+						<p><i>You haven't posted any Work Ads.</i></p>
 				<%  } %>
 			 	</div>
 			</div>
@@ -131,11 +131,11 @@
 						<% count++;		
 					  	} %>
 				<%  } else {  %>
-						<p>You haven't applied to any Work Ads.</p>
+						<p><i>You haven't applied to any Work Ads.</i></p>
 				<%  } %>
 			 	</div>
 			</div>
-			<script src="/TEDProject/Javascript/apl_accordion.js"></script>  
+			<script src="/TEDProject/Javascript/apl_accordion.js"></script>
 	<% 	}
 		db.close(); %>
 		<jsp:include page="/footer.html"></jsp:include>
