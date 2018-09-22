@@ -1,14 +1,16 @@
 package model;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class KNNArticles {
 	
 	/* --- Description ---------------------------------------------------------------------------------------------------------------------- *
 	 * The ultimate goal of KKNArticles is to receive previously ordered by time articles ('ArticleIDs') and to re-order them in a fashion    *
-	 * which prioritizes articles posted by K professionals who are most "alike" the logged in professional, in that they have interacted    *
+	 * which prioritizes articles posted by K professionals who are most "alike" the logged in professional, in that they have interacted     *
 	 * (by showing interest and/or commenting) on the same articles as the logged in professional                                             *
 	 * -------------------------------------------------------------------------------------------------------------------------------------- */
 	
@@ -36,7 +38,7 @@ public class KNNArticles {
     public int fit(DataBaseBridge db, int[] articleIDs, int loggedprofID){
     	if (db == null || !db.checkIfConnected()) return -1;
     	if (articleIDs == null || loggedprofID < 0) return -2;
-        // Make a reference to ArticleIDs to be ordered    // TODO: make copy instead?
+        // Make a reference to ArticleIDs to be ordered
     	this.ArticleIDs = articleIDs;
         // 1. Construct connected_prof_vectors for given ArticleIDs and loggedprofID
         List<Professional> connectedProfs = db.getConnectedProfessionalsFor(loggedprofID);
@@ -75,7 +77,7 @@ public class KNNArticles {
 	 * -------------------------------------------------------------------------- */
     public int reorderArticleIDs(DataBaseBridge db){
     	if ( db == null || !db.checkIfConnected() ) return -1;
-    	if (ArticleIDs == null) {
+    	if (ArticleIDs == null || loggedprof_vector == null || connected_prof_vectors == null || connected_prof_IDs == null ) {
     		System.err.println("KNN Error: Tried to reorder ArticleIDs without first calling fit?");
     		return -2;
     	}
@@ -98,16 +100,39 @@ public class KNNArticles {
     			}
     		}
     	}
-    	// reorder ArticleIDs base on their bonuses
-    	
-    	// TODO:
+    	// reorder ArticleIDs base on their bonuses:    	
+    	// 1. Wrap articleIDs and their bonus to a wrapper class 'Item'
+    	class Item{
+    		int articleID;
+    		int bonus;
+    		public Item(int id, int score) { this.articleID = id; this.bonus = score; }
+    		public int getBonus() { return this.bonus; }
+    		public int getId() { return this.articleID; }
 
-    	// I wanted to sort HashMap articleBonuses based on their values, but apparently it is impossible because HashMaps are ordered only by keys, which makes sense as they are HashTables
-    	// So I guess the answer is store <Integer, Integer> pairs on a different data structure together (as one object) and sort comparing their second field (their bonus value)
-    	// However I have not found an easy not-reinventing-the-wheel way to do that yet
-    	// Everyone is saying something like this but i dont understand how and if it works:
-    	// List sortedAryicles = articleBonuses.entrySet().stream().sorted((o1, o2)->articleBonuses.get(o1).compareTo(articleBonuses.get(o2))).collect(Collectors.toList());
-    	
+    	};
+    	Item[] ItemsToSort = new Item[ArticleIDs.length];
+    	for (int i = 0 ; i < ArticleIDs.length ; i++ ) {
+    		ItemsToSort[i] = new Item(ArticleIDs[i], articleBonuses.get(ArticleIDs[i]));
+    	}
+    	// 2. Overload a comperator for this class
+    	class ItemComparator implements Comparator {   // decending order
+    		@Override
+    		public int compare( Object o1, Object o2 ) {
+    			Item i1 = (Item)o1;
+    			Item i2 = (Item)o2;
+    			if ( i1.getBonus() > i2.getBonus() ) return -1;
+    			else if ( i1.getBonus() < i2.getBonus() ) return 1;
+    			else return 0;
+			 }
+		}
+    	// 3. Sort the wrapped class based on 'bonus' field
+    	Arrays.sort(ItemsToSort, new ItemComparator());
+    	// 4. Overwrite ArticleIDs with ordered IDs in ItemsToSort
+    	for (int i = 0 ; i < ArticleIDs.length ; i++ ) {
+    		// DEBUG:
+    		// System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
+    		ArticleIDs[i] = ItemsToSort[i].getId();
+    	}
     	return 0;
     }
 
@@ -151,7 +176,7 @@ public class KNNArticles {
 	 * 	if the i-th characteristic is > 0 for BOTH vectors then                   *
 	 * 		add their values to the similarity measure                            *
 	 * -------------------------------------------------------------------------- */
-    private int similarity(int[] v1, int v2[]) {
+    private int similarity(int[] v1, int[] v2) {
     	if ( v1 == null || v2 == null ) return -1;
     	int similarity = 0;
     	for (int i = 0 ; i < ArticleIDs.length ; i++) {

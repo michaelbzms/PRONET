@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<title>PRONET - Home Page</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
-	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Article" %>
+	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Article, model.KNNArticles" %>
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
@@ -89,8 +89,16 @@
 						<div id="wall">
 							<!-- JSP include articles order by time uploaded + infinite scroll -->
 							<%	int InitialCount = 3;       // CONFIG number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
+								int K = 3;                  // CONFIG KNN K parameter
 								int[] articleIDs = db.getWallArticlesIDsFor(prof.getID()); 
 								if (articleIDs != null) {
+									// Use KNN to reorder ArticleIDs
+									KNNArticles KNN = new KNNArticles(K);
+									int result = KNN.fit(db, articleIDs, prof.getID());
+									if ( result == 0 ){
+										KNN.reorderArticleIDs(db);
+									} else if ( result == 1 ) { System.out.println("Did not need to run KNN"); }
+									else { System.err.println("KNN fit failed?"); }
 									for (int i = 0 ; i < InitialCount && i < articleIDs.length ; i++) {  %>
 										<jsp:include page="Article.jsp"> 
 											<jsp:param name="ArticleID" value="<%= articleIDs[i] %>" /> 
@@ -109,11 +117,7 @@
 							
 							// if scrolled to bottom and we can show more articles then do so with AJAX
 							$(window).scroll(function(){
-								// DEBUG: console.log("scrollTop + height = " + ( $("#wall").scrollTop() +  $("#wall").height()) + ", scrollHeight = " + $("#wall")[0].scrollHeight );
-								
 								if ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && ( $(window).scrollTop() + $(window).height() + padding >= document.documentElement.scrollHeight ) ){   // plus one to avoid decimal errors
-									// DEBUG: console.log("nextArticleIDindex = " + nextArticleIDindex + ", ArticleIDs[nextArticleIDindex] = " + ArticleIDs[nextArticleIDindex]);
-									
 									$.ajax({
 			    						url: "/TEDProject/AJAXServlet?action=loadArticle",
 			    						type: "post",
@@ -122,12 +126,11 @@
 			    							$("#wall").append(response);
 			    						}
 									});
-									
 									nextArticleIDindex++;    // this update MUST be done synchronoysly (and NOT on AJAX callback)
 								}
 							});
 							
-							// if we load less articles than enough to cause overflow due to small "InitialCount" value then load more as a client until overflow happens
+							// (rare) if we load less articles than enough to cause overflow due to small "InitialCount" value then load more as a client until overflow happens
 							$("#wall").ready(function(){
 								while ( nextArticleIDindex !== -1 && nextArticleIDindex < <%= articleIDs.length %> && $("body").height() <= $(window).height() ){   // while no overflow has happened to window after loading "InitialCount" articles then load more right now (immediatelly after loading the page)
 									$.ajax({
@@ -143,7 +146,6 @@
 								}
 								$(window).scrollTop(0);     // scroll back to top
 							});
-							
 						</script>
 					</div>	
 				</div>

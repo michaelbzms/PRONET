@@ -112,7 +112,7 @@ public class ChangeServlet extends HttpServlet {
 					request.setAttribute("errorType", "notMatchingPasswordsChange");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
-				} else if ( !SiteFunctionality.checkInputText(newPassword, true, 128) ) {
+				} else if ( !SiteFunctionality.checkInputText(newPassword, true, 32) ) {
 					System.out.println("Form submitted but one or more fields have illegal input characters.");
 					request.setAttribute("errorType", "illegalTextInput");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
@@ -171,7 +171,7 @@ public class ChangeServlet extends HttpServlet {
 				// Check input
 				if (  !SiteFunctionality.checkInputText(tempProf.getEmploymentStatus(), true, 255)
 				   || !SiteFunctionality.checkInputText(tempProf.getEmploymentInstitution(), true, 255)
-				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, 4096) 
+				   || !SiteFunctionality.checkInputText(tempProf.getDescription(), false, 1024) 
 				   || !SiteFunctionality.checkInputNumber(tempProf.getPhone(), 32, false) 
 				   || !SiteFunctionality.checkInputText(tempProf.getProfessionalExperience(), false, 0) 
 				   || !SiteFunctionality.checkInputText(tempProf.getEducationBackground(), false, 0) 

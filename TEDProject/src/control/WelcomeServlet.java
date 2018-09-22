@@ -80,8 +80,8 @@ public class WelcomeServlet extends HttpServlet {
 				// TEMP: for now just reload the same page
 				response.sendRedirect("/TEDProject/");
 			}
-			else if ( !SiteFunctionality.checkInputText(email, true, 0) || !SiteFunctionality.checkInputText(password, true, 128) || !SiteFunctionality.checkInputText(re_password, true, 128) 
-				   || !SiteFunctionality.checkInputText(firstName, true, 255) || !SiteFunctionality.checkInputText(lastName, true, 255) || !SiteFunctionality.checkInputNumber(phone, 32, false) ) {
+			else if ( !SiteFunctionality.checkInputText(email, true, 255) || !SiteFunctionality.checkInputText(password, true, 32) || !SiteFunctionality.checkInputText(re_password, true, 32) 
+				   || !SiteFunctionality.checkInputText(firstName, true, 45) || !SiteFunctionality.checkInputText(lastName, true, 45) || !SiteFunctionality.checkInputNumber(phone, 32, false) ) {
 				System.out.println("Form submitted but one or more fields have illegal input characters.");
 				request.setAttribute("errorType", "illegalTextInput");
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
