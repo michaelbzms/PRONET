@@ -644,6 +644,32 @@ public class DataBaseBridge {
 		return ads;
 	}
 	
+	public List<WorkAd> getWorkAdsAppliedToBy(int profID){
+		if (!connected) return null;
+		List<WorkAd> ads = null;
+		String Query = "SELECT * FROM Ads WHERE idAd IN "
+					 + "(SELECT idAd FROM Applications WHERE idApplicant = ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			ads = new ArrayList<WorkAd>();
+			while (resultSet.next()) {
+				WorkAd ad = new WorkAd();
+				ad.setID(resultSet.getInt("idAd"));
+				ad.setPublishedByID(resultSet.getInt("idPublishedBy"));
+				ad.setTitle(resultSet.getString("title"));
+				ad.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				ad.setDescription(resultSet.getString("description"));
+				ads.add(ad);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return ads;
+	}
+	
 	public WorkAd getWorkAd(int adID) {
 		if (!connected) return null;
 		WorkAd ad = null;

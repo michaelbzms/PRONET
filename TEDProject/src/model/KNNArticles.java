@@ -140,31 +140,40 @@ public class KNNArticles {
     // find the indexes of connected_prof_IDs (in random order) and the distance of the K most similar 'connected_prof_vectors' to 'loggedprof_vector'
     private int[][] findKNearestNeighbours() {     // O(K*N*M) where N = connected_prof_vectors.length and M = ArticleIDs.length
     	int[][] K_neighbours = new int[2][K];      // [0] is for the professional's indexes and [1] is for their similarity measurement
-    	for (int j = 0 ; j < K ; j++ ) { 
-    		K_neighbours[0][j] = -1;
-    		K_neighbours[1][j] = -1;
-    	}
-    	for (int i = 0 ; i < connected_prof_vectors.length ; i++) {
-    		// calculate i-th's connected prof's similarity to logged in prof
-    		int sim = similarity(loggedprof_vector, connected_prof_vectors[i]);    // O(M)
-    		// find the minimum currently stored similarity between the K similarities we keep track of (if found empty spot then use that immediately)
-    		int min = -1, minpos = -1;
-    		for (int j = 0 ; j < K ; j++) {
-    			if ( K_neighbours[1][j] == -1 ) {
-    				min = -1;      // signifying that there is still an empty spot on K_neighbours table
-    				minpos = j;
-    				break;
-    			} 
-    			else if ( min == -1 || K_neighbours[1][j] < min ) {
-    				min = K_neighbours[1][j];
-    				minpos = j;
-    			}
-    		}
-    		if ( minpos < 0 ) { System.err.println("KNN Unexpected warning: could not find minimum?!"); break; }
-    		// check if current sim is > than the minimum of the current K similarities and if it is then overwrite the minimum with this sim
-    		if ( min == -1 || sim > min) {
-    			K_neighbours[1][minpos] = sim;
-    			K_neighbours[0][minpos] = i;
+    	if ( this.K < connected_prof_vectors.length ) {  // K < N  -> O(K*N*M)
+	    	for (int j = 0 ; j < K ; j++ ) { 
+	    		K_neighbours[0][j] = -1;
+	    		K_neighbours[1][j] = -1;
+	    	}
+	    	for (int i = 0 ; i < connected_prof_vectors.length ; i++) {
+	    		// calculate i-th's connected prof's similarity to logged in prof
+	    		int sim = similarity(loggedprof_vector, connected_prof_vectors[i]);    // O(M)
+	    		// find the minimum currently stored similarity between the K similarities we keep track of (if found empty spot then use that immediately)
+	    		int min = -1, minpos = -1;
+	    		for (int j = 0 ; j < K ; j++) {
+	    			if ( K_neighbours[1][j] == -1 ) {
+	    				min = -1;      // signifying that there is still an empty spot on K_neighbours table
+	    				minpos = j;
+	    				break;
+	    			} 
+	    			else if ( min == -1 || K_neighbours[1][j] < min ) {
+	    				min = K_neighbours[1][j];
+	    				minpos = j;
+	    			}
+	    		}
+	    		if ( minpos < 0 ) { System.err.println("KNN Unexpected warning: could not find minimum?!"); break; }
+	    		// check if current sim is > than the minimum of the current K similarities and if it is then overwrite the minimum with this sim
+	    		if ( min == -1 || sim > min) {
+	    			K_neighbours[0][minpos] = i;
+	    			K_neighbours[1][minpos] = sim;
+	    		}
+	    	}
+    	} else {       // K == N -> O(N*M) (optimization)
+    		// if K == N then we must calculate and save all similarities to connected_prof_vectors
+    		for (int i = 0 ; i < connected_prof_vectors.length ; i++) {
+    			// calculate i-th's connected prof's similarity to logged in prof
+	    		K_neighbours[0][i] = i;
+	    		K_neighbours[1][i] = similarity(loggedprof_vector, connected_prof_vectors[i]);    // O(M)
     		}
     	}
     	return K_neighbours;
