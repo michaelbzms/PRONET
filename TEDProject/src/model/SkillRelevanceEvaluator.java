@@ -18,6 +18,8 @@ public class SkillRelevanceEvaluator {
 
 	private static List<String> stopwords = null; 
 	private List<String> stemmedSkills;
+	private final int TitleWeight = 3;
+	
 	
 	private static void loadStopWords() {
 		if (stopwords != null)	{		// stopwords have already been loaded
@@ -50,7 +52,7 @@ public class SkillRelevanceEvaluator {
         }
 	}
 	
-	private static List<String> getStemmedList(String textString) {		// removes stopwords and returns a list of stemmed words
+	public static List<String> getStemmedList(String textString) {		// removes stopwords and returns a list of stemmed words
 		SnowballStemmer stemmer = new englishStemmer();
 		List<String> textWords = new ArrayList<String>(Arrays.asList(textString.split("[\\s,.;?!#_~|`(){}\\*\\[\\]]+")));		// regex to isolate words
 		// convert skills to lowercase in ordered to be compared with stopwords:
@@ -94,13 +96,36 @@ public class SkillRelevanceEvaluator {
 		/* For each unique skill the score is incremented by 3 if it appears in the title and by 1 + log(x)
 		 *  where x the frequency with which the skill appears in the ad description, if it appears there */
 		for (String skill : stemmedSkills) {
-			totalScore += Collections.frequency(stemmedAdTitle, skill) * 3;
+			totalScore += Collections.frequency(stemmedAdTitle, skill) * TitleWeight;
 			skillFrequency = Collections.frequency(stemmedAdDescription, skill);
 			if (skillFrequency >= 1) {		
 				totalScore += 1 + Math.log(skillFrequency);
 			}
 		}
 		return totalScore;
+	}
+	
+	public double[] evaluateWorkAds(DataBaseBridge db, int[] workAdsIDs) {
+		if ( workAdsIDs == null ) return null;
+		double[] scores = new double[workAdsIDs.length];
+		double max = -1.0;
+		for (int i = 0 ; i < workAdsIDs.length ; i++) {
+			WorkAd ad = db.getWorkAd(workAdsIDs[i]);
+			if ( ad == null ) {
+				System.err.println("evaluateWorkAds error: null work ad for " + workAdsIDs[i]);
+				return null;
+			}
+			scores[i] = calculateScore(ad.getTitle(), ad.getDescription());
+			if ( scores[i] > max ) {
+				max = scores[i];
+			}
+		}
+		if ( max != 0.0 ) {
+			for (int i = 0 ; i < workAdsIDs.length ; i++) {
+				scores[i] /= max;
+			}
+		}
+		return scores;
 	}
 	
 }

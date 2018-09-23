@@ -454,7 +454,7 @@ public class SiteFunctionality {
 		xmlProf.setID(prof.getID());
 		xmlProf.setProfArticles(db.getProfArticles(profID));
 		xmlProf.setProfInterests(db.getInterestedArticlesIDs(profID));
-		xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
+		xmlProf.setProfWorkAds(db.getWorkAdsFromProf(profID));
 		xmlProf.setProfComments(db.getComments(profID, false));
 		xmlProf.setProfNetwork(db.getNetworkProfIDs(profID));
 		db.close();
@@ -477,7 +477,7 @@ public class SiteFunctionality {
 			xmlProf.setID(prof.getID());
 			xmlProf.setProfArticles(db.getProfArticles(profID));
 			xmlProf.setProfInterests(db.getInterestedArticlesIDs(profID));
-			xmlProf.setProfWorkAds(db.getWorkAds(profID, 0));
+			xmlProf.setProfWorkAds(db.getWorkAdsFromProf(profID));
 			xmlProf.setProfComments(db.getComments(profID, false));
 			xmlProf.setProfNetwork(db.getNetworkProfIDs(profID));
 			profList.add(xmlProf);

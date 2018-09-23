@@ -600,30 +600,54 @@ public class DataBaseBridge {
 		}
 	}
 
-	public List<WorkAd> getWorkAds(int profID, int mode) {		// mode: 0 for own ads, 1 for ads from connected profs, 2 from others
-		if (!connected || mode < 0 || mode > 2) return null;
-		List<WorkAd> ads = null;
+	public int[] getWorkAdsIDs(int profID, int mode) {      // mode: 0 -> ads from connected professionals, 1 -> ads from not connected professionals
+		if (!connected || mode < 0 || mode > 1) return null;
+		List<Integer> ads = null;
 		String Query;
 		if (mode == 0) {
-			Query = "SELECT * FROM Ads WHERE idPublishedBy = ?;";
-		} else if (mode == 1) {
-			Query = "SELECT a.idAd, a.idPublishedBy, a.title, a.postedDate FROM Ads a, ConnectedProfessionals cp "
+			Query = "SELECT a.idAd FROM Ads a, ConnectedProfessionals cp "
 				  + "WHERE a.idPublishedBy != ? AND "
 				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
-				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy));";
-		} else {
-			Query = "SELECT idAd, idPublishedBy, title, postedDate FROM Ads WHERE idPublishedBy != ? AND idAd NOT IN "
+				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy)) AND "
+				  + "a.idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?);";
+		} else if (mode == 1) {
+			Query = "SELECT idAd FROM Ads WHERE idPublishedBy != ? AND idAd NOT IN "
 				  + "(SELECT a.idAd FROM Ads a, ConnectedProfessionals cp WHERE "
 				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
-				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy)));";
-		}
+				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy))) AND "
+				  + "idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?);";
+		} else return null;
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			statement.setInt(1, profID);
-			if (mode == 1 || mode == 2) {
-				statement.setInt(2, profID);
-				statement.setInt(3, profID);
+			statement.setInt(2, profID);
+			statement.setInt(3, profID);
+			statement.setInt(4, profID);
+			ResultSet resultSet = statement.executeQuery();
+			ads = new ArrayList<Integer>();
+			while (resultSet.next()) {
+				ads.add(resultSet.getInt("idAd"));
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		int[] adIDs = new int[ads.size()];
+		int i = 0;
+		for ( int id : ads ) {
+			adIDs[i] = id;
+			i++;
+		}
+		return adIDs;
+	}
+	
+	public List<WorkAd> getWorkAdsFromProf(int profID) {
+		if (!connected) return null;
+		List<WorkAd> ads = null;
+		String Query = "SELECT * FROM Ads WHERE idPublishedBy = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
 			ResultSet resultSet = statement.executeQuery();
 			ads = new ArrayList<WorkAd>();
 			while (resultSet.next()) {
@@ -632,9 +656,7 @@ public class DataBaseBridge {
 				ad.setPublishedByID(resultSet.getInt("idPublishedBy"));
 				ad.setTitle(resultSet.getString("title"));
 				ad.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
-				if (mode == 0) {		// descriptions are never directly displayed in other cases
-					ad.setDescription(resultSet.getString("description"));
-				}
+				ad.setDescription(resultSet.getString("description"));
 				ads.add(ad);
 			}
 		} catch (SQLException e) {

@@ -155,6 +155,7 @@
 			</div>
 			<script>
 				var articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+				articleEditor.value("");
 			</script>
    			<script src="/TEDProject/Javascript/util.js"></script>
    			<script src="/TEDProject/Javascript/responsiveInputHeight.js"></script>
