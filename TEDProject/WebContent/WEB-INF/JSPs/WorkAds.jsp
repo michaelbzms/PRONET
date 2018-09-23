@@ -29,6 +29,7 @@
 			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else { 
+			int K = db.getNumberOfWorkAdsAppliedToBy(prof.getID());                // KNN's K parameter is set to number of applied work ads
 			SkillRelevanceEvaluator skill_eval = new SkillRelevanceEvaluator(prof.getSkills()); %>
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="WorkAds"/> 
@@ -42,7 +43,7 @@
 							// Evaluate a score (in [0,1]) based on prof's skills and the ad's description
 							double[] skillbonus = skill_eval.evaluateWorkAds(db, workAdsIDs);
 							// Use KNN to calculate a score of similarity (in [0,1]) based on previously applied ads and then to reorder the ads based on their combined scores 
-							KNNWorkAds KNN = new KNNWorkAds(workAdsIDs.length);     // K = N
+							KNNWorkAds KNN = new KNNWorkAds(K);
 							int res = KNN.fit_applied_ads(db, prof.getID());        // if this is unnecessary due to |applied ads| <= 1 then reordering will only be affected by 'skillbonus'
 							KNN.fit_candidates_ads(db, workAdsIDs, (res == 0));     // only construct candidate vectors if we are going to use them <=> res == 0.
 							KNN.reorderAdIDs(db, skillbonus);                       // this reorders workAdsIDs (given on fit_candidates_ads) accordingly
@@ -72,7 +73,7 @@
 							// Evaluate a score (in [0,1]) based on prof's skills and the ad's description
 							double[] skillbonus = skill_eval.evaluateWorkAds(db, workAdsIDs);
 							// Use KNN to calculate a score of similarity (in [0,1]) based on previously applied ads and then to reorder the ads based on their combined scores 
-							KNNWorkAds KNN = new KNNWorkAds(workAdsIDs.length);     // K = N
+							KNNWorkAds KNN = new KNNWorkAds(K);
 							int res = KNN.fit_applied_ads(db, prof.getID());        // if this is unnecessary due to |applied ads| <= 1 then reordering will only be affected by 'skillbonus'
 							KNN.fit_candidates_ads(db, workAdsIDs, (res == 0));     // only construct candidate vectors if we are going to use them <=> res == 0.
 							KNN.reorderAdIDs(db, skillbonus);                       // this reorders workAdsIDs (given on fit_candidates_ads) accordingly				

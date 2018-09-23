@@ -666,6 +666,23 @@ public class DataBaseBridge {
 		return ads;
 	}
 	
+	public int getNumberOfWorkAdsAppliedToBy(int profID) {
+		if (!connected) return -1;
+		String Query = "SELECT COUNT(*) AS 'count' FROM Ads WHERE idAd IN "
+					 + "(SELECT idAd FROM Applications WHERE idApplicant = ?);";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt("count");
+			} else return -3;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
+		}
+	}
+	
 	public List<WorkAd> getWorkAdsAppliedToBy(int profID){
 		if (!connected) return null;
 		List<WorkAd> ads = null;

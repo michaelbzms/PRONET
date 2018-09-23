@@ -130,7 +130,7 @@ public class KNNArticles {
     	// 4. Overwrite ArticleIDs with ordered IDs in ItemsToSort
     	for (int i = 0 ; i < ArticleIDs.length ; i++ ) {
     		// DEBUG:
-    		// System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
+    		System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
     		ArticleIDs[i] = ItemsToSort[i].getId();
     	}
     	return 0;

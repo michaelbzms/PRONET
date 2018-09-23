@@ -46,10 +46,10 @@ public class KNNWorkAds {
     	if ( appliedAds == null ) {              // should not happen
         	System.err.println("KNN fit error: null applied work ads");
         	return -3;
-        } else if ( appliedAds.size() <= 1 ) {   // could happen
+        } else if ( appliedAds.size() <= 0 ) {   // could happen
         	return 1;          // no need to use KNN then
     	} else if ( K > appliedAds.size() ) {    // could happen
-        	System.out.println("Warning: KNN's K is > than the number of connected profs. Resetting to match their count.");   // DEBUG
+        	System.out.println("Warning: KNN's K is " + K + " which is larger than the number of applied ads, which is " + appliedAds.size() + ". Resetting to match their count.");   // DEBUG
         	this.K = appliedAds.size();
         }
     	applied_ads_vectors = new Map[appliedAds.size()];
@@ -76,7 +76,7 @@ public class KNNWorkAds {
     	this.candidate_ads_IDs = candidateAdsIDs;
     	// Construct candidate_ads_vectors but only if need be
     	if ( constructVectors ) {
-	    	candidate_ads_vectors = new Map[candidateAdsIDs.length];
+	    	candidate_ads_vectors = new Map[candidate_ads_IDs.length];
 	    	for (int i = 0 ; i < candidateAdsIDs.length ; i++) {
 	    		// get Work Ad for 'candidateAdsIDs[i]'
 	    		WorkAd ad = db.getWorkAd(candidateAdsIDs[i]);
@@ -87,7 +87,7 @@ public class KNNWorkAds {
 	    		}
 	    		// Create document-term matrix 'candidate_ads_vectors[i]' here for 'candidateAdsIDs[i]'
 	    		List<String> stemmedWords = SkillRelevanceEvaluator.getStemmedList(String.join(" ", Collections.nCopies(TitleWeight, ad.getTitle())) + " " + ad.getDescription());
-	        	applied_ads_vectors[i] = DocumentTermFrequency.tf(stemmedWords);
+	    		candidate_ads_vectors[i] = DocumentTermFrequency.tf(stemmedWords);
 	    	}
     	}
     	return 0;
@@ -117,7 +117,7 @@ public class KNNWorkAds {
 	    		// find KNN similarities
 	    		double[] K_Neighbours = findKNearestNeighbours(candidate_ads_vectors[i]);
 	    		// use KNNs to calculate the bonus of 'candidate_ads_IDs[i]' based on some bonus scheme on K_Neighbours' similarities
-	    		double bonus = 0;
+	    		double bonus = 0.0;
 	    		for (int j = 0 ; j < K ; j++) {
 	    			bonus += K_Neighbours[j];    // TODO: Use a different scheme?
 	    		}
@@ -126,8 +126,14 @@ public class KNNWorkAds {
 	    			max = bonus;
 	    		}
 	    	}
-	    	for (int i = 0 ; i < candidate_ads_IDs.length ; i++) { 
-	    		CombinedAdBonuses[i] = firstBonus[i] + (adBonuses[i] / max);      // where firstBonus in [0,1] and (adBonuses[i] / max) in [0,1]
+	    	if ( max == 0 ) {
+	    		for (int i = 0 ; i < candidate_ads_IDs.length ; i++) { 
+		    		CombinedAdBonuses[i] = firstBonus[i];                             // where firstBonus in [0,1]
+		    	}
+	    	} else {
+		    	for (int i = 0 ; i < candidate_ads_IDs.length ; i++) { 
+		    		CombinedAdBonuses[i] = firstBonus[i] + (adBonuses[i] / max);      // where firstBonus in [0,1] and (adBonuses[i] / max) in [0,1]
+		    	}
 	    	}
     	}
     	// reorder candidate_ads_IDs base on their bonuses:    	
@@ -234,8 +240,9 @@ public class KNNWorkAds {
             dotProduct += vectorA[i] * vectorB[i];
             normA += Math.pow(vectorA[i], 2);
             normB += Math.pow(vectorB[i], 2);
-        }   
-        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+        }
+        double squares = Math.sqrt(normA) * Math.sqrt(normB);
+        return ((squares == 0.0) ? dotProduct : (dotProduct / squares));
     }
     
 }
