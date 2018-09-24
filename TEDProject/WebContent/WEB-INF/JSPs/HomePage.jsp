@@ -40,14 +40,14 @@
 								<h4 class="neon_header"><%= prof.getFirstName() %>  <%= prof.getLastName() %></h4>
 								<img class="img-thumbnail side_tab_thumbnail" src="<%= prof.getProfilePicURI() %>" alt="Profile picture"><br>
 								<p>
-									<% if ( prof.getEmploymentStatus() != null ) { %>
+									<% if ( prof.getEmploymentStatus() != null && !prof.getEmploymentStatus().equals("") ) { %>
 										<%= prof.getEmploymentStatus() %><br> 
 									<% } %>
-									<% if ( prof.getEmploymentInstitution() != null ) { %>
+									<% if ( prof.getEmploymentInstitution() != null && !prof.getEmploymentInstitution().equals("") ) { %>
 										<%= prof.getEmploymentInstitution() %><br> 
 									<% } %>
 								</p>
-								<% if ( prof.getDescription() != null ) { %>
+								<% if ( prof.getDescription() != null && !prof.getDescription().equals("") ) { %>
 									<p class="side_description"><%= prof.getDescription() %></p> 
 								<% } %>
 								<a href="/TEDProject/ProfileLink">View details</a>
@@ -64,8 +64,11 @@
 													<%= p.getFirstName() %><br><%= p.getLastName() %>		
 												</div>
 											</a>
-									<%	} %>
-								<% } %>
+									<%	} 
+										if ( Connections.isEmpty() ) { %>
+											<p><i>You have not got any connections.</i></p>
+									<%  } 
+									} %>
 								</div>
 							</div>							
 							<div class="buttonContainer mt-0">

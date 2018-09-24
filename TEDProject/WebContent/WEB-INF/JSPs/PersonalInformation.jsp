@@ -44,70 +44,79 @@
 			 <% } else { %>
 			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
 			 <% } 
-		 	} %>
-			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
-			<p class="text-center font-weight-bold">
-				<img class="img-thumbnail profile_thumbnail m-2" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
-				<% if ( Prof.getEmploymentStatus() != null && !Prof.getEmploymentStatus().isEmpty() ) { %>
-					<%= Prof.getEmploymentStatus() %><br> 
-				<% } %>
-				<% if ( Prof.getEmploymentInstitution() != null && !Prof.getEmploymentInstitution().isEmpty() ) { %>
-					<%= Prof.getEmploymentInstitution() %><br> 
-				<% } %>
-			</p>
-			<% if ( Prof.getDescription() != null && !Prof.getDescription().isEmpty()) { %>
-				<p class="text-center"><%= Prof.getDescription() %><br></p>
-			<% } %>
-			<div class="ProfileOptions">
-			<% if (currentSession != null) { 
-				   if (!isAdmin) {
-					   if (isSelf) { %>
-							<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
-					<% } else { %>
-							<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary mb-2 ml-1">Message</a>
+		 	} %>	
+		  	<div class="row">
+				<div class="col-3">
+					<div class="info_tab">
+						<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
+						<p class="text-center font-weight-bold">
+							<img class="img-thumbnail profile_thumbnail m-2" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
+							<% if ( Prof.getEmploymentStatus() != null && !Prof.getEmploymentStatus().isEmpty() ) { %>
+								<%= Prof.getEmploymentStatus() %><br> 
+							<% } %>
+							<% if ( Prof.getEmploymentInstitution() != null && !Prof.getEmploymentInstitution().isEmpty() ) { %>
+								<%= Prof.getEmploymentInstitution() %><br> 
+							<% } %>
+						</p>
+					</div>
+					<div class="ProfileOptions">
+					<% if (currentSession != null) { 
+						   if (!isAdmin) {
+							   if (isSelf) { %>
+									<a href="/TEDProject/prof/NavigationServlet?page=EditProfile" class="btn btn-primary">Edit Profile</a>
+							<% } else { %>
+									<a href="/TEDProject/prof/NavigationServlet?page=Messages&chatWith=<%= profID %>" class="btn btn-outline-primary mb-2 ml-1">Message</a>
+									<br>
+								<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
+										<small class="text-info"><i>Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></i></small><br>
+										<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
+								<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
+										<small class="text-info"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></i></small><br>
+										<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success m-2">Accept Connection Request</a>
+										<br>
+										<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger m-2">Reject Connection Request</a>
+								<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
+										<small class="text-info"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></i></small><br>
+										<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
+								<%  } else {		// Any other not connected prof %>		
+										<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
+								<%  } %>
+							<% }
+						   } else {	%>
+						   	   <a href="/TEDProject/admin/AdminServlet?exportXML=downloadProf&ProfID=<%= profID %>" class="btn btn-primary">Export to XML</a>
+						<% }
+					   } %>
+					</div>
+				</div>
+				<div class="col-9">
+					<div class="info_tab">
+						<% if ( Prof.getDescription() != null && !Prof.getDescription().isEmpty()) { %>
+								<h2 class="my_h2">Description</h2>
+								<p><%= Prof.getDescription() %></p>
+								<br>
+						<% } %>
+						<% if ( Prof.getProfessionalExperience() != null && !Prof.getProfessionalExperience().isEmpty() && (Prof.getProfExpVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID))) ) { %>
+							<h2 class="my_h2">Professional Experience</h2>
+							<p id="profExp"><%= Prof.getProfessionalExperience() %></p>
 							<br>
-						<%  if (db.areProfessionalsConnected(profID, sessionProfID)) { 	// An already connected prof %>
-								<small class="text-info"><i>Connected since <%= MyUtil.printDate(db.getConnectionDate(profID, sessionProfID), false) %></i></small><br>
-								<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
-						<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
-								<small class="text-info"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></i></small><br>
-								<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success">Accept Connection Request</a>
-								<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger">Reject Connection Request</a>
-						<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
-								<small class="text-info"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></i></small><br>
-								<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
-						<%  } else {		// Any other not connected prof %>		
-								<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
-						<%  } %>
-					<% }
-				   } else {	%>
-				   	   <a href="/TEDProject/admin/AdminServlet?exportXML=downloadProf&ProfID=<%= profID %>" class="btn btn-primary">Export to XML</a>
-				<% }
-			   } %>
+						<% } %>
+						<% if ( Prof.getEducationBackground() != null && !Prof.getEducationBackground().isEmpty() && (Prof.getEdBackgroundVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
+							<h2 class="my_h2">Education Background</h2>
+							<p id="edBackground"><%= Prof.getEducationBackground() %></p>
+							<br>
+						<% } %>
+						<% if ( Prof.getSkills() != null && !Prof.getSkills().isEmpty() && (Prof.getSkillsVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
+							<h2 class="my_h2">Skills</h2>
+							<p id="skills"><%= Prof.getSkills() %></p>
+							<br>
+						<% } %>
+						<h2 class="my_h2">Contact Information</h2>
+						<label>Email: </label><%= Prof.getEmail() %><br>
+					  	<label>Phone Number: </label><%= Prof.getPhone() %><br>
+					</div>
+				</div>
 			</div>
-		  	<h2 class="my_h2">Contact Info:</h2> 
-		  	<label>Email: </label><%= Prof.getEmail() %><br>
-		  	<label>Phone Number: </label><%= Prof.getPhone() %><br> 
-			<br>
-			<% if ( Prof.getProfessionalExperience() != null && !Prof.getProfessionalExperience().isEmpty() && 
-						(Prof.getProfExpVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID))) ) { %>
-					<h2 class="my_h2">Professional Experience</h2>
-					<p id="profExp"><%= Prof.getProfessionalExperience() %></p>
-					<br>
-			<% } %>
-			<% if ( Prof.getEducationBackground() != null && !Prof.getEducationBackground().isEmpty() && 
-						(Prof.getEdBackgroundVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
-					<h2 class="my_h2">Education Background</h2>
-					<p id="edBackground"><%= Prof.getEducationBackground() %></p>
-					<br>
-			<% } %>
-			<% if ( Prof.getSkills() != null && !Prof.getSkills().isEmpty() && 
-						(Prof.getSkillsVisibility() || isSelf || isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID)))) { %>
-					<h2 class="my_h2">Skills</h2>
-					<p id="skills"><%= Prof.getSkills() %></p>
-					<br>
-			<% } %>
-			<% if ( isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID) && !isSelf) ) { %>
+		<% 	if ( isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID) && !isSelf) ) { %>
 				<div class="connections_bar">
 					<h2 class="my_h2">Connections</h2>
 					<div class="grid_container_container">
@@ -136,10 +145,12 @@
 						</ul>
 					</div>
 				</div>
-			<% } %>
+		<%	 } %>
 			<!-- Back button only for admin -->
 			<% if (isAdmin) { %>
-					<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
+					<div class="text-center">
+						<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
+					</div>
 			<% } %>
 		<% } 
 		   db.close(); %>

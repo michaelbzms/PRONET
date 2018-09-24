@@ -95,7 +95,7 @@
 						<div class="conversation_input">
 							<form id="send_text">
 								<textarea id="msg_input" name="msg"></textarea>
-								<input id="msg_submit" type="submit" value="send">
+								<input id="msg_submit" type="submit" value="send" class="btn btn-outline-primary">
 							</form>
 						</div>
 					</div>

@@ -609,13 +609,15 @@ public class DataBaseBridge {
 				  + "WHERE a.idPublishedBy != ? AND "
 				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
 				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy)) AND "
-				  + "a.idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?);";
+				  + "a.idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?) "
+				  + "ORDER BY postedDate DESC;";
 		} else if (mode == 1) {
 			Query = "SELECT idAd FROM Ads WHERE idPublishedBy != ? AND idAd NOT IN "
 				  + "(SELECT a.idAd FROM Ads a, ConnectedProfessionals cp WHERE "
 				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
 				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy))) AND "
-				  + "idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?);";
+				  + "idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?) "
+				  + "ORDER BY postedDate DESC;";
 		} else return null;
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);

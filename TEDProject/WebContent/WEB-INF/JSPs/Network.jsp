@@ -54,10 +54,12 @@
 			<div class="connections_bar">
 				<h2 class="my_h2">Connections</h2>
 				<div class="grid_container_container">
-					<ul id="connections_grid" class="grid_container">
-					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID());
-					   if ( Connections != null ) { 
-						   for (Professional p : Connections) { %>
+					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID()); 
+					if ( Connections != null && Connections.isEmpty() ) { %>
+						<p><i>You have not got any connections.</i></p>
+					<% 	} else if ( Connections != null ) { %>
+						<ul id="connections_grid" class="grid_container">
+					<%		for (Professional p : Connections) { %>
 								<li class="grid_item">
 									<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
 									<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
@@ -75,8 +77,8 @@
 									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
 								</li>
 						<%	} %>
-					<% } %>
-					</ul>
+						</ul>
+					 <% } %>
 				</div>
 			</div>
 			<jsp:include page="/footer.html"></jsp:include>

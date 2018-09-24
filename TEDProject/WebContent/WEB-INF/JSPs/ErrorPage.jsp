@@ -12,7 +12,10 @@
 <body>
 	<div class="main_container text-center">
 	<% if ( request != null &&  request.getAttribute("errorType") != null ) { %>
-		<% if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
+		<% if ( request.getAttribute("errorType").equals("registerSuccess") ) { // not really an error %>
+			<h2 class="my_h2">REIGISTRATION SUCCESSFUL</h2>
+			<p>Please log in from the welcome page using your credentials.</p>
+		<% } else if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
 			<h2 class="my_h2">LOGIN FAILED</h2>
 			<p>Oops! It appears that the email you entered does not belong to a registered account.</p>
 		<% } else if ( request.getAttribute("errorType").equals("invalidLoginPassword") ) { %>	
@@ -78,7 +81,7 @@
 			if ( currentSession == null || (request.getAttribute("errorType") != null && 
 					 (  request.getAttribute("errorType").equals("invalidLoginEmail")    || request.getAttribute("errorType").equals("invalidLoginPassword")
 					 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
-					 || request.getAttribute("errorType").equals("nullSession")
+					 || request.getAttribute("errorType").equals("nullSession") || request.getAttribute("errorType").equals("registerSuccess")
 			   ) ) ) { %>
 				<a class="d-inline-block" href="/TEDProject">Go back to welcome page</a>
 		<% } else  if ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>

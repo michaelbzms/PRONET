@@ -101,9 +101,15 @@ public class KNNWorkAds {
 	 * -------------------------------------------------------------------------- */
     public int reorderAdIDs(DataBaseBridge db, double[] firstBonus){
     	if ( db == null || !db.checkIfConnected() ) return -1;
-    	if (firstBonus == null || candidate_ads_IDs == null || firstBonus.length != candidate_ads_IDs.length ) {
+    	if ( candidate_ads_IDs == null || (firstBonus != null && firstBonus.length != candidate_ads_IDs.length) ) {
     		System.err.println("KNN Error: invalid firstBonus parameter or fit ad candidates has not been called");
     		return -2;
+    	}
+    	if (firstBonus == null) {    // no score from skills
+    		firstBonus = new double[candidate_ads_IDs.length];
+	    	for (int i = 0 ; i < candidate_ads_IDs.length ; i++) {       	// for each candidate work ad
+	    		firstBonus[i] = 0.0;
+	    	}
     	}
     	double[] CombinedAdBonuses = new double[candidate_ads_IDs.length];
     	if ( applied_ads_IDs == null || applied_ads_vectors == null || candidate_ads_vectors == null ) {   // applied ads have not been fitted so only order by firstBonus score

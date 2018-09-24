@@ -39,8 +39,8 @@
 		</nav>
 		<div class="justify-content-between">
 			<% if (!exportPage) { %>
-				<h2 class="my_h2">Registered Professionals 
-				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right pb-1">Export Professionals' data to XML</a></h2>
+				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right pb-1">Export Professionals' data to XML</a>
+				<h2 class="my_h2 pt-1">Registered Professionals</h2>
 			<% } else {	%>
 				<h2 class="my_h2">Export Registered Professionals to XML</h2>
 			<% } %> 
@@ -58,11 +58,20 @@
 							<% if (exportPage) { %>
 								<input type="checkbox" name="profID" value="<%= professionals[i].getID() %>">
 							<% } %>	
-							<!-- profile picture here as an <img> element  -->
+							<br>
+							<img class="img-thumbnail" src="<%= professionals[i].getProfilePicURI() %>" alt="Profile picture"><br>
 							<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
-							<% if ( professionals[i].getEmploymentStatus() != null ) { %>
-								<%= professionals[i].getEmploymentStatus() %> <br>
+							<% if (professionals[i].getEmploymentStatus() != null) { %> 
+								<%= professionals[i].getEmploymentStatus() %> 
+							<% } else { %> 
+								N/A  
 							<% } %>
+							<br> 
+							<% if (professionals[i].getEmploymentInstitution() != null) { %> <%= professionals[i].getEmploymentInstitution() %> 
+							<% } else { %> 
+								N/A
+							<% } %>
+							<br>
 							<!-- The following is a servlet URI which will forward the HTTP GET request to ProfPublicProfilePage.jsp with the correct ID  -->
 							<a href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">View Details</a>
 						</li>

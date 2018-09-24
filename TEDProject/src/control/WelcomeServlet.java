@@ -123,10 +123,10 @@ public class WelcomeServlet extends HttpServlet {
 							}		
 						}
 						System.out.println("Register successful for email: " + email);
-						// "login the user" or toast-notify him and prompt him to log in from the welcome page
-						// ...	
-						// TEMP: for now just reload the same page
-						response.sendRedirect("/TEDProject/");  // this clears all input form data though (!) -  use AJAX instead?
+						// forward user to a page informing him of registration's success
+						request.setAttribute("errorType", "registerSuccess");
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+						RequetsDispatcherObj.forward(request, response);
 						break;
 					case -1:     // password mismatch
 						request.setAttribute("errorType", "notMatchingPasswords");
