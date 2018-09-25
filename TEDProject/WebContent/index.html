@@ -32,12 +32,12 @@
 		<br>
 		<div class="form">
 			<h2 class="my_h2">SIGN UP</h2>
-			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data">
+			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data" onsubmit="return checkIdenticalPasswords()">
 				<label class="pl-1">First name: </label><input class="form_field" type="text" name="firstname" required><br>
 				<label class="pl-1">Last name: </label><input class="form_field" type="text" name="lastname" required><br>
 				<label class="pl-1">Email: </label><input class="form_field" type="email" name="email" required><br>
-				<label class="pl-1">Password: </label><input class="form_field" type="password" name="password" required><br>
-				<label class="pl-1">Repeat Password: </label><input class="form_field" type="password" name="repeat_password" required><br>
+				<label class="pl-1">Password: </label><input id="password" class="form_field" type="password" name="password" required><br>
+				<label class="pl-1">Repeat Password: </label><input id="rePassword" class="form_field" type="password" name="repeat_password" required><br>
 				<label class="pl-1">Phone Number: </label><input class="form_field" type="text" name="phone_number" required><br>
 				<label class="pl-1">Profile Picture:</label>
 				<div class="custom-file index_upload" style="width: calc(100% - 160px - 10px);">
@@ -62,9 +62,18 @@
 		var tmzOffset = new Date().getTimezoneOffset(); 
 		document.getElementById("tmzOffset").value = tmzOffset;
 	</script>
+	<script>
+		function checkIdenticalPasswords() {
+			if ($("#password").val() != $("#rePassword").val()) {
+		        alert("Passwords do not match.");
+		        return false;
+		    }
+			return true;
+		}
+	</script>
 	<script> 
 	    $(function(){
-	      $("#includedFooter").load("footer.html"); 
+	    	$("#includedFooter").load("footer.html"); 
 	    });
     </script>
 </body>

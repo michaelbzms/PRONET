@@ -78,17 +78,17 @@
 		<br>
 	<%  if ( request != null ) {
 			HttpSession currentSession = request.getSession(false);
-			if ( currentSession == null || (request.getAttribute("errorType") != null && 
-					 (  request.getAttribute("errorType").equals("invalidLoginEmail")    || request.getAttribute("errorType").equals("invalidLoginPassword")
-					 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
-					 || request.getAttribute("errorType").equals("nullSession") || request.getAttribute("errorType").equals("registerSuccess") 
-					 || request.getAttribute("errorType").equals("dbError")
-			   ) ) ) { %>
-				<a class="d-inline-block" href="/TEDProject">Go back to welcome page</a>
-		<% } else  if ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
-				<a class="d-inline-block" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
-		<% } else { %>
-				<a class="d-inline-block" href="<%= currentSession.getAttribute("lastVisited") %>">Back</a>		<!-- TODO: Fix or go back to Homepage -->
+			if (currentSession == null) { %>
+				<a class="d-inline-block btn btn-secondary" href="/TEDProject">Go back to welcome page</a>
+		<% } else  if (currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
+				<a class="d-inline-block btn btn-secondary" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
+		<% } else { 
+				String lastVisited = (String) currentSession.getAttribute("lastVisited"); 
+				if (lastVisited != null) { %>
+					<a class="d-inline-block btn btn-secondary" href="<%= lastVisited %>">Go back</a>
+			 <% } else { %>
+					<a class="d-inline-block btn btn-secondary" href="/TEDProject">Go back to Welcome page</a>
+			 <% } %>
 		<% } 
 	   } %>	
 		<jsp:include page="/footer.html"></jsp:include>
