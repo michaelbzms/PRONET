@@ -28,32 +28,21 @@
 	<%	} else if ( prof == null ) {  %>
 			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
-	<% 	} else { 
-			int K = db.getNumberOfWorkAdsAppliedToBy(prof.getID());                // KNN's K parameter is set to number of applied work ads
-			SkillRelevanceEvaluator skill_eval = null;
-			if ( prof.getSkills() != null ) {
-				skill_eval = new SkillRelevanceEvaluator(prof.getSkills()); 
-			} %>
+	<% 	} else {
+			int MAXIMUM_ADS_SHOWN = 1000;        // CONFIG: This limits ads fetched from database to the 'MAXIMUM_ADS_SHOWN' most recent ads
+			SkillRelevanceEvaluator skill_eval = null; %>
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="WorkAds"/> 
 			</jsp:include>
 			<div>
 				<h2 class="my_h2">Work Ads from Connected Professionals</h2>
 				<div class="list-group ad_list_container">
-				<% 	{   // load workAdIds for connected professionals, order them based on prof's skills and previously applied ad with KNN and then present them
-						int[] workAdsIDs = db.getWorkAdsIDs(prof.getID(), 0);
+				<% 	{   // Load workAdIds for connected professionals, order them based on prof's skills and previously applied ads with KNN and then present them
+						int[] workAdsIDs = db.getWorkAdsIDs(prof.getID(), 0, MAXIMUM_ADS_SHOWN);
 						if (workAdsIDs != null && workAdsIDs.length > 0) {
-							// Evaluate a score (in [0,1]) based on prof's skills and the ad's description
-							double[] skillbonus = null;
-							if ( skill_eval != null ) {      // but only if professional has skills != null
-								skillbonus = skill_eval.evaluateWorkAds(db, workAdsIDs);
-							}
-							// Use KNN to calculate a score of similarity (in [0,1]) based on previously applied ads and then to reorder the ads based on their combined scores 
-							KNNWorkAds KNN = new KNNWorkAds(K);
-							int res = KNN.fit_applied_ads(db, prof.getID());        // if this is unnecessary due to |applied ads| <= 1 then reordering will only be affected by 'skillbonus'
-							KNN.fit_candidates_ads(db, workAdsIDs, (res == 0));     // only construct candidate vectors if we are going to use them <=> res == 0.
-							if ( res == 0 || skillbonus != null ){                  // no need to reorder ads if 0 bonus can apply to them
-								KNN.reorderAdIDs(db, skillbonus);                   // this reorders workAdsIDs (given on fit_candidates_ads) accordingly
+							if (workAdsIDs.length > 1) {
+								if ( skill_eval == null && prof.getSkills() != null  ) { skill_eval = new SkillRelevanceEvaluator(prof.getSkills()); }
+								SiteFunctionality.reorderWorkAds(db, prof.getID(), workAdsIDs, skill_eval);			
 							}
 						   	for (int i = 0 ; i < workAdsIDs.length ; i++) {
 						   		WorkAd ad = db.getWorkAd(workAdsIDs[i]); %>
@@ -75,21 +64,13 @@
 			<div>
 				<h2 class="my_h2">Work Ads from Others</h2>
 				<div class="list-group ad_list_container">
-				<% 	{	// load workAdIds for NOT connected professionals, order them based on prof's skills and previously applied ad with KNN and then present them
-						int[] workAdsIDs = db.getWorkAdsIDs(prof.getID(), 1);
+				<% 	{	// Load workAdIds for NOT connected professionals, order them based on prof's skills and previously applied ads with KNN and then present them
+						int[] workAdsIDs = db.getWorkAdsIDs(prof.getID(), 1, MAXIMUM_ADS_SHOWN);
 						if (workAdsIDs != null && workAdsIDs.length > 0) {
-							// Evaluate a score (in [0,1]) based on prof's skills and the ad's description
-							double[] skillbonus = null;
-							if ( skill_eval != null ) {      // but only if professional has skills != null
-								skillbonus = skill_eval.evaluateWorkAds(db, workAdsIDs);
+							if (workAdsIDs.length > 1) {
+								if ( skill_eval == null && prof.getSkills() != null ) { skill_eval = new SkillRelevanceEvaluator(prof.getSkills()); }
+								SiteFunctionality.reorderWorkAds(db, prof.getID(), workAdsIDs, skill_eval);			
 							}
-							// Use KNN to calculate a score of similarity (in [0,1]) based on previously applied ads and then to reorder the ads based on their combined scores 
-							KNNWorkAds KNN = new KNNWorkAds(K);
-							int res = KNN.fit_applied_ads(db, prof.getID());        // if this is unnecessary due to |applied ads| <= 1 then reordering will only be affected by 'skillbonus'
-							KNN.fit_candidates_ads(db, workAdsIDs, (res == 0));     // only construct candidate vectors if we are going to use them <=> res == 0.
-							if ( res == 0 || skillbonus != null ){                  // no need to reorder ads if 0 bonus can apply to them
-								KNN.reorderAdIDs(db, skillbonus);                   // this reorders workAdsIDs (given on fit_candidates_ads) accordingly
-							}			
 							for (int i = 0 ; i < workAdsIDs.length ; i++) {
 						   		WorkAd ad = db.getWorkAd(workAdsIDs[i]); %>
 								<a href="/TEDProject/WorkAdLink?AdID=<%= ad.getID() %>" class="list-group-item list-group-item-action flex-column align-items-start">

@@ -128,6 +128,8 @@ public class KNNArticles {
     	// 3. Sort the wrapped class based on 'bonus' field
     	Arrays.sort(ItemsToSort, new ItemComparator());
     	// 4. Overwrite ArticleIDs with ordered IDs in ItemsToSort
+    	// DEBUG:
+    	System.out.println("___Articles bonuses_______________ ");
     	for (int i = 0 ; i < ArticleIDs.length ; i++ ) {
     		// DEBUG:
     		System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());

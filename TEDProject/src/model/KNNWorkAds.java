@@ -47,7 +47,7 @@ public class KNNWorkAds {
         	System.err.println("KNN fit error: null applied work ads");
         	return -3;
         } else if ( appliedAds.size() <= 0 ) {   // could happen
-        	return 1;          // no need to use KNN then
+        	return 1;
     	} else if ( K > appliedAds.size() ) {    // could happen
         	System.out.println("Warning: KNN's K is " + K + " which is larger than the number of applied ads, which is " + appliedAds.size() + ". Resetting to match their count.");   // DEBUG
         	this.K = appliedAds.size();
@@ -170,6 +170,8 @@ public class KNNWorkAds {
     	// 3. Sort the wrapped class based on 'bonus' field
     	Arrays.sort(ItemsToSort, new ItemComparator());
     	// 4. Overwrite candidate_ads_IDs with ordered IDs in ItemsToSort
+    	// DEBUG:
+		System.out.println("___WorkAd bonuses_______________ ");
     	for (int i = 0 ; i < candidate_ads_IDs.length ; i++ ) {
     		// DEBUG:
     		System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());

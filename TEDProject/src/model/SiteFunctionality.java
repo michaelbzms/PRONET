@@ -96,7 +96,7 @@ public class SiteFunctionality {
 	}
 		
 	public static Professional acquireProfFromSession(DataBaseBridge db, HttpServletRequest request) {
-		if ( !db.checkIfConnected() ) {
+		if ( db == null || !db.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
 			return null;
 		}
@@ -486,6 +486,36 @@ public class SiteFunctionality {
 		XMLProfessionalList xmlProfList = new XMLProfessionalList();
 		xmlProfList.setProfList(profList);
 		return xmlProfList;
+	}
+	
+	public static boolean reorderWorkAds(DataBaseBridge db, int profID, int[] workAdsIDs, SkillRelevanceEvaluator skill_eval) {
+		if ( db == null || !db.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return false;
+		}
+		// Evaluate a score (in [0,1]) based on prof's skills and the ad's description
+		double[] skillbonus = null;
+		if ( skill_eval != null ) {                               // but only if professional has skills != null
+			skillbonus = skill_eval.evaluateWorkAds(db, workAdsIDs);
+		}
+		// Use KNN to calculate a score of similarity (in [0,1]) based on previously applied ads 
+		int K = db.getNumberOfWorkAdsAppliedToBy(profID);         // KNN's K parameter is set to number of applied work ads
+		KNNWorkAds KNN = new KNNWorkAds(K);
+		// Prepare KNN's "train-set" of applied ads by 'profID'
+		int res = KNN.fit_applied_ads(db, profID);                // if this is unnecessary due to |applied ads| <= 1 then reordering will only be affected by 'skillbonus'
+		if (res < 0) {                                            // something went bad (should not happen)  
+			return false; 
+		}
+		// Prepare KNN's "test-set" of candidate (to-be-reordered) ads
+		int res2 = KNN.fit_candidates_ads(db, workAdsIDs, (res == 0));    // (!) only construct candidate vectors if we are going to use them <=> res == 0.
+		if (res2 < 0) {                                           // something went bad (should not happen) 
+			return false; 
+		}
+		// Reorder the ads based on their combined scores (skillbonus + similarity-to-applied-ads-bonus)
+		if ( res == 0 || skillbonus != null ){                    // (!) no need to reorder ads if only 0 bonus can apply to them
+			KNN.reorderAdIDs(db, skillbonus);                     // this reorders workAdsIDs (given on fit_candidates_ads) accordingly
+		}
+		return true;
 	}
 	
 }

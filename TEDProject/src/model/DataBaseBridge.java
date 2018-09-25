@@ -600,8 +600,9 @@ public class DataBaseBridge {
 		}
 	}
 
-	public int[] getWorkAdsIDs(int profID, int mode) {      // mode: 0 -> ads from connected professionals, 1 -> ads from not connected professionals
+	public int[] getWorkAdsIDs(int profID, int mode, int maxrows) {      // mode: 0 -> ads from connected professionals, 1 -> ads from not connected professionals
 		if (!connected || mode < 0 || mode > 1) return null;
+		if ( maxrows <= 0 ) return null;
 		List<Integer> ads = null;
 		String Query;
 		if (mode == 0) {
@@ -610,14 +611,16 @@ public class DataBaseBridge {
 				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
 				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy)) AND "
 				  + "a.idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?) "
-				  + "ORDER BY postedDate DESC;";
+				  + "ORDER BY postedDate DESC "
+				  + "LIMIT ?;";
 		} else if (mode == 1) {
 			Query = "SELECT idAd FROM Ads WHERE idPublishedBy != ? AND idAd NOT IN "
 				  + "(SELECT a.idAd FROM Ads a, ConnectedProfessionals cp WHERE "
 				  + "((cp.idProfessional1 = a.idPublishedBy AND cp.idProfessional2 = ?) OR "
 				  + "(cp.idProfessional1 = ? AND cp.idProfessional2 = a.idPublishedBy))) AND "
 				  + "idAD NOT IN (SELECT ap.idAd FROM Applications ap WHERE ap.idApplicant = ?) "
-				  + "ORDER BY postedDate DESC;";
+				  + "ORDER BY postedDate DESC "
+				  + "LIMIT ?;";
 		} else return null;
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
@@ -625,6 +628,7 @@ public class DataBaseBridge {
 			statement.setInt(2, profID);
 			statement.setInt(3, profID);
 			statement.setInt(4, profID);
+			statement.setInt(5, maxrows);
 			ResultSet resultSet = statement.executeQuery();
 			ads = new ArrayList<Integer>();
 			while (resultSet.next()) {
