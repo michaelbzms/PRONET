@@ -92,18 +92,18 @@
 						   	</form>
 						</div>
 						<div id="wall">
-							<!-- JSP include articles order by time uploaded + infinite scroll -->
-							<%	int InitialCount = 3;       // CONFIG number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
-								int K = 3;                  // CONFIG KNN K parameter
-								int[] articleIDs = db.getWallArticlesIDsFor(prof.getID()); 
+							<%	int InitialCount = 5;                 // CONFIG number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
+								int K = 5;                            // CONFIG KNN's K parameter (bigger K means slower 'reorderArticleIDs')
+								int MAXIMUM_ARTICLES_SHOWN = 1000;    // CONFIG: This limits articles fetched from database to the 'MAXIMUM_ADS_SHOWN' most recent relevant articles (assuming that the user would never scroll more than that number of articles)
+								int[] articleIDs = db.getWallArticlesIDsFor(prof.getID(), MAXIMUM_ARTICLES_SHOWN);
 								if (articleIDs != null) {
 									// Use KNN to reorder ArticleIDs
 									KNNArticles KNN = new KNNArticles(K);
 									int result = KNN.fit(db, articleIDs, prof.getID());
 									if ( result == 0 ){
-										KNN.reorderArticleIDs(db);
-									} else if ( result == 1 ) { System.out.println("Did not need to run KNN"); }
-									else { System.err.println("KNN fit failed?"); }
+										KNN.reorderArticleIDs(db, prof.getID());
+									} else if ( result < 0 ) { System.err.println("KNNArticles reordering failed"); }
+									// else if result == 1 then we did not need to run KNN (|connected profs| <= 1)
 									for (int i = 0 ; i < InitialCount && i < articleIDs.length ; i++) {  %>
 										<jsp:include page="Article.jsp"> 
 											<jsp:param name="ArticleID" value="<%= articleIDs[i] %>" /> 
@@ -111,7 +111,7 @@
 							<% 		} 
 								} %>
 						</div>
-						<script>
+						<script> <!-- Infinite scrolling script -->
 							// Client-side variables:
 							var nextArticleIDindex = <% if (articleIDs!= null && articleIDs.length > InitialCount ) { %> <%= InitialCount %> <% } else { %> -1 <% } %>;
 							var ArticleIDs = [];

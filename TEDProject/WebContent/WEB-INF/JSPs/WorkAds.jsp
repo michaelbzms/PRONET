@@ -29,7 +29,7 @@
 			<h2 class="my_h2">INTERNAL ERROR</h2>	
 			<p>Could not retrieve your info from our data base. How did you login?</p>
 	<% 	} else {
-			int MAXIMUM_ADS_SHOWN = 1000;        // CONFIG: This limits ads fetched from database to the 'MAXIMUM_ADS_SHOWN' most recent ads
+			int MAXIMUM_ADS_SHOWN = 2000;        // CONFIG: This limits ads fetched from database to the 'MAXIMUM_ADS_SHOWN' most recent ads (assuming that the user would never scroll more than that number of ads)
 			SkillRelevanceEvaluator skill_eval = null; %>
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="WorkAds"/> 
@@ -42,7 +42,8 @@
 						if (workAdsIDs != null && workAdsIDs.length > 0) {
 							if (workAdsIDs.length > 1) {
 								if ( skill_eval == null && prof.getSkills() != null  ) { skill_eval = new SkillRelevanceEvaluator(prof.getSkills()); }
-								SiteFunctionality.reorderWorkAds(db, prof.getID(), workAdsIDs, skill_eval);			
+								boolean res = SiteFunctionality.reorderWorkAds(db, prof.getID(), workAdsIDs, skill_eval);
+								if (!res) { System.err.println("Error: reordering work ads failed"); }
 							}
 						   	for (int i = 0 ; i < workAdsIDs.length ; i++) {
 						   		WorkAd ad = db.getWorkAd(workAdsIDs[i]); %>
@@ -69,7 +70,8 @@
 						if (workAdsIDs != null && workAdsIDs.length > 0) {
 							if (workAdsIDs.length > 1) {
 								if ( skill_eval == null && prof.getSkills() != null ) { skill_eval = new SkillRelevanceEvaluator(prof.getSkills()); }
-								SiteFunctionality.reorderWorkAds(db, prof.getID(), workAdsIDs, skill_eval);			
+								boolean res = SiteFunctionality.reorderWorkAds(db, prof.getID(), workAdsIDs, skill_eval);
+								if (!res) { System.err.println("Error: reordering work ads failed"); }
 							}
 							for (int i = 0 ; i < workAdsIDs.length ; i++) {
 						   		WorkAd ad = db.getWorkAd(workAdsIDs[i]); %>

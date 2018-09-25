@@ -1207,7 +1207,7 @@ public class DataBaseBridge {
 		return true;
 	}
 	
-	public int[] getWallArticlesIDsFor(int profID) {
+	public int[] getWallArticlesIDsFor(int profID, int maxrows) {
 		if (!connected) return null;
 		List<Integer> articleIDs = null;
 		String Query = "SELECT a.idArticle FROM Articles a WHERE a.idAuthor = ? OR "
@@ -1215,7 +1215,8 @@ public class DataBaseBridge {
 					 + "EXISTS (SELECT * FROM ArticleInterests ai, ConnectedProfessionals cp "
 					 +         "WHERE a.idArticle = ai.idArticle AND "
 					 +               "(( ai.idInterestShownBy = cp.idProfessional1 AND cp.idProfessional2 = ? ) OR ( ai.idInterestShownBy = cp.idProfessional2 AND cp.idProfessional1 = ? ))) "
-					 + "ORDER BY a.postedDate DESC;";
+					 + "ORDER BY a.postedDate DESC "
+					 + "LIMIT ?;";
 		try {
 			PreparedStatement statement = connection.prepareStatement(Query);
 			statement.setInt(1, profID);
@@ -1223,6 +1224,7 @@ public class DataBaseBridge {
 			statement.setInt(3, profID);
 			statement.setInt(4, profID);
 			statement.setInt(5, profID);
+			statement.setInt(6, maxrows);
 			ResultSet resultSet = statement.executeQuery();
 			articleIDs = new ArrayList<Integer>();
 			while (resultSet.next()) {

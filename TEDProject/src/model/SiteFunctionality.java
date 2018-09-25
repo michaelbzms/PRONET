@@ -97,7 +97,7 @@ public class SiteFunctionality {
 		
 	public static Professional acquireProfFromSession(DataBaseBridge db, HttpServletRequest request) {
 		if ( db == null || !db.checkIfConnected() ) {
-			System.out.println("> Database error: database down");
+			System.err.println("> Database error: database down");
 			return null;
 		}
 		int LoggedProfID = -1;
@@ -346,7 +346,7 @@ public class SiteFunctionality {
 
 	public static int addArticle(HttpServletRequest request, DataBaseBridge db, String postText, boolean containsFiles) {
 		if ( !db.checkIfConnected() ) {
-			System.out.println("> Database error: database down");
+			System.err.println("> Database error: database down");
 			return -503;
 		}
 		Professional prof = acquireProfFromSession(db, request);
@@ -490,7 +490,7 @@ public class SiteFunctionality {
 	
 	public static boolean reorderWorkAds(DataBaseBridge db, int profID, int[] workAdsIDs, SkillRelevanceEvaluator skill_eval) {
 		if ( db == null || !db.checkIfConnected() ) {
-			System.out.println("> Database error: database down");
+			System.err.println("> Database error: database down");
 			return false;
 		}
 		// Evaluate a score (in [0,1]) based on prof's skills and the ad's description

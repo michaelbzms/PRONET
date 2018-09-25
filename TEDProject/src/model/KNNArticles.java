@@ -8,17 +8,18 @@ import java.util.List;
 
 public class KNNArticles {
 	
-	/* --- Description ---------------------------------------------------------------------------------------------------------------------- *
-	 * The ultimate goal of KKNArticles is to receive previously ordered by time articles ('ArticleIDs') and to re-order them in a fashion    *
-	 * which prioritizes articles posted by K professionals who are most "alike" the logged in professional, in that they have interacted     *
-	 * (by showing interest and/or commenting) on the same articles as the logged in professional                                             *
-	 * -------------------------------------------------------------------------------------------------------------------------------------- */
+	/* --- Description ------------------------------------------------------------------------------------------------------------------------- *
+	 * The ultimate goal of KKNArticles is to receive previously ordered by time articles ('ArticleIDs') and to re-order them in a fashion       *
+	 * which prioritizes articles posted by or shown interest by the K connected professionals who are most "alike" the logged in professional,  *
+	 * in that they have interacted (by showing interest and/or commenting) on the same articles as the logged in professional                   *
+	 * ----------------------------------------------------------------------------------------------------------------------------------------- */
 	
 	private int K;                                      // parameter K
     private int[][] connected_prof_vectors = null;      // vectors for each connected professional to logged in professionals
 	private int[] connected_prof_IDs = null;            // the professional IDs for each prof of connected_prof_vector
     private int[] ArticleIDs = null;                    // the ArticleIDs that we show on logged in professional's HomePage (order matters)
 	private int[] loggedprof_vector = null;             // the vector for the logged in professional
+	
 	
 	public KNNArticles(int k){
         if ( k <= 0 ) { 
@@ -30,7 +31,7 @@ public class KNNArticles {
     }
 	
 	/* --- fit() ---------------------------------------------------------------- *
-	 * Create a vector for each CONNECTED professional to 'prof' such that:       *
+	 * Create a vector for each connected professional to 'prof' such that:       *
 	 * each i-th characteristic (for each ArticleIDs[i]) will be an integer of: 0 *
 	 * 		+3 if the connected professional was interested on the i-th article   *
 	 * 		+1 for every comment of his on the i-th article                       *
@@ -46,10 +47,9 @@ public class KNNArticles {
         	System.err.println("KNN fit error: null connected professionals");
         	return -3;
         } else if ( connectedProfs.size() <= 1 ) {   // could happen
-        	return 1;          // no need to run KNN then
-    	} else if ( K > connectedProfs.size() ) {    // could happen
-        	System.out.println("Warning: KNN's K is > than the number of connected profs. Resetting to match their count.");   // DEBUG
-        	this.K = connectedProfs.size();
+        	return 1;          // no need to run KNN then (only articles posted by loggin professional and maybe (if ==1) one connected prof will be shown on HomePage)
+    	} else if ( K > connectedProfs.size() ) {    // could happen if the logged in professional has less connected profs than our K value
+        	this.K = connectedProfs.size();          // in which case reset K to |connected professionals| 
         }
         connected_prof_vectors = new int[connectedProfs.size()][];
         connected_prof_IDs = new int[connectedProfs.size()];
@@ -74,8 +74,10 @@ public class KNNArticles {
 	 * Reorder ArticleIDs referenced in fit() such that:                          *
 	 * articles posted by or shown interest by the K nearest neighbors            *
 	 * receive an "ordering bonus" based on their amount of similarity            *
+	 * Also: if the logged in prof has NOT shown interest to them then they       *
+	 * receive an extra bonus (as then he probably hasn't seen them yet)          *
 	 * -------------------------------------------------------------------------- */
-    public int reorderArticleIDs(DataBaseBridge db){
+    public int reorderArticleIDs(DataBaseBridge db, int loggedInProfID){
     	if ( db == null || !db.checkIfConnected() ) return -1;
     	if (ArticleIDs == null || loggedprof_vector == null || connected_prof_vectors == null || connected_prof_IDs == null ) {
     		System.err.println("KNN Error: Tried to reorder ArticleIDs without first calling fit?");
@@ -86,20 +88,33 @@ public class KNNArticles {
     	for (int i = 0 ; i < ArticleIDs.length ; i++) {
     		articleBonuses.put(ArticleIDs[i], 0);
     	}
-    	// find KNNs
-    	int[][] K_neighbours = findKNearestNeighbours();
-    	// use KNNs to give bonus to articles posted or shown Interest by them
-    	for (int i = 0 ; i < K ; i++) {
-    		List<Integer> articleIDsForBonus = db.getArticlesInvolvingProfID(connected_prof_IDs[K_neighbours[0][i]]);   // get articles posted by or shown interest by the i-th K-Neighbour
+    	// find KNNs connected professionals
+    	int[][] K_neighbours = findKNearestNeighbours();   // O(K*N) if K < N and O(N) if K == N, where N = |connected profs|
+    	// use KNNs connected professionals to give bonus to articles posted or shown Interest by them
+    	for (int i = 0 ; i < K ; i++) {                    // O(K*M), where M = ArticleIDs.length (worst-case)
+    		// get articles posted by or shown interest by the i-th K-Neighbour
+    		List<Integer> articleIDsForBonus = db.getArticlesInvolvingProfID(connected_prof_IDs[K_neighbours[0][i]]);
     		for (int articleID : articleIDsForBonus) {
     			Integer bonusptr = articleBonuses.get(articleID);
-    			if ( bonusptr != null ) {                // only if articleID is already there
+    			if ( bonusptr != null ) {
     				int bonus = bonusptr;
-    				bonus += K_neighbours[1][i];         // get a bonus depending on how similar you are. TODO: find a better 'formula' than this?
+    				bonus += K_neighbours[1][i];           // get a bonus depending on how similar the respective professional is
     				articleBonuses.put(articleID, bonus);
     			}
     		}
     	}
+    	// Give an extra bonus to articles that the loggedin prof has NOT already shown Interest to (except from his own articles)
+    	int NOT_LIKED_BONUS = K;                          // the higher the K the higher the potential bonuses can be => the higher the NOT_SEEN_BONUS should be 
+    	for (int i = 0 ; i < ArticleIDs.length ; i++) {   // O(N)
+    		Integer bonusptr = articleBonuses.get(ArticleIDs[i]);
+			if ( bonusptr != null && !db.getInterest(ArticleIDs[i], loggedInProfID) && !(loggedInProfID == db.getArticleAuthorID(ArticleIDs[i])) ) {
+				int bonus = bonusptr;
+				bonus += NOT_LIKED_BONUS;
+				articleBonuses.put(ArticleIDs[i], bonus);
+			}
+    	}
+    	
+    	
     	// reorder ArticleIDs base on their bonuses:    	
     	// 1. Wrap articleIDs and their bonus to a wrapper class 'Item'
     	class Item{
