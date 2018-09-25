@@ -71,7 +71,7 @@
 				   			switch( MyUtil.getFileType(URI) ){
 				   				case 1:    // image  %>
 				   					<img id="<%= (MyUtil.getFileName(URI)).replace(".", "_") %>" class="article_img" src="<%= URI %>"  data-toggle="tooltip" data-placement="top" title="Click to enlarge!">
-				   					<div class="modal fade" id="modal_<%= (MyUtil.getFileName(URI)).replace(".", "_") %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="padding-left: 16px !important;">
+				   					<div class="modal fade" id="modal_<%= (MyUtil.getFileName(URI)).replace(".", "_") %>" tabindex="-1" role="dialog" aria-hidden="true" style="padding-left: 16px !important;">
 										<div class="modal-dialog image_modal_dialog" role="document">
 									    	<div class="modal-content image_modal_content">
 										        <div class="modal-header">

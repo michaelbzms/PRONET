@@ -35,7 +35,7 @@
 				<!-- Change basic information  -->
 				<div class="row mt-2">
 					<div class="col-4 text-center m-auto">
-						<img class="img-thumbnail profile_thumbnail" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture">
+						<img id="profile_img" class="img-thumbnail profile_thumbnail" src="<%= Prof.getProfilePicURI() %>" onclick="$('#modal_profile_img').modal('show');" alt="Profile picture" data-toggle="tooltip" data-placement="top" title="Click to enlarge!">
 					</div>
 					<div id="edit_input" class="col-8">
 						<label class="mylabel">Employment Status:</label>
@@ -52,6 +52,7 @@
 						    <input id="article_file_input" class="custom-file-input" type="file" name="profile_picture" accept="image/*">
 						    <label class="custom-file-label" for="inputGroupFile01"><i>Choose file</i></label>
 						</div>
+						<small class="image-recommendation-text text-secondary">We recommend uploading a square picture, at least 200x200 px in size</small>
 						<br>
 					</div>
 				</div>
@@ -73,6 +74,21 @@
 					<a href="/TEDProject/ProfileLink" class="btn btn-secondary">Cancel</a>
 				</div>
 			</form>
+			<div class="modal fade" id="modal_profile_img" tabindex="-1" role="dialog" aria-hidden="true" style="padding-left: 16px !important;">
+				<div class="modal-dialog image_modal_dialog" role="document">
+			    	<div class="modal-content image_modal_content">
+				        <div class="modal-header">
+					       <h5 class="modal-title"><%= Prof.getFirstName() %> <%= Prof.getLastName() %></h5>
+					       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					       		<span aria-hidden="true">&times;</span>
+					       </button>
+					    </div>
+					    <div class="modal-body text-center">
+					        <img id="modal_img" class="modal_img" src="<%= Prof.getProfilePicURI() %>">
+					    </div>
+			    	</div>
+			    </div>
+			</div>
 			<script>
 				var profExpSMDE = new SimpleMDE({ element: document.getElementById("profExp"), showIcons: ["code", "table"] });
 				var edBackgroundSMDE = new SimpleMDE({ element: document.getElementById("edBackground"), showIcons: ["code", "table"] });

@@ -50,7 +50,7 @@
 					<div class="info_tab">
 						<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 						<p class="text-center font-weight-bold">
-							<img class="img-thumbnail profile_thumbnail m-2" src="<%= Prof.getProfilePicURI() %>" alt="Profile picture"><br>
+							<img id="profile_image" class="img-thumbnail profile_thumbnail m-2" src="<%= Prof.getProfilePicURI() %>" onclick="$('#modal_profile_img').modal('show');" alt="Profile picture" data-toggle="tooltip" data-placement="top" title="Click to enlarge!"><br>
 							<% if ( Prof.getEmploymentStatus() != null && !Prof.getEmploymentStatus().isEmpty() ) { %>
 								<%= Prof.getEmploymentStatus() %><br> 
 							<% } %>
@@ -58,6 +58,21 @@
 								<%= Prof.getEmploymentInstitution() %><br> 
 							<% } %>
 						</p>
+						<div id="modal_profile_img" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="padding-left: 16px !important;">
+							<div class="modal-dialog image_modal_dialog" role="document">
+						    	<div class="modal-content image_modal_content">
+							        <div class="modal-header">
+								       <h5 class="modal-title"><%= Prof.getFirstName() %> <%= Prof.getLastName() %></h5>
+								       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								       		<span aria-hidden="true">&times;</span>
+								       </button>
+								    </div>
+								    <div class="modal-body text-center">
+								        <img class="modal_img" src="<%= Prof.getProfilePicURI() %>">
+								    </div>
+						    	</div>
+						    </div>
+						</div>
 					</div>
 					<div class="ProfileOptions">
 					<% if (currentSession != null) { 

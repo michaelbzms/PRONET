@@ -234,6 +234,11 @@ label {
     width: calc(100% - 70px);
 }
 
+.image-recommendation-text {
+	float: right;
+	margin-right: 8%;
+}
+
 .side_description {		/* Chrome only - supports multiline ellipsis */
 	overflow: hidden;
     display: -webkit-box;
