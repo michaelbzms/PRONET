@@ -161,17 +161,13 @@ public final class MyUtil {
 		if ( start == -1 || end == -1 ) return null;   // should not happen
 		return fileURI.substring(start, end);
 	}
-	
-//	public static ArrayList<String> removeDuplicatesFromList(ArrayList<String> list) {    //TODO: delete this?
-//        ArrayList<String> resultList = new ArrayList<String>();
-//        HashSet<String> set = new HashSet<String>();
-//        for (String item : list) {
-//            if (!set.contains(item)) {
-//                resultList.add(item);
-//                set.add(item);
-//            }
-//        }
-//        return resultList;
-//    }
+
+    public static String bytesToHex(byte[] bytes) {
+        StringBuffer result = new StringBuffer();
+        for (byte byt : bytes) { 
+        	result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
+        }
+        return result.toString();
+    }
 	
 }

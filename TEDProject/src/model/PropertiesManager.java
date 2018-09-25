@@ -22,6 +22,8 @@ public class PropertiesManager {
 		properties.put("sessionTimeoutMin", "20");
 		properties.put("dateFormat", "dd/MM/yyyy");
 		properties.put("timezoneOffset", "-180");
+		properties.put("passwordHashingEnable", "true");
+		properties.put("passwordHashSalt", "defaultSalt");
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream in = classLoader.getResourceAsStream("config.properties");

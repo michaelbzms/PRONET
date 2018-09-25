@@ -16,6 +16,10 @@ public class SiteFunctionality {
 			System.out.println("> Database error: database down");
 			return -503;
 		}
+		// if passwordHashing is enabled, we want to compare with the hash of the password instead of the actual one
+		if (PropertiesManager.getProperty("passwordHashingEnable").equals("true")) {
+			password = PasswordManager.getHashSHA256(password);
+		}
 		// First try to login as an administrator
 		Administrator admin = dbg.recoverAdministratorRecord(email);
 		if ( admin != null && !admin.getPassword().equals(password)) {    // email exists as administrator but password mismatch!
@@ -53,7 +57,11 @@ public class SiteFunctionality {
 				dbg.close();                               // close connection to the database
 				return -2;   // code for email taken
 			} 
-			else {           // registration successful					
+			else {           // registration successful
+				// if passwordHashing is enabled, we want to save the hash of the password instead of the actual one
+				if (PropertiesManager.getProperty("passwordHashingEnable").equals("true")) {
+					password = PasswordManager.getHashSHA256(password);
+				}
 				// insert a corresponding Professional record in the database
 				boolean success = dbg.registerNewProfessional(email, password, firstName, lastName, phone, profilePicFilePath);	
 				if (!success) { dbg.close(); return -3; }
@@ -127,6 +135,9 @@ public class SiteFunctionality {
 			System.out.println("> Database error: database down");
 			return -503;
 		}
+		if (PropertiesManager.getProperty("passwordHashingEnable").equals("true")) {
+			currentPassword = PasswordManager.getHashSHA256(currentPassword);
+		}
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password
 			dbg.close();                               
@@ -151,6 +162,10 @@ public class SiteFunctionality {
 		if ( !dbg.checkIfConnected() ) {
 			System.out.println("> Database error: database down");
 			return -503;
+		}
+		if (PropertiesManager.getProperty("passwordHashingEnable").equals("true")) {
+			currentPassword = PasswordManager.getHashSHA256(currentPassword);
+			newPassword = PasswordManager.getHashSHA256(newPassword);
 		}
 		String profPassword = dbg.getProfessionalPassword(profID);
 		if ( !currentPassword.equals(profPassword) ) {			// invalid current password

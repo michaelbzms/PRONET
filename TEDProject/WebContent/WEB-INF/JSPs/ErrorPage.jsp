@@ -81,7 +81,8 @@
 			if ( currentSession == null || (request.getAttribute("errorType") != null && 
 					 (  request.getAttribute("errorType").equals("invalidLoginEmail")    || request.getAttribute("errorType").equals("invalidLoginPassword")
 					 || request.getAttribute("errorType").equals("notMatchingPasswords") || request.getAttribute("errorType").equals("emailTaken")
-					 || request.getAttribute("errorType").equals("nullSession") || request.getAttribute("errorType").equals("registerSuccess")
+					 || request.getAttribute("errorType").equals("nullSession") || request.getAttribute("errorType").equals("registerSuccess") 
+					 || request.getAttribute("errorType").equals("dbError")
 			   ) ) ) { %>
 				<a class="d-inline-block" href="/TEDProject">Go back to welcome page</a>
 		<% } else  if ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
