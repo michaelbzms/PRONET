@@ -1047,6 +1047,28 @@ public class DataBaseBridge {
 		}
 	}
 	
+	public Article getArticleAndDate(int articleID) {
+		if (!connected) return null;
+		Article article = null;
+		String Query = "SELECT * FROM Articles WHERE idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {            // move cursor to first record, if false is returned then we got an empty set
+				return null;
+			} else {
+				article = new Article();
+				article.setID(resultSet.getInt("idArticle"));
+				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return article;
+	}
+	
 	public Article getArticle(int articleID) {
 		if (!connected) return null;
 		Article article = null;
@@ -1079,6 +1101,29 @@ public class DataBaseBridge {
 			return null;
 		}
 		return article;
+	}
+	
+	public List<Article> getProfArticlesAndDates(int profID) {
+		if (!connected) return null;
+		List<Article> articles = null;
+		String Query = "SELECT idArticle, postedDate FROM Articles WHERE idAuthor = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			articles = new ArrayList<Article>();
+			Article article = null;
+			while (resultSet.next()) {
+				article = new Article();
+				article.setID(resultSet.getInt("idArticle"));
+				article.setPostedDate(resultSet.getTimestamp("postedDate", cal).toLocalDateTime());
+				articles.add(article);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return articles;
 	}
 	
 	public List<Article> getProfArticles(int profID) {

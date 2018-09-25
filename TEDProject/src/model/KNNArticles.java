@@ -46,8 +46,8 @@ public class KNNArticles {
         if ( connectedProfs == null ) {              // should not happen
         	System.err.println("KNN fit error: null connected professionals");
         	return -3;
-        } else if ( connectedProfs.size() <= 1 ) {   // could happen
-        	return 1;          // no need to run KNN then (only articles posted by loggin professional and maybe (if ==1) one connected prof will be shown on HomePage)
+        } else if ( connectedProfs.size() <= 0 ) {   // could happen
+        	return 1;          // no need to run KNN then (only articles posted by loggin professional will be shown on HomePage)
     	} else if ( K > connectedProfs.size() ) {    // could happen if the logged in professional has less connected profs than our K value
         	this.K = connectedProfs.size();          // in which case reset K to |connected professionals| 
         }
@@ -104,17 +104,52 @@ public class KNNArticles {
     		}
     	}
     	// Give an extra bonus to articles that the loggedin prof has NOT already shown Interest to (except from his own articles)
+    	// plus an extra bonus if they are really recent
     	int NOT_LIKED_BONUS = K;                          // the higher the K the higher the potential bonuses can be => the higher the NOT_SEEN_BONUS should be 
     	for (int i = 0 ; i < ArticleIDs.length ; i++) {   // O(N)
     		Integer bonusptr = articleBonuses.get(ArticleIDs[i]);
-			if ( bonusptr != null && !db.getInterest(ArticleIDs[i], loggedInProfID) && !(loggedInProfID == db.getArticleAuthorID(ArticleIDs[i])) ) {
+			if ( bonusptr != null ) {
 				int bonus = bonusptr;
-				bonus += NOT_LIKED_BONUS;
+				// not "liked" yet bonus
+				if ( !db.getInterest(ArticleIDs[i], loggedInProfID) && !(loggedInProfID == db.getArticleAuthorID(ArticleIDs[i])) ) {
+					bonus += NOT_LIKED_BONUS;
+				}
+				// time posted bonus
+				Article article = db.getArticleAndDate(ArticleIDs[i]);
+				if ( article != null ) {
+					long hoursSincePosted = MyUtil.getHoursAgo(article.getPostedDate());
+					if ( hoursSincePosted < 1 ) {
+						bonus += 3*K;
+					} else if ( hoursSincePosted < 12 ) {
+						bonus += 2*K;
+					} else if ( hoursSincePosted < 24 ) {
+						bonus += K;
+					}
+				}
 				articleBonuses.put(ArticleIDs[i], bonus);
 			}
     	}
-    	
-    	
+    	// Give an extra bonus to articles recently posted by the loggedin prof based on how recently they were posted
+    	List<Article> loggedInProfArticles = db.getProfArticlesAndDates(loggedInProfID);
+    	if ( loggedInProfArticles != null && loggedInProfArticles.size() > 0) {
+	    	for ( Article article : loggedInProfArticles ) {
+	    		Integer bonusptr = articleBonuses.get(article.getID());
+				if ( bonusptr != null ) {
+					int bonus = bonusptr;
+					long hoursSincePosted = MyUtil.getHoursAgo(article.getPostedDate());
+					if ( hoursSincePosted < 1 ) {
+						bonus += 5*K;
+					} else if ( hoursSincePosted < 12 ) {
+						bonus += 3*K;
+					} else if ( hoursSincePosted < 24 ) {
+						bonus += 2*K;
+					} else if ( hoursSincePosted < 48 ) {
+						bonus += K;
+					} else continue;  // skip this article thus giving it no bonus
+					articleBonuses.put(article.getID(), bonus);
+				}
+	    	}
+    	}
     	// reorder ArticleIDs base on their bonuses:    	
     	// 1. Wrap articleIDs and their bonus to a wrapper class 'Item'
     	class Item{

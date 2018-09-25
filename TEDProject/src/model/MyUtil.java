@@ -48,6 +48,10 @@ public final class MyUtil {
 		return utcDateTime.plusHours(timezoneOffset/60);
 	}
 	
+	public static long getHoursAgo(LocalDateTime date) {
+		return ChronoUnit.HOURS.between(date, LocalDateTime.now(ZoneOffset.UTC));
+	}
+	
 	public static String getTimeAgo(LocalDateTime date) {
 		if (date == null) { 
 			return "null ago";
@@ -100,7 +104,6 @@ public final class MyUtil {
         return true;
 	}
 	
-	// file URI Parsing
 	public static int getFileType(final String fileURI) {       // parse URI String to find out its type	
 		int i = fileURI.lastIndexOf('?') , start = -1, end = -1;
 		if (i > 0) {
@@ -159,7 +162,7 @@ public final class MyUtil {
 		return fileURI.substring(start, end);
 	}
 	
-//	public static ArrayList<String> removeDuplicatesFromList(ArrayList<String> list) {
+//	public static ArrayList<String> removeDuplicatesFromList(ArrayList<String> list) {    //TODO: delete this?
 //        ArrayList<String> resultList = new ArrayList<String>();
 //        HashSet<String> set = new HashSet<String>();
 //        for (String item : list) {
