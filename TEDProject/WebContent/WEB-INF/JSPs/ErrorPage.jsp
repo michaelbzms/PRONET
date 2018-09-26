@@ -82,15 +82,15 @@
 	<%  if ( request != null ) {
 			HttpSession currentSession = request.getSession(false);
 			if (currentSession == null) { %>
-				<a class="d-inline-block btn btn-secondary" href="/TEDProject">Go back to welcome page</a>
+				<a class="btn btn-secondary" href="/TEDProject">Go back to welcome page</a>
 		<% } else  if (currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
-				<a class="d-inline-block btn btn-secondary" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
+				<a class="btn btn-secondary" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
 		<% } else { 
 				String lastVisited = (String) currentSession.getAttribute("lastVisited");
 				if (lastVisited != null && !request.getAttribute("errorType").equals("nullSession") && !request.getAttribute("errorType").equals("successfulAccountDeletion")) { %>
-					<a class="d-inline-block btn btn-secondary" href="<%= lastVisited %>">Go back</a>
+					<a class="btn btn-secondary" href="<%= lastVisited %>">Go back</a>
 			 <% } else { %>
-					<a class="d-inline-block btn btn-secondary" href="/TEDProject">Go back to Welcome page</a>
+					<a class="btn btn-secondary" href="/TEDProject">Go back to Welcome page</a>
 			 <% } %>
 		<% } 
 	   } %>	

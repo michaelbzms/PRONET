@@ -157,9 +157,8 @@ public class DataBaseBridge {
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM Professionals;");
-			if (resultSet.next()) {  // if not empty set is returned (should not happen with SELECT count(*) )
+			if (resultSet.next()) {
 				int count = resultSet.getInt(1);
-				System.out.println("Number of Professionals registered is: " + count);
 				resultSet = statement.executeQuery("SELECT * FROM Professionals;");
 				P = new Professional[count];
 				int i = 0;
