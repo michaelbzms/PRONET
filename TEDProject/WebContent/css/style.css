@@ -161,6 +161,7 @@ label {
 .profile_thumbnail {
 	height: 200px;
 	width: 200px;
+	cursor: pointer;
 }
 
 .side_tab_thumbnail {

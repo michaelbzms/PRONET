@@ -84,7 +84,7 @@
 				<a class="d-inline-block btn btn-secondary" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
 		<% } else { 
 				String lastVisited = (String) currentSession.getAttribute("lastVisited"); 
-				if (lastVisited != null) { %>
+				if (lastVisited != null && !request.getAttribute("errorType").equals("nullSession")) { %>
 					<a class="d-inline-block btn btn-secondary" href="<%= lastVisited %>">Go back</a>
 			 <% } else { %>
 					<a class="d-inline-block btn btn-secondary" href="/TEDProject">Go back to Welcome page</a>
