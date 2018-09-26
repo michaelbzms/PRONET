@@ -180,6 +180,22 @@ public class DataBaseBridge {
 		return P;
 	}
 	
+	public int getNumberOfRegisteredProfessionals() {
+		if (!connected) return -1;
+		String Query = "SELECT COUNT(*) AS 'count' FROM Professionals;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt("count");
+			} else return -3;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
+		}
+	}
+
+
 	public Professional getProfessional(int ID) {
 		if (!connected) return null;
 		Professional prof = null;
@@ -1525,6 +1541,24 @@ public class DataBaseBridge {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	public int getNumberOfInterestedProfessionals(int articleID) {
+		if (!connected) return -1;
+		String Query = "SELECT COUNT(p.idProfessional) AS 'count' "
+				     + "FROM Professionals p, ArticleInterests ai "
+				     + "WHERE ai.idInterestShownBy = p.idProfessional AND ai.idArticle = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, articleID);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt("count");
+			} else return -3;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -2;
 		}
 	}
 	

@@ -57,7 +57,6 @@
 					</div>
 				</div>
 				<br>
-				
 				<!-- Markdown editor for text fields -->
 				<h2 class="my_h2">Professional Experience</h2>
 				<p>&ensp;<input type="checkbox" name="profExpVisibility" <% if (Prof.getProfExpVisibility()) { %> checked <% } %>> Visible to non-connected professionals</p>
