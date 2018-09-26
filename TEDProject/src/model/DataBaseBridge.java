@@ -137,6 +137,20 @@ public class DataBaseBridge {
 		return record;
 	}
 	
+	public boolean deleteProfessionalRecord(int profID) {
+		if (!connected) return false;
+		String deleteString = "DELETE FROM Professionals WHERE idProfessional = ?;";   // cascade will take care of the rest
+		try {
+			PreparedStatement statement = connection.prepareStatement(deleteString);
+			statement.setInt(1, profID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public Professional[] getAllProfessionals(){
 		if (!connected) return null;
 		Professional[] P = null;
@@ -194,7 +208,6 @@ public class DataBaseBridge {
 			return -2;
 		}
 	}
-
 
 	public Professional getProfessional(int ID) {
 		if (!connected) return null;
@@ -1117,6 +1130,25 @@ public class DataBaseBridge {
 			return null;
 		}
 		return article;
+	}
+	
+	public List<Integer> getProfArticleIds(int profID) {
+		if (!connected) return null;
+		List<Integer> articlesIDs = null;
+		String Query = "SELECT idArticle FROM Articles WHERE idAuthor = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, profID);
+			ResultSet resultSet = statement.executeQuery();
+			articlesIDs = new ArrayList<Integer>();
+			while (resultSet.next()) {
+				articlesIDs.add(resultSet.getInt("idArticle"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return articlesIDs;
 	}
 	
 	public List<Article> getProfArticlesAndDates(int profID) {

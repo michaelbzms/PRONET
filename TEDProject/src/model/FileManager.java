@@ -69,6 +69,23 @@ public class FileManager {
 		return true;
 	}
 	
+	public static boolean deleteProfilePicture(Professional prof, String saveLocation) {
+		if ( prof.getProfilePicURI() != null && !prof.getProfilePicURI().equals(projectURL + "/images/defaultProfilePic.png") && (new File(saveLocation + "/profile/" + prof.getProfile_pic_name())).exists() ) {
+			Path filepath = FileSystems.getDefault().getPath(saveLocation + "/profile", prof.getProfile_pic_name());
+			try {
+			    Files.delete(filepath);
+			    System.out.println("File " + prof.getProfile_pic_name() + " deleted from disk!");
+			} catch (NoSuchFileException x) {
+			    System.err.format("Tried to delete %s but no such file or directory%n", filepath);
+			    return false;
+			} catch (IOException x) {    // File permission problems are caught here.
+			    System.err.println("Do not have permission to delete previous profile picture!");
+			    return false;
+			}
+		}
+		return true;
+	}
+	
 	public static boolean saveArticleFiles(Collection<Part> fileParts, String saveLocation, DataBaseBridge db, int articleID) {
 		for (Part filePart : fileParts) {
 			String userUploadFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();    // MSIE fix

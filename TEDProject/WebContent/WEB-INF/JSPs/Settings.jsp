@@ -21,10 +21,22 @@
 			<jsp:param name="activePage" value="Settings"/> 
 		</jsp:include>
 		<div class="buttonContainer changeButton">
-			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change Email</a>
+			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change email</a>
 		</div>
 		<div class="buttonContainer changeButton">
-			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=password" class="btn btn-primary btn-lg">Change Password</a>
+			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=password" class="btn btn-primary btn-lg">Change password</a>
+		</div>
+		<div class="buttonContainer changeButton">
+			<button id="deleteAccount" class="btn btn-danger btn-lg">Delete my account</button>
+			<script>
+				$("#deleteAccount").on("click", function(){
+					var result = confirm("Are you sure you want to delete your account?");
+					if (result) {
+						// redirect to that link as if he had clicked on this link
+						window.location.href = "/TEDProject/prof/ChangeServlet?attr=deleteAccount";
+					}
+				});	
+			</script>
 		</div>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>

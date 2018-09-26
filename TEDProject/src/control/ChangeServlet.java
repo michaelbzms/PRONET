@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.RequestDispatcher;
@@ -25,7 +26,7 @@ import model.PropertiesManager;
 import model.SiteFunctionality;
 
 
-@WebServlet("/ChangeServlet")
+@WebServlet("/prof/ChangeServlet")
 @MultipartConfig(fileSizeThreshold = 1024*1024, maxFileSize = 25*1024*1024)
 public class ChangeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -216,6 +217,33 @@ public class ChangeServlet extends HttpServlet {
 							break;
 					}
 				}
+				break;
+			case "deleteAccount":
+				int profID = (int) request.getSession(false).getAttribute("ProfID");
+				DataBaseBridge db = new DataBaseBridge();
+				Professional prof = db.getBasicProfessionalInfo(profID);
+				if (prof != null) {
+					// Delete user's profile picture if he has one saved
+					FileManager.deleteProfilePicture(prof, UploadSaveDirectory);
+					// Delete all user's articles along with their files
+					List<Integer> myArticles = db.getProfArticleIds(profID);
+					if ( myArticles != null ) {
+						for ( int id : myArticles ) {
+							db.deleteArticle(id);
+						}
+					}
+					// Delete professional's record
+					db.deleteProfessionalRecord(profID);
+					// The 'cascade' option will take care of the rest necessary deletes from DataBase
+					request.setAttribute("errorType", "successfulAccountDeletion");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				} else {
+					request.setAttribute("errorType", "dbError");
+					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+					RequetsDispatcherObj.forward(request, response);
+				}
+				db.close();
 				break;
 			default:
 				request.setAttribute("errorType", "invalidPageRequest");

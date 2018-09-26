@@ -31,7 +31,7 @@
 			</jsp:include>
 			<h1 class="my_h1"><%= Prof.getFirstName() %>  <%= Prof.getLastName() %></h1>
 			<br>
-			<form method=POST action="/TEDProject/ChangeServlet?attr=profile" enctype="multipart/form-data">
+			<form method=POST action="/TEDProject/prof/ChangeServlet?attr=profile" enctype="multipart/form-data">
 				<!-- Change basic information  -->
 				<div class="row mt-2">
 					<div class="col-4 text-center m-auto">

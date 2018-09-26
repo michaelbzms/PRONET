@@ -12,9 +12,12 @@
 <body>
 	<div class="main_container text-center">
 	<% if ( request != null &&  request.getAttribute("errorType") != null ) { %>
-		<% if ( request.getAttribute("errorType").equals("registerSuccess") ) { // not really an error %>
+		<% if ( request.getAttribute("errorType").equals("registerSuccess") ) {  // not really an error %>
 			<h2 class="my_h2">REIGISTRATION SUCCESSFUL</h2>
 			<p>Please log in from the welcome page using your credentials.</p>
+		<% } else if ( request.getAttribute("errorType").equals("successfulAccountDeletion") ) {  // not really an error either %>
+			<h2 class="my_h2">ACCOUNT DELETED SUCCESSFULLY</h2>
+			<p>You have successfully deleted your account. We are sorry to see you go.</p>
 		<% } else if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
 			<h2 class="my_h2">LOGIN FAILED</h2>
 			<p>Oops! It appears that the email you entered does not belong to a registered account.</p>
@@ -83,8 +86,8 @@
 		<% } else  if (currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) ){ %>
 				<a class="d-inline-block btn btn-secondary" href="/TEDProject/admin/AdminServlet">Go back to admin page</a>	
 		<% } else { 
-				String lastVisited = (String) currentSession.getAttribute("lastVisited"); 
-				if (lastVisited != null && !request.getAttribute("errorType").equals("nullSession")) { %>
+				String lastVisited = (String) currentSession.getAttribute("lastVisited");
+				if (lastVisited != null && !request.getAttribute("errorType").equals("nullSession") && !request.getAttribute("errorType").equals("successfulAccountDeletion")) { %>
 					<a class="d-inline-block btn btn-secondary" href="<%= lastVisited %>">Go back</a>
 			 <% } else { %>
 					<a class="d-inline-block btn btn-secondary" href="/TEDProject">Go back to Welcome page</a>
