@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, java.nio.file.Files, java.nio.file.Paths, model.DataBaseBridge, model.Article, model.Professional, model.Comment, model.MyUtil, model.SiteFunctionality" %>
 
-<%! private DataBaseBridge db = new DataBaseBridge();     // TODO: This is inefficient	%>
+<%! private DataBaseBridge db = new DataBaseBridge(); %>
 
 <%! @Override
 	public void finalize(){                               // kind of like a destructor

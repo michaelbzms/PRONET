@@ -35,6 +35,10 @@ public class PropertiesManager {
 		}
 		// Create required folders:
 		File dirPath = new File(getProperty("saveDir") + "/profile");
+		if (! dirPath.exists()) { 
+			dirPath.mkdirs();	
+		}
+		dirPath = new File(getProperty("saveDir") + "/article");
 		if (! dirPath.exists()) {
 			dirPath.mkdirs();
 		}

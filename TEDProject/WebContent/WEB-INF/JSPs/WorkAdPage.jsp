@@ -60,7 +60,7 @@
 			   } %>
 			</div>
 			<br>
-		  	<p id="adDescription" class="text-center"><%= ad.getDescription() %></p>
+		  	<p id="adDescription"><%= ad.getDescription() %></p>
 		  	<br>
 			<% if (isAdmin) { %>
 				<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>

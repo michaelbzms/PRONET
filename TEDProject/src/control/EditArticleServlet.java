@@ -32,7 +32,7 @@ public class EditArticleServlet extends HttpServlet {
 		int articleID = Integer.parseInt(articleIDstr);
 		int result;
 		String articleContent = request.getParameter("articleContent");
-		if ( articleContent.isEmpty() ) {		// TODO: do we want to prevent empty posts?
+		if ( articleContent.isEmpty() ) {
 			result = -2;
 		} else {
 			result = SiteFunctionality.updateArticle(articleID, profID, articleContent);

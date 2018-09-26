@@ -90,6 +90,10 @@
 								   	</div>
 							   	</div>
 						   	</form>
+							<script>
+								var articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
+								articleEditor.value("");
+							</script>
 						</div>
 						<div id="wall">
 							<%	int InitialCount = 5;                 // CONFIG number of articles loaded immediatelly when loading the page (more can be loaded through AJAX)
@@ -159,10 +163,6 @@
 				</div>
 				<jsp:include page="/footer.html"></jsp:include>
 			</div>
-			<script>
-				var articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
-				articleEditor.value("");
-			</script>
    			<script src="/TEDProject/Javascript/util.js"></script>
    			<script src="/TEDProject/Javascript/responsiveInputHeight.js"></script>
 			<script id="fileInputUpdateLabelScript" src="/TEDProject/Javascript/fileInputUpdateLabelScript.js" data-emptyText="<i>No files chosen</i>"></script>

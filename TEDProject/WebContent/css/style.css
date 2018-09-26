@@ -175,6 +175,11 @@ label {
 	width: 72px;
 }
 
+#search_form .form-control {
+    display: inline-block;
+    width: 40%;
+}
+
 .homepage_file_input {
 	display: inline-block;
 	cursor: pointer;

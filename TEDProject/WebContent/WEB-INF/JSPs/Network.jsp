@@ -30,9 +30,8 @@
 			<div class="search_bar">
 				<h2 class="my_h2">Search for professionals</h2>
 				<form id="search_form">
-					<label>Find: </label>
-					<input type="text" name="searchString" id="searchString">
-					<input type="submit" value="search">
+					<input type="text" class="form-control" id="searchString" name="searchString" placeholder="First/Last name">
+					<input type="submit" class="btn btn-light mb-1" value="Search">
 					<script>
 						$("#search_form").on("submit", function(e){
 							e.preventDefault();
@@ -47,7 +46,7 @@
 						});
 					</script>
 				</form>
-				<div id="search_results">
+				<div id="search_results" class="mt-2">
 				</div>
 			</div>
 			<br>

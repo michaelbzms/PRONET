@@ -4,7 +4,7 @@ $("#article_input_form").on("submit", function(e){
 	articleEditor.toTextArea()
 	
 	var formData = new FormData($(this)[0]);  // get form's data
-
+	// TODO: Prevent empty article
 	articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 	
 	// send them via AJAX to AJAXServlet		   			
