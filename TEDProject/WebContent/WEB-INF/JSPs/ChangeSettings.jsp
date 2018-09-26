@@ -35,6 +35,14 @@
 				<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Submit">
 			</form>
 		</div>
+	<% } else if ( request.getAttribute("attr").equals("deleteAccount") ) { %>
+		<h2 class="my_h2">Delete Account</h2>
+		<div class="form pwd_form" style="background-color: dimgray;">		<!-- TODO: opinions? -->
+			<form method="POST" action="/TEDProject/prof/ChangeServlet?attr=deleteAccount" onsubmit="return confirm('This action is irreversible. Are you sure you want to delete your account?')">
+				<label class="form_field">Type your Password: </label><input class="form_field" type="password" name="password" required><br>
+				<input class="btn btn-danger d-block mt-3 mb-2 ml-auto mr-auto" type="submit" value="Delete Account">
+			</form>
+		</div>
 	<% } else { %>		<!-- This should never happen -->
 		<h2 class="my_h2">UNKNOWN ERROR</h2>
 		<p>Well, this is embarrassing... An unknown error has occurred! :(</p>

@@ -182,6 +182,35 @@ public class SiteFunctionality {
 		}
 	}
 	
+	public static int DeleteAccount(int profID, String password) {
+		DataBaseBridge dbg = new DataBaseBridge();     // create a connection to the database
+		if ( !dbg.checkIfConnected() ) {
+			System.out.println("> Database error: database down");
+			return -503;
+		}
+		if (PropertiesManager.getProperty("passwordHashingEnable").equals("true")) {
+			password = PasswordManager.getHashSHA256(password);
+		}
+		Professional prof = dbg.getProfessional(profID);
+		if (prof == null) {
+			return -2;
+		}
+		if ( !password.equals(prof.getPassword()) ) {			// invalid current password
+			dbg.close();                               
+			return -1;   
+		}
+		// Delete user's profile picture if he has one saved
+		FileManager.deleteProfilePicture(prof, PropertiesManager.getProperty("saveDir"));
+		// Delete account:
+		if ( dbg.deleteProfessionalRecord(profID) ) {		// Successful deletion
+			dbg.close(); 
+			return 0;	
+		} else {				// database error
+			dbg.close(); 
+			return -2;
+		}
+	}
+	
 	public static int updateConnectionRequest(int AskerID, int ReceiverID, boolean decision) {
 		DataBaseBridge db = new DataBaseBridge();              // create a connection to the database
 		if ( !db.checkIfConnected() ) {

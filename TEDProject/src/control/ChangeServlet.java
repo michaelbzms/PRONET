@@ -69,7 +69,7 @@ public class ChangeServlet extends HttpServlet {
 					switch (result) {
 						case 0:     // success
 							System.out.println("Email changed successfully");
-							// notify user for sucess and reload settings page	
+							// notify user for success and reload settings page	
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
 							RequetsDispatcherObj.forward(request, response);
 							break;
@@ -134,7 +134,8 @@ public class ChangeServlet extends HttpServlet {
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 							RequetsDispatcherObj.forward(request, response);
 							break;
-						case -2:      // database error
+						case -503:      // database error
+						case -2:
 							request.setAttribute("errorType", "dbError");
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 							RequetsDispatcherObj.forward(request, response);
@@ -205,7 +206,8 @@ public class ChangeServlet extends HttpServlet {
 							// notify user for success and reload settings page	
 							response.sendRedirect("/TEDProject/ProfileLink");
 							break;
-						case -1:      // database error
+						case -503:      // database error
+						case -1:
 							request.setAttribute("errorType", "dbError");
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 							RequetsDispatcherObj.forward(request, response);
@@ -219,31 +221,40 @@ public class ChangeServlet extends HttpServlet {
 				}
 				break;
 			case "deleteAccount":
-				int profID = (int) request.getSession(false).getAttribute("ProfID");
-				DataBaseBridge db = new DataBaseBridge();
-				Professional prof = db.getBasicProfessionalInfo(profID);
-				if (prof != null) {
-					// Delete user's profile picture if he has one saved
-					FileManager.deleteProfilePicture(prof, UploadSaveDirectory);
-					// Delete all user's articles along with their files
-					List<Integer> myArticles = db.getProfArticleIds(profID);
-					if ( myArticles != null ) {
-						for ( int id : myArticles ) {
-							db.deleteArticle(id);
-						}
-					}
-					// Delete professional's record
-					db.deleteProfessionalRecord(profID);
-					// The 'cascade' option will take care of the rest necessary deletes from DataBase
-					request.setAttribute("errorType", "successfulAccountDeletion");
+				String pass;
+				pass = request.getParameter("password");
+				if ( pass.isEmpty() ) {
+					request.setAttribute("errorType", "emptyFormFields");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
 				} else {
-					request.setAttribute("errorType", "dbError");
-					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
-					RequetsDispatcherObj.forward(request, response);
+					int profID = (int) request.getSession(false).getAttribute("ProfID");
+					int result = SiteFunctionality.DeleteAccount(profID, pass);
+					switch (result) {
+						case 0:     // success
+							System.out.println("Account with ID " + profID + " deleted successfully");
+							// notify user for success and redirect to index
+							RequetsDispatcherObj = request.getRequestDispatcher("/index.html");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						case -1:     // invalid current password
+							request.setAttribute("errorType", "invalidCurrentPassword");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						case -503:      // database error
+						case -2:
+							request.setAttribute("errorType", "dbError");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+						default:      // should not happen
+							request.setAttribute("errorType", "invalid return code at registration");
+							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
+							RequetsDispatcherObj.forward(request, response);
+							break;
+					}
 				}
-				db.close();
 				break;
 			default:
 				request.setAttribute("errorType", "invalidPageRequest");

@@ -100,24 +100,6 @@
 	max-width: 400px;
 }
 
-.image_modal_dialog {
-	max-width: none;
-	width: auto;
-	display: table;
-	margin-left: auto;
-    margin-right: auto;
-}
-
-.image_modal_content {
-	max-width: none;
-}
-
-.modal_img {
-	height: auto;
-    max-width: 100%;
-    object-fit: contain;
-}
-
 .custom-file {
 	width: 70%;
 }

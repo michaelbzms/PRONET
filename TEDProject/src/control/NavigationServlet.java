@@ -72,7 +72,7 @@ public class NavigationServlet extends HttpServlet {
 				return;
 			case "ChangeSettings":
 				attr = request.getParameter("attr");
-				if (attr != null && (attr.equals("email") || attr.equals("password")) ) {
+				if (attr != null && (attr.equals("email") || attr.equals("password") || attr.equals("deleteAccount")) ) {
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ChangeSettings.jsp");
 					request.setAttribute("attr", attr);
 					RequetsDispatcherObj.forward(request, response);

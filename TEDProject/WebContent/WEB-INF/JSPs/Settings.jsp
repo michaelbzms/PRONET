@@ -27,16 +27,7 @@
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=password" class="btn btn-primary btn-lg">Change Password</a>
 		</div>
 		<div class="buttonContainer changeButton">
-			<button id="deleteAccount" class="btn btn-danger btn-lg">Delete Account</button>
-			<script>
-				$("#deleteAccount").on("click", function(){
-					var result = confirm("Are you sure you want to delete your account?");
-					if (result) {
-						// redirect to that link as if he had clicked on this link
-						window.location.href = "/TEDProject/prof/ChangeServlet?attr=deleteAccount";
-					}
-				});	
-			</script>
+			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=deleteAccount" class="btn btn-danger btn-lg">Delete Account</a>
 		</div>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>
