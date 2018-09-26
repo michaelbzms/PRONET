@@ -93,8 +93,8 @@ public class AJAXServlet extends HttpServlet {
 					if ( text == null || sentByProfStr == null || sentToProfStr == null ) {
 						out.write("AJAX add message request reached server with invalid parameters"); 
 					} 
-					else if ( !SiteFunctionality.checkInputText(text, false, 0) ) {      // TODO: size restriction policy for messages?
-						out.write("illegal text message input characters");
+					else if ( !SiteFunctionality.checkInputText(text, false, 65530) ) {      // mysql's TEXT's maximum size
+						out.write("illegal text message input characters (or too long)");
 					}
 					else {
 						text = text.replace("\n", "\n<br>\n");
@@ -135,8 +135,8 @@ public class AJAXServlet extends HttpServlet {
 					if ( postText == null || fileParts == null ) {
 						out.write("AJAX add article request reached server with invalid parameters");
 						System.out.println("AJAX add article request reached server with invalid parameters");
-					} else if ( !SiteFunctionality.checkInputText(postText, false, 0) ) {    // TODO: size restriction policy for article posts?
-						out.write("illegal post text input characters");
+					} else if ( !SiteFunctionality.checkInputText(postText, false, 16777210) ) {    // mysql's MEDIUMTEXT's maximum size
+						out.write("illegal post text input characters (or too long)");
 					} else {
 						// remove all non-file Parts
 						fileParts.removeIf((Part filePart) -> !filePart.getName().equals("file_input"));	
@@ -221,7 +221,7 @@ public class AJAXServlet extends HttpServlet {
 					if (commentText == null || articleIDstr == null || authorIDstr == null) {
 						out.write("AJAX add comment request reached server with invalid parameters");
 						System.out.println("AJAX add comment request reached server with invalid parameters");
-					} else if ( !SiteFunctionality.checkInputText(commentText, false, 0) ) {    // TODO: size restriction policy for comments?
+					} else if ( !SiteFunctionality.checkInputText(commentText, false, 65530) ) {   // mysql's TEXT's maximum size
 						out.write("illegal comment text input characters");
 					} else {
 						int articleID = -1;

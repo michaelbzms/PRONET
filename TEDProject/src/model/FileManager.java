@@ -91,7 +91,6 @@ public class FileManager {
 			String userUploadFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();    // MSIE fix
 			String contentType = filePart.getContentType();
 			
-			// Debug:
 			System.out.println("Saving uploaded file: " + userUploadFileName + " to " + saveLocation + " under a new unique name...");
 			
 			// figure out an appropriate unique name for the file

@@ -48,7 +48,10 @@
 							   	} %>	
 					    <% 		for (Professional p : messagedProfs) { %>
 									<li id="conv<%= p.getID() %>" class="conv_li" <% if ( chatWith != null && chatWithProf!= null && chatWithProf.getID() == p.getID() ) { %> style="background-color: #b2cdff" <% } %> > 
-										<img class="img-thumbnail float-left conv_prof_img" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><%= p.getFirstName() %> <%= p.getLastName() %> 
+										<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
+											<img class="img-thumbnail float-left conv_prof_img" src="<%= p.getProfilePicURI() %>" alt="Profile picture">
+										</a>
+										<%= p.getFirstName() %> <%= p.getLastName() %> 
 										<script>
 						    				$("#conv<%= p.getID() %>").on("click", function(){
 						    					select_conversation(<%= p.getID() %>);

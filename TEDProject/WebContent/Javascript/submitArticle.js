@@ -2,12 +2,9 @@ $("#article_input_form").on("submit", function(e){
 	e.preventDefault();
 	
 	articleEditor.toTextArea()
-	// get form's data
-	var formData = new FormData($(this)[0]);
-	// DEBUG: Print formData to console
-	//for (var pair of formData.entries()) {
-	//    console.log(pair[0]+ ', ' + pair[1]); 
-	//}
+	
+	var formData = new FormData($(this)[0]);  // get form's data
+
 	articleEditor = new SimpleMDE({ element: document.getElementById("article_input_editor"), showIcons: ["code", "table"] });
 	
 	// send them via AJAX to AJAXServlet		   			

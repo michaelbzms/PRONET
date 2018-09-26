@@ -36,7 +36,6 @@ public class LogoutServlet extends HttpServlet {
     		System.out.println("An admin successfully logged out.");
     		session.invalidate();
     	}
-    	// TODO: Maybe also print a "successful logout" message?
     	response.sendRedirect("/TEDProject/index.html");
     }
 }

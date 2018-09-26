@@ -49,7 +49,7 @@ public class KNNWorkAds {
         } else if ( appliedAds.size() <= 0 ) {   // could happen
         	return 1;
     	} else if ( K > appliedAds.size() ) {    // could happen
-        	System.out.println("Warning: KNN's K is " + K + " which is larger than the number of applied ads, which is " + appliedAds.size() + ". Resetting to match their count.");   // DEBUG
+        	System.err.println("Warning: KNN's K is " + K + " which is larger than the number of applied ads, which is " + appliedAds.size() + ". Resetting to match their count.");
         	this.K = appliedAds.size();
         }
     	applied_ads_vectors = new Map[appliedAds.size()];
@@ -125,7 +125,7 @@ public class KNNWorkAds {
 	    		// use KNNs to calculate the bonus of 'candidate_ads_IDs[i]' based on some bonus scheme on K_Neighbours' similarities
 	    		double bonus = 0.0;
 	    		for (int j = 0 ; j < K ; j++) {
-	    			bonus += K_Neighbours[j];    // TODO: Use a different scheme?
+	    			bonus += K_Neighbours[j];
 	    		}
 	    		adBonuses[i] = bonus;
 	    		if (bonus > max) {

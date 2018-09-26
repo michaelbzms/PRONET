@@ -51,7 +51,7 @@ public class FileServlet extends HttpServlet {
 					case "article":  
 						success = serveFile("article", requestedFile, response);
 						if (!success) {
-							if ( !serveErrorFile(response, "/images/errorImage.png") ) {   // TODO: error image even if file was not an image?
+							if ( !serveErrorFile(response, "/images/errorImage.png") ) {   // Serves error image even if file was not an image -> browser should be able to deal with this
 								request.setAttribute("errorType", "404Request");
 								RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 								RequetsDispatcherObj.forward(request, response);

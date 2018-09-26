@@ -126,7 +126,6 @@ public final class MyUtil {
 		}
 		if ( start == -1 || end == -1 ) return -1;   // should not happen
 		String type = fileURI.substring(start, end);
-		// DEBUG: System.out.println("Parsing found type: " + type);
 		if ( type.equals("img") ){
 			return 1;
 		} else if ( type.equals("vid") ){

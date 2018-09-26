@@ -74,15 +74,13 @@ public class WelcomeServlet extends HttpServlet {
 			}
 			profilePicFileURL = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();     // get the path of the user's input file (MSIE fix)
 			// check if any field was empty:
-			if ( email.isEmpty() || password.isEmpty() || re_password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() /*|| profilePicFilePath.isEmpty() */ ) {   //TODO : Profile picture optional or not?
-				System.out.println("Form submitted but has unfilled fields. Ignored.");
-				// Notify user
-				// TEMP: for now just reload the same page
+			if ( email.isEmpty() || password.isEmpty() || re_password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() ) {   // (!) Profile picture is optional
+				System.err.println("Registration form submitted but has unfilled fields. Ignored.");
 				response.sendRedirect("/TEDProject/");
 			}
 			else if ( !SiteFunctionality.checkInputText(email, true, 255) || !SiteFunctionality.checkInputText(password, true, 32) || !SiteFunctionality.checkInputText(re_password, true, 32) 
 				   || !SiteFunctionality.checkInputText(firstName, true, 45) || !SiteFunctionality.checkInputText(lastName, true, 45) || !SiteFunctionality.checkInputNumber(phone, 32, false) ) {
-				System.out.println("Form submitted but one or more fields have illegal input characters.");
+				System.err.println("Registration form submitted but one or more fields have illegal input characters (or too long).");
 				request.setAttribute("errorType", "illegalTextInput");
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
@@ -193,13 +191,13 @@ public class WelcomeServlet extends HttpServlet {
 	            }
 	            response.sendRedirect("/TEDProject/prof/NavigationServlet?page=HomePage");
 			} else {     // SHOULD NOT HAPPEN
-				request.setAttribute("errorType", "???");
+				request.setAttribute("errorType", "???");   // unknown error
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			}
 		}
 		else {    // register attribute not sent
-			request.setAttribute("errorType", "???");
+			request.setAttribute("errorType", "invalidPageRequest");
 			RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 			RequetsDispatcherObj.forward(request, response);
 		}

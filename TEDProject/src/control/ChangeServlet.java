@@ -187,7 +187,7 @@ public class ChangeServlet extends HttpServlet {
 					if ( !profilePicFilePath.isEmpty() ) {                       // if professional submitted a new profile picture 
 						boolean success = FileManager.editProfilePicture(tempProf, filePart, UploadSaveDirectory, profilePicFilePath, profID);
 						if (!success) {        // should not happen
-							request.setAttribute("errorType", "EditingProfilePictureError");    // should not happen. TODO: make such a page?
+							request.setAttribute("errorType", "EditingProfilePictureError");    // this page doesn't exist and does not need to exist -> unknown error is ok
 							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 							RequetsDispatcherObj.forward(request, response);
 							return;
