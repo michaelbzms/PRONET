@@ -66,7 +66,7 @@
 											</a>
 									<%	} 
 										if ( Connections.isEmpty() ) { %>
-											<p><i>You have not got any connections.</i></p>
+											<p><i>You don't have any connections.</i></p>
 									<%  } 
 									} %>
 								</div>

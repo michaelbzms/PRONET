@@ -45,6 +45,22 @@
 			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
 			 <% } 
 		 	} %>
+		 	
+		 	<!-- Alerts -->
+		    <div id="workAdCreationSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+				Your Work Ad was created successfully.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		    <div id="workAdEditSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+				Your Work Ad was updated successfully.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<script src="/TEDProject/Javascript/alerts/workAdPageAlerts.js"></script>
+		 	
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
 			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
 			<div class="ProfileOptions">

@@ -12,13 +12,7 @@
 <body>
 	<div class="main_container text-center">
 	<% if ( request != null &&  request.getAttribute("errorType") != null ) { %>
-		<% if ( request.getAttribute("errorType").equals("registerSuccess") ) {  // not really an error %>
-			<h2 class="my_h2">REIGISTRATION SUCCESSFUL</h2>
-			<p>Please log in from the welcome page using your credentials.</p>
-		<% } else if ( request.getAttribute("errorType").equals("successfulAccountDeletion") ) {  // not really an error either %>
-			<h2 class="my_h2">ACCOUNT DELETED SUCCESSFULLY</h2>
-			<p>You have successfully deleted your account. We are sorry to see you go.</p>
-		<% } else if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
+		<% if ( request.getAttribute("errorType").equals("invalidLoginEmail") ) { %>
 			<h2 class="my_h2">LOGIN FAILED</h2>
 			<p>Oops! It appears that the email you entered does not belong to a registered account.</p>
 		<% } else if ( request.getAttribute("errorType").equals("invalidLoginPassword") ) { %>	

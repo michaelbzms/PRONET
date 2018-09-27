@@ -121,10 +121,8 @@ public class WelcomeServlet extends HttpServlet {
 							}		
 						}
 						System.out.println("Register successful for email: " + email);
-						// forward user to a page informing him of registration's success
-						request.setAttribute("errorType", "registerSuccess");
-						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
-						RequetsDispatcherObj.forward(request, response);
+						// forward user to index, informing him of registration's success
+						response.sendRedirect("/TEDProject/index.html?alert=registrationSuccess");
 						break;
 					case -1:     // password mismatch
 						request.setAttribute("errorType", "notMatchingPasswords");

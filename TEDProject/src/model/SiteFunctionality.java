@@ -280,13 +280,7 @@ public class SiteFunctionality {
 			System.out.println("> Database error: database down");
 			return -503;
 		}
-		if ( db.createWorkAd(profID, title, description) ) {		// Successful update
-			db.close(); 
-			return 0;	
-		} else {				// database error
-			db.close(); 
-			return -1;
-		}
+		return db.createWorkAd(profID, title, description);
 	}
 	
 	public static int updateWorkAd(int adID, int profID, String description) {

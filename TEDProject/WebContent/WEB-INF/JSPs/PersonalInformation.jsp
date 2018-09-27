@@ -45,7 +45,8 @@
 			 <% } else { %>
 			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
 			 <% } 
-		 	} %>	
+		 	} %>
+			
 		  	<div class="row">
 				<div class="col-4">
 					<div class="info_tab">
@@ -105,6 +106,16 @@
 					</div>
 				</div>
 				<div class="col-8">
+		 	
+				 	<!-- Alerts -->
+				    <div id="editSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+						Your profile was updated successfully.
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<script src="/TEDProject/Javascript/alerts/profileAlerts.js"></script>
+					
 					<div class="info_tab">
 						<% if ( Prof.getDescription() != null && !Prof.getDescription().isEmpty()) { %>
 								<h2 class="my_h2">Description</h2>

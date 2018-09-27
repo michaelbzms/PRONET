@@ -39,7 +39,7 @@ public class EditArticleServlet extends HttpServlet {
 		}			
 		switch (result) {
 			case 0:     // success
-				response.sendRedirect("/TEDProject/prof/NavigationServlet?page=Article&ArticleID=" + articleID);
+				response.sendRedirect("/TEDProject/prof/NavigationServlet?page=Article&ArticleID=" + articleID + "&alert=editSuccess");
 				break;
 			case -1:
 			case -503:      // database error

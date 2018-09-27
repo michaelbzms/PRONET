@@ -57,6 +57,15 @@
 			 <% return;
 		   } %>		   
 		   
+		    <!-- Alerts -->
+		    <div id="editSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+				Your article was updated successfully.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<script src="/TEDProject/Javascript/alerts/articleAlerts.js"></script>
+		   
 			<jsp:include page="Article.jsp"> 
 				<jsp:param name="ArticleID" value="<%= articleID %>" /> 
 			</jsp:include>

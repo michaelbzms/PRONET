@@ -46,6 +46,10 @@ public class WorkAdManagementServlet extends HttpServlet {
 					result = -3;
 				} else {
 					result = SiteFunctionality.createWorkAd(profID, title, description);
+					if (result >= 0) {
+						response.sendRedirect("/TEDProject/WorkAdLink?AdID=" + result + "&alert=workAdCreationSuccess");
+						return;
+					}
 				}
 				break;
 			case "edit":
@@ -54,10 +58,18 @@ public class WorkAdManagementServlet extends HttpServlet {
 					result = -2;
 				} else {
 					result = SiteFunctionality.updateWorkAd(adID, profID, description);
+					if (result == 0) {
+						response.sendRedirect("/TEDProject/WorkAdLink?AdID=" + adID + "&alert=workAdEditSuccess");
+						return;
+					}
 				}
 				break;
 			case "delete":
 				result = SiteFunctionality.removeWorkAd(adID, profID);
+				if (result == 0) {
+					response.sendRedirect("/TEDProject/prof/NavigationServlet?page=WorkAds&alert=workAdDeletionSuccess");
+					return;
+				}
 				break;
 			case "apply":
 				description = request.getParameter("applyNote");
@@ -65,10 +77,18 @@ public class WorkAdManagementServlet extends HttpServlet {
 					result = -2;
 				} else {
 					result = SiteFunctionality.applyToWorkAd(adID, profID, description);
+					if (result == 0) {
+						response.sendRedirect("/TEDProject/prof/NavigationServlet?page=WorkAds&alert=applicationSubmissionSuccess");
+						return;
+					}
 				}
 				break;
 			case "cancel":
 				result = SiteFunctionality.removeApplication(profID, adID);
+				if (result == 0) {
+					response.sendRedirect("/TEDProject/prof/NavigationServlet?page=WorkAds&alert=applicationCancelationSuccess");
+					return;
+				}
 				break;
 			default:	
 				request.setAttribute("errorType", "invalidPageRequest");
@@ -77,7 +97,7 @@ public class WorkAdManagementServlet extends HttpServlet {
 				return;
 		}
 		switch (result) {
-			case 0:     // success
+			case 0:     // uncaught success
 				response.sendRedirect("/TEDProject/prof/NavigationServlet?page=WorkAds");
 				break;
 			case -1:

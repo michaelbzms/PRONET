@@ -788,21 +788,26 @@ public class DataBaseBridge {
 		return publishedByID;
 	}
 	
-	public boolean createWorkAd(int profID, String title, String description) {
-		if (!connected) return false;
+	public int createWorkAd(int profID, String title, String description) {
+		if (!connected) return -1;
 		String insertString = "INSERT INTO Ads (idAd, idPublishedBy, title, postedDate, description) VALUES (default, ?, ?, ?, ?)";
 		try {
-			PreparedStatement statement = connection.prepareStatement(insertString);
+			PreparedStatement statement = connection.prepareStatement(insertString, Statement.RETURN_GENERATED_KEYS);
 			statement.setInt(1, profID);
 			statement.setString(2, title);
 			statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
 			statement.setString(4, description);
 			statement.executeUpdate();
+			ResultSet rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				return rs.getInt(1);		// return articleID of the just created article
+			} else {
+				return -3;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return -2;
 		}
-		return true;
 	}
 	
 	public boolean updateWorkAd(int adID, String description) {

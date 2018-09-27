@@ -34,6 +34,28 @@
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="WorkAds"/> 
 			</jsp:include>
+	    
+		    <!-- Alerts -->
+		    <div id="workAdDeletionSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+				Your Work Ad was deleted successfully.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		    <div id="applicationSubmissionSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+				Your application was submitted successfully.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		    <div id="applicationCancelationSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+				Your application was canceled successfully.
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<script src="/TEDProject/Javascript/alerts/workAdsAlerts.js"></script>
+		
 			<div>
 				<h2 class="my_h2">Work Ads from Connected Professionals</h2>
 				<div class="list-group ad_list_container">

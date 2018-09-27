@@ -54,7 +54,7 @@ public class ChangeServlet extends HttpServlet {
 				String password, newEmail;
 				password = request.getParameter("password");
 				newEmail = request.getParameter("newEmail");
-				if ( password.isEmpty() || newEmail.isEmpty() ) {
+				if ( password == null || password.isEmpty() || newEmail == null || newEmail.isEmpty() ) {
 					request.setAttribute("errorType", "emptyFormFields");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
@@ -69,9 +69,7 @@ public class ChangeServlet extends HttpServlet {
 					switch (result) {
 						case 0:     // success
 							System.out.println("Email changed successfully");
-							// notify user for success and reload settings page	
-							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
-							RequetsDispatcherObj.forward(request, response);
+							response.sendRedirect("/TEDProject/prof/NavigationServlet?page=Settings&alert=emailChangeSuccess");
 							break;
 						case -1:     // invalid current password
 							request.setAttribute("errorType", "invalidCurrentPassword");
@@ -101,7 +99,7 @@ public class ChangeServlet extends HttpServlet {
 				currentPassword = request.getParameter("currentPassword");
 				newPassword = request.getParameter("newPassword");
 				reNewPassword = request.getParameter("reNewPassword");
-				if ( currentPassword.isEmpty() || newPassword.isEmpty() || reNewPassword.isEmpty() ) {
+				if ( currentPassword == null || currentPassword.isEmpty() || newPassword == null || newPassword.isEmpty() || reNewPassword == null || reNewPassword.isEmpty() ) {
 					request.setAttribute("errorType", "emptyFormFields");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
@@ -124,10 +122,7 @@ public class ChangeServlet extends HttpServlet {
 					switch (result) {
 						case 0:     // success
 							System.out.println("Password changed successfully");
-							// "login the user" or toast-notify him and prompt him to log in from the welcome page
-							// ...	
-							RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Settings.jsp");
-							RequetsDispatcherObj.forward(request, response);
+							response.sendRedirect("/TEDProject/prof/NavigationServlet?page=Settings&alert=passwordChangeSuccess");
 							break;
 						case -1:     // invalid current password
 							request.setAttribute("errorType", "invalidCurrentPassword");
@@ -203,8 +198,7 @@ public class ChangeServlet extends HttpServlet {
 					switch (result) {
 						case 0:     // success
 							System.out.println("Profile updated successfully");
-							// notify user for success and reload settings page	
-							response.sendRedirect("/TEDProject/ProfileLink");
+							response.sendRedirect("/TEDProject/ProfileLink?alert=editSuccess");
 							break;
 						case -503:      // database error
 						case -1:
@@ -223,7 +217,7 @@ public class ChangeServlet extends HttpServlet {
 			case "deleteAccount":
 				String pass;
 				pass = request.getParameter("password");
-				if ( pass.isEmpty() ) {
+				if ( pass == null || pass.isEmpty() ) {
 					request.setAttribute("errorType", "emptyFormFields");
 					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 					RequetsDispatcherObj.forward(request, response);
@@ -233,9 +227,8 @@ public class ChangeServlet extends HttpServlet {
 					switch (result) {
 						case 0:     // success
 							System.out.println("Account with ID " + profID + " deleted successfully");
-							// notify user for success and redirect to index
-							RequetsDispatcherObj = request.getRequestDispatcher("/index.html");
-							RequetsDispatcherObj.forward(request, response);
+							// forward user to index, informing him of registration's success
+							response.sendRedirect("/TEDProject/index.html?alert=accountDeletionSuccess");
 							break;
 						case -1:     // invalid current password
 							request.setAttribute("errorType", "invalidCurrentPassword");
