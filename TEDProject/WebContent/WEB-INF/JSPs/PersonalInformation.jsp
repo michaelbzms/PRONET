@@ -89,9 +89,9 @@
 										<a href="/TEDProject/prof/ConnectionServlet?action=remove&ProfID=<%= profID %>" class="btn btn-danger">Remove Connection</a>
 								<%  } else if (db.pendingConnectionRequest(profID, sessionProfID)) { 	// A not connected prof with pending connection request from them %>
 										<small class="text-secondary"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(profID, sessionProfID)) %></i></small><br>
-										<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success m-2">Accept Connection Request</a>
+										<a href="/TEDProject/prof/ConnectionServlet?action=accept&ProfID=<%= profID %>" class="btn btn-success mt-1">Accept Connection Request</a>
 										<br>
-										<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger m-2">Reject Connection Request</a>
+										<a href="/TEDProject/prof/ConnectionServlet?action=reject&ProfID=<%= profID %>" class="btn btn-danger mt-2 mr-1">Reject Connection Request</a>
 								<%  } else if (db.pendingConnectionRequest(sessionProfID, profID)) { 	// A not connected prof with pending connection request from logged in prof %>
 										<small class="text-secondary"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></i></small><br>
 										<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
@@ -155,17 +155,14 @@
 									<li class="grid_item">
 										<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
 										<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-										<% if (p.getEmploymentStatus() != null) { %> 
+									 	<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
 											<%= p.getEmploymentStatus() %> 
-										<% } else { %> 
-											N/A  
+											<br> 
+										<% } 
+										   if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
+										   	<%= p.getEmploymentInstitution() %> 
+											<br>
 										<% } %>
-										<br> 
-										<% if (p.getEmploymentInstitution() != null) { %> <%= p.getEmploymentInstitution() %> 
-										<% } else { %> 
-											N/A
-										<% } %>
-										<br>
 										<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
 									</li>
 							<%	} %>

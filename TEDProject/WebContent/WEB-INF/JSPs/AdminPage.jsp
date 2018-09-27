@@ -57,23 +57,20 @@
 						<li class="grid_item">
 							<% if (exportPage) { %>
 								<input type="checkbox" name="profID" value="<%= professionals[i].getID() %>">
+								<br>
 							<% } %>	
-							<br>
 							<img class="img-thumbnail" src="<%= professionals[i].getProfilePicURI() %>" alt="Profile picture"><br>
 							<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
-							<% if (professionals[i].getEmploymentStatus() != null) { %> 
+						 	<% if (professionals[i].getEmploymentStatus() != null && !professionals[i].getEmploymentStatus().isEmpty()) { %> 
 								<%= professionals[i].getEmploymentStatus() %> 
-							<% } else { %> 
-								N/A  
+								<br> 
+							<% } 
+							   if (professionals[i].getEmploymentInstitution() != null && !professionals[i].getEmploymentInstitution().isEmpty()) { %> 
+							   	<%= professionals[i].getEmploymentInstitution() %> 
+								<br>
 							<% } %>
-							<br> 
-							<% if (professionals[i].getEmploymentInstitution() != null) { %> <%= professionals[i].getEmploymentInstitution() %> 
-							<% } else { %> 
-								N/A
-							<% } %>
-							<br>
 							<!-- The following is a servlet URI which will forward the HTTP GET request to ProfPublicProfilePage.jsp with the correct ID  -->
-							<a href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">View Details</a>
+							<a href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>" class="mt-2">View Details</a>
 						</li>
 					<% } %>
 					</ul>

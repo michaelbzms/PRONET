@@ -117,9 +117,9 @@ label {
 	border-radius: 5px;
 	background-color: white;
 	box-shadow: 0px 0px 3px 1px #6397ff;
-	max-height: 45vh;
+	max-height: 400px;
 	min-height: 100px;
-	overflow-y: hidden;
+	overflow: hidden;
 }
 
 .side_tab_thumbnail {
@@ -263,20 +263,11 @@ label {
     object-fit: contain;
 }
 
-.side_description {		/* Chrome only - supports multiline ellipsis */
+.side_description {
+	display: inherit;
 	overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-}
-
-@-moz-document url-prefix() {		/* Firefox only */
-	.side_description {
-		display: inherit;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 /* add over any bootstrap changes: */

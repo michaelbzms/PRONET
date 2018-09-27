@@ -98,8 +98,7 @@
 								<% 	} %>
 								</div>
 							<% 	if ( topProfIDs != null && topProfIDs.length > 0 ) { %>
-									<br>
-									<a href="/TEDProject/prof/NavigationServlet?page=Network">View all connections</a>
+									<a href="/TEDProject/prof/NavigationServlet?page=Network#connections">View all connections</a>
 							<% 	} %>
 							</div>							
 							<div class="buttonContainer mt-0">
