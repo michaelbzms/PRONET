@@ -59,7 +59,7 @@
 			</li>
 			<li class="nav-item ml-xl-1">
 				<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-					<input class="btn btn-primary" type="submit" value="Logout" >
+					<input class="btn btn-primary pt-2 pb-2" type="submit" value="Logout" >
 				</form>
 			</li>
 		</ul>

@@ -20,7 +20,7 @@ public class KNNArticles {
     private int[] ArticleIDs = null;                    // the ArticleIDs that we show on logged in professional's HomePage (order matters)
 	private int[] loggedprof_vector = null;             // the vector for the logged in professional
 	private final double simScalingFactor = 3.0;        // how much important the difference in similarity should be versus the extra bonuses we give (who ara analogous to K) (should be sth 2 - 5)
-	
+	private double[][] K_neighbours = null;
 	
 	public KNNArticles(int k){
         if ( k <= 0 ) { 
@@ -90,16 +90,16 @@ public class KNNArticles {
     		articleBonuses.put(ArticleIDs[i], 0.0);
     	}
     	// find KNNs connected professionals
-    	double[][] K_neighbours = findKNearestNeighbours();   // O(K*N) if K < N and O(N) if K == N, where N = |connected profs|
+    	K_neighbours = findKNearestNeighbours();              // O(K*N) if K < N and O(N) if K == N, where N = |connected profs|
     	// use KNNs connected professionals to give bonus to articles posted or shown Interest by them
     	for (int i = 0 ; i < K ; i++) {                       // O(K*M), where M = ArticleIDs.length (worst-case)
     		// get articles posted by or shown interest by the i-th K-Neighbour
-    		List<Integer> articleIDsForBonus = db.getArticlesInvolvingProfID(connected_prof_IDs[(int) K_neighbours[0][i]]);
+    		List<Integer> articleIDsForBonus = db.getArticlesInvolvingProfID(connected_prof_IDs[(int) K_neighbours[i][0]]);
     		for (int articleID : articleIDsForBonus) {
     			Double bonusptr = articleBonuses.get(articleID);
     			if ( bonusptr != null ) {
     				double bonus = bonusptr;
-    				bonus += K_neighbours[1][i];              // get a bonus depending on how similar the respective professional is
+    				bonus += K_neighbours[i][1];              // get a bonus depending on how similar the respective professional is
     				articleBonuses.put(articleID, bonus);
     			}
     		}
@@ -207,11 +207,11 @@ public class KNNArticles {
     
     // find the indexes of connected_prof_IDs (in random order) and the distance of the K most similar 'connected_prof_vectors' to 'loggedprof_vector'
     private double[][] findKNearestNeighbours() {           // O(K*N*M) where N = connected_prof_vectors.length and M = ArticleIDs.length
-    	double[][] K_neighbours = new double[2][K];         // [0] is for the professional's indexes and [1] is for their similarity measurement
+    	double[][] K_neighbours = new double[K][2];         // [0] is for the professional's indexes and [1] is for their similarity measurement
     	if ( this.K < connected_prof_vectors.length ) {     // K < N  -> O(K*N*M)
 	    	for (int j = 0 ; j < K ; j++ ) { 
-	    		K_neighbours[0][j] = -1;
-	    		K_neighbours[1][j] = -1;
+	    		K_neighbours[j][0] = -1;
+	    		K_neighbours[j][1] = -1;
 	    	}
 	    	for (int i = 0 ; i < connected_prof_vectors.length ; i++) {
 	    		// calculate i-th's connected prof's similarity to logged in prof
@@ -220,29 +220,29 @@ public class KNNArticles {
 	    		double min = -1.0;
 	    		int minpos = -1;
 	    		for (int j = 0 ; j < K ; j++) {
-	    			if ( K_neighbours[1][j] == -1 ) {
+	    			if ( K_neighbours[j][1] == -1 ) {
 	    				min = -1.0;      // signifying that there is still an empty spot on K_neighbours table
 	    				minpos = j;
 	    				break;
 	    			} 
-	    			else if ( min == -1 || K_neighbours[1][j] < min ) {
-	    				min = K_neighbours[1][j];
+	    			else if ( min == -1 || K_neighbours[j][1] < min ) {
+	    				min = K_neighbours[j][1];
 	    				minpos = j;
 	    			}
 	    		}
 	    		if ( minpos < 0 ) { System.err.println("KNN Unexpected warning: could not find minimum?!"); break; }
 	    		// check if current sim is > than the minimum of the current K similarities and if it is then overwrite the minimum with this sim
 	    		if ( min == -1.0 || sim > min) {
-	    			K_neighbours[0][minpos] = i;
-	    			K_neighbours[1][minpos] = sim;
+	    			K_neighbours[minpos][0] = i;
+	    			K_neighbours[minpos][1] = sim;
 	    		}
 	    	}
     	} else {       // K == N -> O(N*M) (optimization)
     		// if K == N then we must calculate and save all similarities to connected_prof_vectors
     		for (int i = 0 ; i < connected_prof_vectors.length ; i++) {
     			// calculate i-th's connected prof's similarity to logged in prof
-	    		K_neighbours[0][i] = i;
-	    		K_neighbours[1][i] = similarity(loggedprof_vector, connected_prof_vectors[i]);    // O(M)
+	    		K_neighbours[i][0] = i;
+	    		K_neighbours[i][1] = similarity(loggedprof_vector, connected_prof_vectors[i]);    // O(M)
     		}
     	}
     	return K_neighbours;
@@ -265,6 +265,36 @@ public class KNNArticles {
     		}
     	}
     	return (simScalingFactor * similarity) / ((double) ArticleIDs.length);
+    }
+    
+    
+    public int[] getTopKProfessionals(int maxNumber) {
+    	if (K_neighbours == null || connected_prof_IDs == null) {
+    		if (connected_prof_IDs == null) System.err.println("KNN Error: Tried to get KNN's ids without first running KNN to find them");   // else KNN might have not been needed ex: logged prof has no connections
+    		return null;
+    	}
+    	if (maxNumber > K || maxNumber <= 0) { maxNumber = K; }
+    	int[] KNNProfIDs = new int[maxNumber];
+    	// sort KNNs based on their similarity
+    	class KNNComparator implements Comparator {   // decending order
+    		@Override
+    		public int compare( Object o1, Object o2 ) {
+    			double[] i1 = (double[]) o1;
+    			double[] i2 = (double[]) o2;
+    			if ( i1[1] > i2[1] ) return -1;
+    			else if ( i1[1] < i2[1] ) return 1;
+    			else return 0;
+			 }
+		}
+    	Arrays.sort(K_neighbours, new KNNComparator());
+		// DEBUG:
+    	System.out.println("___KNNs and their similarities________");
+    	for (int i = 0 ; i < maxNumber ; i++) {
+    		KNNProfIDs[i] = connected_prof_IDs[(int) K_neighbours[i][0]];
+    		// DEBUG:
+    		System.out.println((i+1) + ". id = " + KNNProfIDs[i] + ", similarity = " + K_neighbours[i][1]);
+    	}
+    	return KNNProfIDs;
     }
     
 }

@@ -30,7 +30,7 @@
 			<div class="search_bar">
 				<h2 class="my_h2">Search for professionals</h2>
 				<form id="search_form">
-					<input type="text" class="form-control" id="searchString" name="searchString" placeholder="First/Last name">
+					<input type="text" class="form-control" id="searchString" name="searchString" placeholder="Professional's name">
 					<input type="submit" class="btn btn-light mb-1" value="Search">
 					<script>
 						$("#search_form").on("submit", function(e){
