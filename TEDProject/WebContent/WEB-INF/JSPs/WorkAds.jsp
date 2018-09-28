@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>PRONET - WorkAds</title>
+	<title>PRONET - Work Ads</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd, model.Application, model.MyUtil, model.KNNWorkAds, model.SkillRelevanceEvaluator" %>
 	<!-- CSS -->
@@ -34,7 +34,6 @@
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="WorkAds"/> 
 			</jsp:include>
-	    
 		    <!-- Alerts -->
 		    <div id="workAdDeletionSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
 				Your Work Ad was deleted successfully.
@@ -55,7 +54,6 @@
 				</button>
 			</div>
 			<script src="/TEDProject/js/alerts/workAdsAlerts.js"></script>
-		
 			<div>
 				<h2 class="my_h2">Work Ads from Connected Professionals</h2>
 				<div class="list-group ad_list_container">

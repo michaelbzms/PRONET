@@ -2,14 +2,22 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, java.nio.file.Files, java.nio.file.Paths, model.DataBaseBridge, model.Article, model.Professional, model.Comment, model.MyUtil, model.SiteFunctionality" %>
 
-<%! private DataBaseBridge db = new DataBaseBridge(); %>
+<%! private DataBaseBridge db = new DataBaseBridge();
 
-<%! @Override
-	public void finalize(){                               // kind of like a destructor
+ 	@Override
+	public void finalize(){              // kind of like a destructor
 		db.close();
+	} 
+%>
+
+
+<%  if ( !db.checkIfConnected() ) {      // if not connected to database try to make a new connection 
+		db = new DataBaseBridge();
+		if ( !db.checkIfConnected() ){   // if that fails as well then abort (database is down)
+			System.err.println("Warning: Database is down!");
+			return;
+		}
 	} %>
-
-
 <%	String articleIDstr = request.getParameter("ArticleID");
 	if ( articleIDstr == null ) {  %>
 		<p>Error: Invalid Article ID.</p>

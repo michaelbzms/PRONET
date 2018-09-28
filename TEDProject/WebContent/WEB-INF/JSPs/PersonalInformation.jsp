@@ -48,7 +48,6 @@
 			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
 			 <% } 
 		    } %>
-			
 		  	<div class="row">
 				<div class="col-4">
 					<div class="info_tab">
@@ -108,7 +107,6 @@
 					</div>
 				</div>
 				<div class="col-8">
-		 	
 				 	<!-- Alerts -->
 				    <div id="editSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
 						Your profile was updated successfully.
@@ -117,7 +115,6 @@
 						</button>
 					</div>
 					<script src="/TEDProject/js/alerts/profileAlerts.js"></script>
-					
 					<div class="info_tab">
 						<% if ( Prof.getDescription() != null && !Prof.getDescription().isEmpty()) { %>
 								<h2 class="my_h2">Description</h2>
@@ -181,23 +178,25 @@
 						<a href="/TEDProject/admin/AdminServlet" class="btn btn-secondary">Return to admin page</a>
 					</div>
 			<% } %>
-		<% } 
-		   db.close(); %>
-		   <jsp:include page="/footer.html"></jsp:include>
+			<script>
+				<% if ( Prof != null ) { %>
+					<% if ( Prof.getProfessionalExperience() != null ) { %>
+						var profExp = document.getElementById("profExp");
+						if (profExp) profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience().replace("\\", "\\\\").replace("`", "\\`") %>`);
+					<% } %>
+					<% if ( Prof.getEducationBackground() != null ) { %>
+						var edBackground = document.getElementById("edBackground");
+						if (edBackground) edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground().replace("\\", "\\\\").replace("`", "\\`") %>`);
+					<% } %>
+					<% if ( Prof.getSkills() != null ) { %>
+						var skills = document.getElementById("skills");
+						if (skills) skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills().replace("\\", "\\\\").replace("`", "\\`") %>`);
+					<% } %>
+				<% } %>
+			</script>
+	<% 	} 
+		db.close(); %>
+		<jsp:include page="/footer.html"></jsp:include>
 	</div>
-	<script>
-		<% if ( Prof.getProfessionalExperience() != null ) { %>
-			var profExp = document.getElementById("profExp");
-			if (profExp) profExp.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getProfessionalExperience().replace("\\", "\\\\").replace("`", "\\`") %>`);
-		<% } %>
-		<% if ( Prof.getEducationBackground() != null ) { %>
-			var edBackground = document.getElementById("edBackground");
-			if (edBackground) edBackground.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getEducationBackground().replace("\\", "\\\\").replace("`", "\\`") %>`);
-		<% } %>
-		<% if ( Prof.getSkills() != null ) { %>
-			var skills = document.getElementById("skills");
-			if (skills) skills.innerHTML = SimpleMDE.prototype.markdown(`<%= Prof.getSkills().replace("\\", "\\\\").replace("`", "\\`") %>`);
-		<% } %>
-	</script>
 </body>
 </html>

@@ -18,13 +18,13 @@
 	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
-<% 	DataBaseBridge db = new DataBaseBridge(); 
-	Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
-	if ( prof == null ) {  %>
-		<h2 class="my_h2">INTERNAL ERROR</h2>	
-		<p>Could not retrieve your info from our data base. How did you login?</p>
-<% 	} else { %>
-		<div class="main_container">
+	<div class="main_container">
+	<% 	DataBaseBridge db = new DataBaseBridge(); 
+		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
+		if ( prof == null ) {  %>
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
+			<p>Could not retrieve your info from our data base. How did you login?</p>
+	<% 	} else { %>
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="Notifications"/> 
 			</jsp:include>
@@ -66,7 +66,7 @@
 		 	<div id="notifications_bar" class="connection_requests_bar">
 		 		<button id="markAll" class="btn btn-primary float-right">Mark all as seen</button>
 	   			<h2 class="my_h2 pt-1">Notifications</h2>
-   				<%	List<Notification> notifications = db.getNotificationsFor(prof.getID());
+	  				<%	List<Notification> notifications = db.getNotificationsFor(prof.getID());
 		    		if ( notifications != null ) {
 		   				if (! notifications.isEmpty() ) {
 			   				int i = 0; %>
@@ -125,10 +125,10 @@
 			<%	} %>
 			</div>
 			<br>
-			<jsp:include page="/footer.html"></jsp:include>
-		</div>
-	<script src="/TEDProject/js/notifications.js"></script>
-<%	} 
- 	db.close(); %>	
+			<script src="/TEDProject/js/notifications.js"></script>
+	<%	} 
+	 	db.close(); %>
+	 	<jsp:include page="/footer.html"></jsp:include>
+ 	</div>	
 </body>
 </html>

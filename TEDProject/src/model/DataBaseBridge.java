@@ -48,6 +48,7 @@ public class DataBaseBridge {
 	public void close(){
 		if (!connected) return;
 		try {
+			connected = false;
 			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

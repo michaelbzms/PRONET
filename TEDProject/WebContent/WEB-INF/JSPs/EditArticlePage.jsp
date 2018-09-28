@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>PRONET - Personal Information</title>
+	<title>PRONET - Edit Article</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, java.nio.file.Files, java.nio.file.Paths, model.DataBaseBridge, model.MyUtil, model.Article, java.util.List" %>
 	<!-- CSS -->

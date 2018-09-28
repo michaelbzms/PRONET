@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>PRONET - Personal Information</title>
+	<title>PRONET - Work Ad</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/workads.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<!-- JS -->
 	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
@@ -45,7 +46,6 @@
 			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
 			 <% } 
 		 	} %>
-		 	
 		 	<!-- Alerts -->
 		    <div id="workAdCreationSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
 				Your Work Ad was created successfully.
@@ -60,7 +60,7 @@
 				</button>
 			</div>
 			<script src="/TEDProject/js/alerts/workAdPageAlerts.js"></script>
-		 	
+		 	<!-- Work Ad -->
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
 			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
 			<div class="ProfileOptions">
@@ -76,7 +76,9 @@
 			   } %>
 			</div>
 			<br>
-		  	<p id="adDescription"><%= ad.getDescription() %></p>
+			<div class="workAdDescription">
+		  		<p id="adDescription"><%= ad.getDescription() %></p>
+		  	</div>
 		  	<br>
 			<% if (isAdmin) { %>
 				<a href="/TEDProject/admin/AdminServlet">Return to admin page</a>
@@ -135,15 +137,15 @@
 							Cancel Application</a>
 					</div>
 				<% }
-		   } %>
-		<script>
-			var adDescription = document.getElementById("adDescription");
-			if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
-			var applyNote = document.getElementById("applyNote");
-			if (applyNote) var applyNoteSMDE = new SimpleMDE({ element: applyNote, showIcons: ["code", "table"] });
-		</script>
-		<script src="/TEDProject/js/apl_accordion.js"></script>    
-		<script src="/TEDProject/js/util.js"></script>
+			  } %>
+			<script>
+				var adDescription = document.getElementById("adDescription");
+				if (adDescription) adDescription.innerHTML = SimpleMDE.prototype.markdown(`<%= ad.getDescription().replace("\\", "\\\\").replace("`", "\\`") %>`);
+				var applyNote = document.getElementById("applyNote");
+				if (applyNote) var applyNoteSMDE = new SimpleMDE({ element: applyNote, showIcons: ["code", "table"] });
+			</script>
+			<script src="/TEDProject/js/apl_accordion.js"></script>    
+			<script src="/TEDProject/js/util.js"></script>
 	<% } 
 	   db.close(); %>
 	   <jsp:include page="/footer.html"></jsp:include>

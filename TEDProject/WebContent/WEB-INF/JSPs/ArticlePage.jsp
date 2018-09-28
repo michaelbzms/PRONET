@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>PRONET - Personal Information</title>
+	<title>PRONET - Home Page</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, model.DataBaseBridge, model.MyUtil" %>
 	<!-- CSS -->
@@ -56,7 +56,6 @@
 			   <p>The requested Article does not exist.</p>
 			 <% return;
 		   } %>		   
-		   
 		    <!-- Alerts -->
 		    <div id="editSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
 				Your article was updated successfully.
@@ -65,12 +64,12 @@
 				</button>
 			</div>
 			<script src="/TEDProject/js/alerts/articleAlerts.js"></script>
-		   
+			<!-- Article -->
 			<jsp:include page="Article.jsp"> 
 				<jsp:param name="ArticleID" value="<%= articleID %>" /> 
 			</jsp:include>
 			<jsp:include page="/footer.html"></jsp:include>
-			
+			<!-- js scripts -->
    			<script src="/TEDProject/js/util.js"></script>
 			<script id="deleteArticleScript" src="/TEDProject/js/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="true"></script>
 			<script id="toggleInterestScript" src="/TEDProject/js/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>

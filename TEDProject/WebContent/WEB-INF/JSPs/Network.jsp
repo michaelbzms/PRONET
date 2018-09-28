@@ -17,13 +17,13 @@
 	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
-<%	DataBaseBridge db = new DataBaseBridge(); 
-	Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
-	if ( prof == null ) {  %>
-		<h2 class="my_h2">INTERNAL ERROR</h2>	
-		<p>Could not retrieve your info from our data base. How did you login?</p>
-<% 	} else { %>
-		<div class="main_container">
+	<div class="main_container">
+	<%	DataBaseBridge db = new DataBaseBridge(); 
+		Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
+		if ( prof == null ) {  %>
+			<h2 class="my_h2">INTERNAL ERROR</h2>	
+			<p>Could not retrieve your info from our data base. How did you login?</p>
+	<% 	} else { %>
 			<jsp:include page="ProfNavBar.jsp"> 
 				<jsp:param name="activePage" value="Network"/> 
 			</jsp:include>
@@ -77,9 +77,9 @@
 					 <% } %>
 				</div>
 			</div>
-			<jsp:include page="/footer.html"></jsp:include>
-		</div>
-<%	} 
-	db.close(); %>  
+	<%	} 
+		db.close(); %>
+		<jsp:include page="/footer.html"></jsp:include>
+	</div>
 </body>
 </html>

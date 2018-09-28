@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 
-<!-- Start of AJAX html response -->
 <% String searchString = request.getParameter("searchString"); %>
 
 <h4>Search results for "<%= searchString %>" are:</h4>

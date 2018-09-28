@@ -3,12 +3,23 @@
 <%@ page import="java.util.List, java.time.LocalDateTime, model.DataBaseBridge, model.Message, model.MyUtil" %>
 <%  // Warning: This JSP is loaded very often (ex every 2 secs)  %>
 <%! private DataBaseBridge newMessagesConnection = new DataBaseBridge();    // this connection will close by finalize when this jsp servlet gets destroyed
- 	
+ 	private boolean failedBefore = false;
+
 	@Override
 	public void finalize(){               // kind of like a destructor
 		newMessagesConnection.close();
 	} 
 %>
+
+<%  if ( !newMessagesConnection.checkIfConnected() ) {      // if not connected to database try ONCE to make a new connection 
+		if (failedBefore) return;
+		newMessagesConnection = new DataBaseBridge();
+		if ( !newMessagesConnection.checkIfConnected() ){   // if that fails as well then abort (database is down)
+			failedBefore = true;
+			System.err.println("Warning: Database is down!");
+			return;
+		}
+	} %>
 <%	String latestGotStr = request.getParameter("latestGot");
 	String homeprofIDstr = request.getParameter("homeprof");
 	String awayprofIDstr = request.getParameter("awayprof");

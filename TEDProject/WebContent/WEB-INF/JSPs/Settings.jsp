@@ -19,7 +19,6 @@
 		<jsp:include page="ProfNavBar.jsp"> 
 			<jsp:param name="activePage" value="Settings"/> 
 		</jsp:include>
-		
 		<!-- Alerts -->
 	    <div id="emailChangeSuccessAlert" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
 			Your email was changed successfully.
