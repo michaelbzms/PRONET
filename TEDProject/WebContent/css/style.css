@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 body{
-    background: radial-gradient(#0053e5, #003697, #0d2551);
+    background: radial-gradient(#3465bc, #3465bc, #102566);
 	background-size: cover;
 	background-attachment: fixed;
 }
@@ -15,7 +15,7 @@ body{
 	margin-right: auto;
 	padding: 20px 30px 20px 30px;
 	border-radius: 5px;
-	box-shadow: 0px 0px 30px 3px #0156ff;
+	box-shadow: 0px 0px 30px 3px #568eff;
 }
 
 .my_h1 {
