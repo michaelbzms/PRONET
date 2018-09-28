@@ -40,7 +40,7 @@
 	<% } else if ( request.getAttribute("attr").equals("deleteAccount") ) { %>
 			<h2 class="my_h2 text-center">Delete Account</h2>
 			<br>
-			<div class="form pwd_form">		<!-- TODO: opinions? -->
+			<div class="form pwd_form">
 				<form method="POST" action="/TEDProject/prof/ChangeServlet?attr=deleteAccount" onsubmit="return confirm('This action is irreversible. Are you sure you want to delete your account?')">
 					<label class="form_field">Type your Password: </label><input class="form_field" type="password" name="password" required><br>
 					<input class="btn btn-light d-block mt-3 mb-2 ml-auto mr-auto" type="submit" value="Delete Account">

@@ -26,7 +26,7 @@
 		<jsp:include page="AdminNavBar.jsp"></jsp:include>
 		<div class="justify-content-between">
 			<% if (!exportPage) { %>
-				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right pb-1">Export Professionals' data to XML</a>
+				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right">Export Professionals' data to XML</a>
 				<h2 class="my_h2 pt-1">Registered Professionals</h2>
 			<% } else {	%>
 				<h2 class="my_h2">Export Registered Professionals to XML</h2>

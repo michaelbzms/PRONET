@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .past_comments_container {
-    max-height: 3000px;
+	max-height: none;
 }
 
 .article_img,

@@ -53,7 +53,7 @@ public class AJAXServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		if (action == null) {
 			out.write("Error: null action!");
-		} else if ( request.getSession(false) == null ) {
+		} else if ( request.getSession(false) == null && action != "loadArticle" ) {
 			out.write("Your session has ended. Please refresh the page.");
 			return;
 		} else {

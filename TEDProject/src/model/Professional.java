@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "profBio")
-@XmlType(propOrder = {"firstName", "lastName", "email", "password", "phone", "description", "employmentStatus", "employmentInstitution", "professionalExperience", "educationBackground", "skills"})
+@XmlType(propOrder = {"firstName", "lastName", "email", "phone", "profilePicURI", "description", "employmentStatus", "employmentInstitution", "professionalExperience", "educationBackground", "skills"})
 public class Professional {
 	
 	/* Characteristics */
@@ -24,6 +24,7 @@ public class Professional {
 	public String getEmail() { return email; }
 	public void setEmail(String email) { this.email = email; }
 	
+	@XmlTransient
 	public String getPassword() { return password; }
 	public void setPassword(String password) { this.password = password; }
 
@@ -36,7 +37,6 @@ public class Professional {
 	public String getPhone() { return phone; }
 	public void setPhone(String phone) { this.phone = phone; }
 	
-	@XmlTransient
 	public String getProfilePicURI() { return profilePicURI; }
 	public void setProfilePicURI(String profilePicURI) { this.profilePicURI = profilePicURI; }
 
