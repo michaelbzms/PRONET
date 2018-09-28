@@ -8,14 +8,14 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, model.DataBaseBridge" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/js-cookie.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/js-cookie.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
 	<% boolean exportPage = false;
@@ -23,20 +23,7 @@
 		   exportPage = true;
 	   } %>
 	<div class="main_container">
-		<nav class="navbar navbar-expand-xl bg-light justify-content-center">
-			<div class="container-fluid">
-			    <div class="navbar-header">
-			    	<a class="navbar-brand" href="/TEDProject/admin/AdminServlet">PRONET</a>
-			    </div>
-				<ul class="navbar-nav"  role="navigation">
-					<li class="nav-item">
-						<form class="form-inline" action="/TEDProject/LogoutServlet" method="post">
-							<input class="btn btn-primary" type="submit" value="Logout" >
-						</form>
-					</li>
-				</ul>
-			</div>
-		</nav>
+		<jsp:include page="AdminNavBar.jsp"></jsp:include>
 		<div class="justify-content-between">
 			<% if (!exportPage) { %>
 				<a href="/TEDProject/admin/AdminServlet?exportXML=form" class="btn btn-primary float-right pb-1">Export Professionals' data to XML</a>
@@ -85,6 +72,6 @@
 		</div>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>
-	<script src="/TEDProject/Javascript/adminPage.js"></script>
+	<script src="/TEDProject/js/adminPage.js"></script>
 </body>
 </html>

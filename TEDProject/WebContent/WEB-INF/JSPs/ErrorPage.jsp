@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
 	<title>PRONET - Professional Networking and more</title>
 </head>
 <body>

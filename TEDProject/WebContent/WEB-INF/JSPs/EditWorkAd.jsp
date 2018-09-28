@@ -8,14 +8,14 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/simplemde.min.css">
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">

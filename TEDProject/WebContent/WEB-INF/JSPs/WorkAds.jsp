@@ -8,15 +8,15 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.WorkAd, model.Application, model.MyUtil, model.KNNWorkAds, model.SkillRelevanceEvaluator" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/workads.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -54,7 +54,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<script src="/TEDProject/Javascript/alerts/workAdsAlerts.js"></script>
+			<script src="/TEDProject/js/alerts/workAdsAlerts.js"></script>
 		
 			<div>
 				<h2 class="my_h2">Work Ads from Connected Professionals</h2>
@@ -175,7 +175,7 @@
 				<%  } %>
 			 	</div>
 			</div>
-			<script src="/TEDProject/Javascript/apl_accordion.js"></script>
+			<script src="/TEDProject/js/apl_accordion.js"></script>
 	<% 	}
 		db.close(); %>
 		<jsp:include page="/footer.html"></jsp:include>

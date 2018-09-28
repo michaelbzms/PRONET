@@ -1,6 +1,5 @@
 var urlParams = new URLSearchParams(window.location.search);
 var alertParam = urlParams.get('alert');
-console.log(alertParam);
 if (alertParam === "emailChangeSuccess") {
 	$('#emailChangeSuccessAlert').show();
 	setTimeout(function(){

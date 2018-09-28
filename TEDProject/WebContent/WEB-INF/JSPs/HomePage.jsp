@@ -8,16 +8,16 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.Article, model.KNNArticles" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/simplemde.min.css">
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/simplemde.min.js"></script>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge();
@@ -180,18 +180,18 @@
 				</div>
 				<jsp:include page="/footer.html"></jsp:include>
 			</div>
-   			<script src="/TEDProject/Javascript/util.js"></script>
-   			<script src="/TEDProject/Javascript/responsiveInputHeight.js"></script>
-			<script id="fileInputUpdateLabelScript" src="/TEDProject/Javascript/fileInputUpdateLabelScript.js" data-emptyText="<i>No files chosen</i>"></script>
-   			<script src="/TEDProject/Javascript/submitArticle.js"></script>
-			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="false"></script>
-			<script id="toggleInterestScript" src="/TEDProject/Javascript/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
-			<script src="/TEDProject/Javascript/openCommentForm.js"></script>
-			<script id="submitCommentScript" src="/TEDProject/Javascript/submitComment.js" data-profID="<%= prof.getID() %>" data-profProfilePicURI="<%= prof.getProfilePicURI() %>"
+   			<script src="/TEDProject/js/util.js"></script>
+   			<script src="/TEDProject/js/responsiveInputHeight.js"></script>
+			<script id="fileInputUpdateLabelScript" src="/TEDProject/js/fileInputUpdateLabelScript.js" data-emptyText="<i>No files chosen</i>"></script>
+   			<script src="/TEDProject/js/submitArticle.js"></script>
+			<script id="deleteArticleScript" src="/TEDProject/js/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="false"></script>
+			<script id="toggleInterestScript" src="/TEDProject/js/toggleInterest.js" data-profID="<%= prof.getID() %>"></script>
+			<script src="/TEDProject/js/openCommentForm.js"></script>
+			<script id="submitCommentScript" src="/TEDProject/js/submitComment.js" data-profID="<%= prof.getID() %>" data-profProfilePicURI="<%= prof.getProfilePicURI() %>"
 					data-profFullName="<%= prof.getFirstName() %> <%= prof.getLastName() %>"></script>
-		   	<script src="/TEDProject/Javascript/commentSendOnEnter.js"></script>
-   			<script id="deleteCommentScript" src="/TEDProject/Javascript/deleteCommentScript.js" data-profID="<%= prof.getID() %>"></script>
-   			<script src="/TEDProject/Javascript/imageModalScript.js"></script>
+		   	<script src="/TEDProject/js/commentSendOnEnter.js"></script>
+   			<script id="deleteCommentScript" src="/TEDProject/js/deleteCommentScript.js" data-profID="<%= prof.getID() %>"></script>
+   			<script src="/TEDProject/js/imageModalScript.js"></script>
 	<%	}
 		db.close(); %>
 </body>

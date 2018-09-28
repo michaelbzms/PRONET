@@ -7,12 +7,12 @@
 	<title>PRONET - Settings</title>
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -33,7 +33,7 @@
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
-		<script src="/TEDProject/Javascript/alerts/settingsAlerts.js"></script>
+		<script src="/TEDProject/js/alerts/settingsAlerts.js"></script>
 		
 		<div class="buttonContainer changeButton">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change Email</a>

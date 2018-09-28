@@ -8,16 +8,16 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, java.nio.file.Files, java.nio.file.Paths, model.DataBaseBridge, model.MyUtil, model.Article, java.util.List" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/simplemde.min.css">
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/articlepage.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -136,9 +136,9 @@
 			<script>
 				var content = new SimpleMDE({ element: document.getElementById("articleContent"), showIcons: ["code", "table"] });
 			</script>
-   			<script src="/TEDProject/Javascript/util.js"></script>
-			<script id="deleteArticleScript" src="/TEDProject/Javascript/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="true"></script>
-   			<script src="/TEDProject/Javascript/imageModalScript.js"></script>
+   			<script src="/TEDProject/js/util.js"></script>
+			<script id="deleteArticleScript" src="/TEDProject/js/deleteArticleScript.js" data-profID="<%= prof.getID() %>" data-redirect="true"></script>
+   			<script src="/TEDProject/js/imageModalScript.js"></script>
 	<%  }
 	    db.close(); %>
 	</div>

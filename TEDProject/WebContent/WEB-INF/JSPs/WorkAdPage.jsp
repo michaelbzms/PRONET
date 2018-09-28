@@ -8,15 +8,15 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.WorkAd, model.Application, model.MyUtil" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/simplemde.min.css">
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/simplemde.min.css">
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/applications.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -59,7 +59,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<script src="/TEDProject/Javascript/alerts/workAdPageAlerts.js"></script>
+			<script src="/TEDProject/js/alerts/workAdPageAlerts.js"></script>
 		 	
 			<h1 class="my_h1"><%= ad.getTitle() %></h1>
 			<h5 class="text-center">Published by <a href="/TEDProject/ProfileLink?ProfID=<%= ad.getPublishedByID() %>"><%= db.getProfessionalFullName(ad.getPublishedByID()) %></a> on <%= MyUtil.printDate(ad.getPostedDate(), true) %></h5>
@@ -142,8 +142,8 @@
 			var applyNote = document.getElementById("applyNote");
 			if (applyNote) var applyNoteSMDE = new SimpleMDE({ element: applyNote, showIcons: ["code", "table"] });
 		</script>
-		<script src="/TEDProject/Javascript/apl_accordion.js"></script>    
-		<script src="/TEDProject/Javascript/util.js"></script>
+		<script src="/TEDProject/js/apl_accordion.js"></script>    
+		<script src="/TEDProject/js/util.js"></script>
 	<% } 
 	   db.close(); %>
 	   <jsp:include page="/footer.html"></jsp:include>

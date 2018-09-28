@@ -8,13 +8,13 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality, model.MyUtil" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/messanges.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
 	<% 	DataBaseBridge db = new DataBaseBridge();
@@ -108,7 +108,7 @@
 	<% } %>
 	<% db.close(); %>
 	 <!-- JS scripts for this page -->
-	<script src="/TEDProject/Javascript/messages.js" id="messages_script" data-profID="<%= prof.getID() %>"></script>
-	<script src="/TEDProject/Javascript/util.js"></script>
+	<script src="/TEDProject/js/messages.js" id="messages_script" data-profID="<%= prof.getID() %>"></script>
+	<script src="/TEDProject/js/util.js"></script>
 </body>
 </html>

@@ -8,15 +8,15 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<%@ page import="model.Professional, model.DataBaseBridge, model.MyUtil, java.util.List" %>
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap.css"/>
-	<link rel="stylesheet" type="text/css" href="/TEDProject/css/bootstrap-grid.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap-grid.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/article.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/grid-box.css"/>
 	<!-- JS -->
-	<script src="/TEDProject/Javascript/jquery-3.3.1.js"></script>
-	<script src="/TEDProject/Javascript/bootstrap.min.js"></script>
-	<script src="/TEDProject/Javascript/simplemde.min.js"></script>
+	<script src="/TEDProject/js/lib/jquery-3.3.1.min.js"></script>
+	<script src="/TEDProject/js/lib/bootstrap.min.js"></script>
+	<script src="/TEDProject/js/lib/simplemde.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -36,8 +36,10 @@
 			}
 			boolean isSelf = (sessionProfID == profID); 
 			boolean isAdmin = ( currentSession != null && currentSession.getAttribute("isAdmin") != null && ((boolean) currentSession.getAttribute("isAdmin")) );
-			// Navbar for professionals or visitors
-			if (!isAdmin) { 
+			// Appropriate navbar:
+			if (isAdmin) { %>
+				<jsp:include page="AdminNavBar.jsp"></jsp:include>
+		 <% } else {
 				if (sessionProfID > -1) { %>
 					<jsp:include page="ProfNavBar.jsp">
 						<jsp:param name="activePage" value="PersonalInformation"/> 
@@ -45,7 +47,7 @@
 			 <% } else { %>
 			 		<jsp:include page="VisitorNavBar.jsp"></jsp:include>
 			 <% } 
-		 	} %>
+		    } %>
 			
 		  	<div class="row">
 				<div class="col-4">
@@ -114,7 +116,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<script src="/TEDProject/Javascript/alerts/profileAlerts.js"></script>
+					<script src="/TEDProject/js/alerts/profileAlerts.js"></script>
 					
 					<div class="info_tab">
 						<% if ( Prof.getDescription() != null && !Prof.getDescription().isEmpty()) { %>
