@@ -77,24 +77,49 @@
 							</div>
 							<div class="side_tab">
 								<h4 class="neon_header">My Connections</h4>
-								<div class="grid_container_mini justify-content-left">
+								<div class="container justify-content-center">
 								<% if ( topProfIDs != null ) { 
-									   for (int i = 0 ; i < topProfIDs.length ; i++) { 
-									   		Professional p = db.getBasicProfessionalInfo(topProfIDs[i]); 
-									   		if ( p != null ) { %>
-											    <a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
-													<div class="grid_item_mini text-dark">
-														<img class="img-thumbnail side_tab_connection_thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
-														<%= p.getFirstName() %><br><%= p.getLastName() %>		
-													</div>
-												</a>
-									<%		} 
-									   	}
 										if ( topProfIDs.length == 0 ) { %>
-											<p><i>You have not got any connections.</i></p>
-									<%  } 
+											<p><i>You don't have any connections.</i></p>
+									<%  } else { %>
+											<div class="row justify-content-between">
+											   <% int i;
+											   	  for (i = 0; i < topProfIDs.length && i < 3; i++) { 
+											   		Professional p = db.getBasicProfessionalInfo(topProfIDs[i]); 
+											   		if ( p != null ) { %>
+													    <a class="col grid_item_mini" href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
+															<div class="text-dark">
+																<img class="img-thumbnail side_tab_connection_thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+																<%= p.getFirstName() %><br><%= p.getLastName() %>		
+															</div>
+														</a>
+													<% } 
+									   			  } 
+									   			  for (int j = i; j < 3; j++) { %>
+									   				  <div class="col"></div>
+									   		   <% } %>
+									   		</div>
+									   		<% if (topProfIDs.length > 3) { %>
+										   		<div class="row justify-content-between">
+												   <% for (; i < topProfIDs.length && i < 6; i++) { 
+												   		Professional p = db.getBasicProfessionalInfo(topProfIDs[i]); 
+												   		if ( p != null ) { %>
+														    <a class="col grid_item_mini text-dark" href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
+																<div>
+																	<img class="img-thumbnail side_tab_connection_thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+																	<%= p.getFirstName() %><br><%= p.getLastName() %>		
+																</div>
+															</a>
+														<% } 
+										   			  } 
+										   			  for (int j = i; j < 6; j++) { %>
+										   				  <div class="col"></div>
+										   		   <% } %>
+										   		</div>
+										   	<% } 
+										}
 									} else { // either 0 connections or an error from KNN %>
-										<p><i>You have not got any connections.</i></p>
+										<p><i>You don't have any connections.</i></p>
 								<% 	} %>
 								</div>
 							<% 	if ( topProfIDs != null && topProfIDs.length > 0 ) { %>

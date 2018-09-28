@@ -93,7 +93,7 @@ public class SkillRelevanceEvaluator {
 		List<String> stemmedAdDescription = getStemmedList(adDescriptionString);
 		double totalScore = 0.0;
 		int skillFrequency;
-		/* For each unique skill the score is incremented by 3 if it appears in the title and by 1 + log(x)
+		/* For each unique skill the score is incremented by TitleWeight if it appears in the title and by 1 + log(x)
 		 *  where x the frequency with which the skill appears in the ad description, if it appears there */
 		for (String skill : stemmedSkills) {
 			totalScore += Collections.frequency(stemmedAdTitle, skill) * TitleWeight;

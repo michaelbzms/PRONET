@@ -39,13 +39,6 @@
 	background-color: #88c0ff;
 }
 
-.grid_container_mini{
-	display: grid;
-	grid-template-columns: auto auto auto;  /* ? x 3 grid */
-	padding: 2px;
-	list-style-type: none;
-}
-
 .grid_item_mini{
 	display: inline-block;
 	border-color: #0e1854;
