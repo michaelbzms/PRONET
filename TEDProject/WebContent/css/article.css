@@ -10,8 +10,8 @@
 
 .article_prof_img {
 	height: 48px;
-    width: 48px;
-    margin: 0 5px;
+	width: 48px;
+	margin: 0 5px;
 }
 
 .interests_count:hover {
@@ -38,7 +38,7 @@
 .past_comments_container {
 	margin: 5px 0;
 	overflow-y: auto;
-    max-height: 410px;
+	max-height: 410px;
 }
 
 .comment {
@@ -67,40 +67,39 @@
     margin: 0 5px;
 }
 
-.articleFilesDiv{
+.articleFilesDiv {
 	margin: 20px 0px 20px 0px;
 	height: auto;
 	width: auto;
 	display: table;
 }
 
-.article_img{
+.article_img {
 	display: inline-block;
 	margin-right: 3px;
 	margin-bottom: 3px;
-	height: auto;
-	max-width: 400px;
+	max-width: 500px;
+	max-height: 500px;
 	object-fit: contain;
 	cursor: pointer;
 }
 
-.article_vid{
+.article_vid {
 	display: inline-block;
 	margin-right: 3px;
 	margin-bottom: 3px;
-	max-height: 400px;
-	max-width: 400px;
+	max-height: 500px;
+	max-width: 500px;
 }
 
-.article_aud{
+.article_aud {
 	display: inline-block;
 	margin-right: 3px;
 	margin-bottom: 3px;
-	max-height: 200px;
-	max-width: 400px;
+	max-height: 250px;
+	max-width: 500px;
 }
 
 .custom-file {
 	width: 70%;
 }
-
