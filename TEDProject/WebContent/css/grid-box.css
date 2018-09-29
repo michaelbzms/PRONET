@@ -7,8 +7,8 @@
 }
 
 .grid_container{
-	display: flex; /* Magic begins */
-  	flex-wrap: wrap; /* Multiline */
+	display: flex;
+  	flex-wrap: wrap;
 	padding: 10px;
 	list-style-type: none;
 	columns: 3;
@@ -18,7 +18,7 @@
 
 .grid_item{
 	display: inline-block;
-	flex-grow: 1;   /* Grow to fill available space */
+	flex-grow: 1;
 	border-color: #0e1854;
 	border-style: solid;
 	border-width: 1px;
@@ -37,6 +37,7 @@
 
 .grid_item:hover{
 	background-color: #88c0ff;
+	text-decoration: none;
 }
 
 .grid_item_mini{

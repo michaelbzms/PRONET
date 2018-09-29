@@ -57,23 +57,24 @@
 					if ( Connections != null && Connections.isEmpty() ) { %>
 						<p><i>You have not got any connections.</i></p>
 				<% 	} else if ( Connections != null ) { %>
-						<ul id="connections_grid" class="grid_container">
+						<div id="connections_grid" class="grid_container">
 						<%	for (Professional p : Connections) { %>
-								<li class="grid_item">
-									<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
-									<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-									<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
-										<%= p.getEmploymentStatus() %> 
-									<% } %>
-									<br>
-									<% if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
-										<%= p.getEmploymentInstitution() %>
-									<% } %>
-									<br>
-									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>
-								</li>
+								<a class="grid_item" href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
+									<div class="text-dark">
+										<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+										<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
+										<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
+											<%= p.getEmploymentStatus() %> 
+										<% } %>
+										<br>
+										<% if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
+											<%= p.getEmploymentInstitution() %>
+										<% } %>
+										<br>
+									</div>
+								</a>
 						<%	} %>
-						</ul>
+						</div>
 				<%	} %>
 				</div>
 			</div>

@@ -145,29 +145,29 @@
 		<% 	if ( isAdmin || (currentSession != null && db.areProfessionalsConnected(profID, sessionProfID) && !isSelf) ) { %>
 				<div class="connections_bar">
 					<h2 class="my_h2">Connections</h2>
-					<div class="grid_container_container">
-						
+					<div class="grid_container_container">					
 						<% List<Professional> Connections = db.getConnectedProfessionalsFor(profID);
 						   if ( Connections != null && Connections.size() > 0) { %>
-								<ul id="connections_grid" class="grid_container">
-						<% 		for (Professional p : Connections) { %>
-									<li class="grid_item">
-										<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
-										<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-									 	<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
-											<%= p.getEmploymentStatus() %> 
-											<br> 
-										<% } 
-										   if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
-										   	<%= p.getEmploymentInstitution() %> 
-											<br>
-										<% } %>
-										<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
-									</li>
-							<%	} %>
-								</ul>
+								<div id="connections_grid" class="grid_container">
+								<%	for (Professional p : Connections) { %>
+										<a class="grid_item" href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">
+											<div class="text-dark">
+												<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
+												<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
+												<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
+													<%= p.getEmploymentStatus() %> 
+												<% } %>
+												<br>
+												<% if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
+													<%= p.getEmploymentInstitution() %>
+												<% } %>
+												<br>
+											</div>
+										</a>
+								<%	} %>
+								</div>
 						<% } else if ( Connections != null ) { %>
-								<p><i>This professional does not have any connections.</i></p>
+								<p><i>This Professional does not have any connections.</i></p>
 						<% } %>
 					</div>
 				</div>
