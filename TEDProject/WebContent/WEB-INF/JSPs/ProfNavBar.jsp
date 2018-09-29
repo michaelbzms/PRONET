@@ -41,13 +41,15 @@
 			</li>
 			<li class="nav-item <%= addCLASSIfActive(activePage, "Notifications")%>">
 				<a <%= addIDIfActive(activePage, "Notifications") %> class="nav-link" href="/TEDProject/prof/NavigationServlet?page=Notifications">Notifications
-				<% 	{ DataBaseBridge db = new DataBaseBridge();
-					  Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
-					  int numberOfNotifications = db.getNumberOfNotifications(prof.getID());
-					  if ( numberOfNotifications > 0 ){ %>
-						<span id="numberOfNotifications" class="badge badge-danger"><%= numberOfNotifications %></span>
-				<% 	  } 
-				   	  db.close(); 
+				<% 	{	DataBaseBridge db = new DataBaseBridge();
+					 	Professional prof = SiteFunctionality.acquireProfFromSession(db, request);
+					  	if (prof != null) {
+					  		int numberOfNotifications = db.getNumberOfNotifications(prof.getID());
+					 		if ( numberOfNotifications > 0 ) { %>
+								<span id="numberOfNotifications" class="badge badge-danger"><%= numberOfNotifications %></span>
+				<% 	  		} 
+				   	  		db.close(); 
+				   	   	} 
 				   	} %>
 				</a>
 			</li>
