@@ -16,6 +16,7 @@ body{
 	padding: 20px 30px 20px 30px;
 	border-radius: 5px;
 	box-shadow: 0px 0px 30px 3px #568eff;
+	word-break: break-word;
 }
 
 .my_h1 {

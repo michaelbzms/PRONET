@@ -45,26 +45,31 @@
 						<input type="checkbox" onClick="selectAll(this)">Select All<br>
 				<% } %>
 						<div class="grid_container"> 
-						<% for (int i = 0 ; i < professionals.length ; i++ ){ %>
-							<a class="grid_item" href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">
-								<div class="text-dark">
-									<% if (exportPage) { %>
-										<input type="checkbox" name="profID" value="<%= professionals[i].getID() %>">
+					 <% for (int i = 0 ; i < professionals.length ; i++ ) { 
+							if (exportPage) { %>
+								<input id="profID<%= professionals[i].getID() %>" type="checkbox" name="profID" value="<%= professionals[i].getID() %>" class="d-none">
+								<div class="grid_item" onclick="document.getElementById('profID<%= professionals[i].getID() %>').click();">
+						 <% } else { %>
+								<a class="grid_item" href="/TEDProject/ProfileLink?ProfID=<%= professionals[i].getID() %>">
+						 <% } %>
+									<div class="text-dark">
+										<img class="img-thumbnail" src="<%= professionals[i].getProfilePicURI() %>" alt="Profile picture"><br>
+										<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
+									 	<% if (professionals[i].getEmploymentStatus() != null && !professionals[i].getEmploymentStatus().isEmpty()) { %> 
+											<%= professionals[i].getEmploymentStatus() %> 
+										<% } %>
+										<br> 
+										<% if (professionals[i].getEmploymentInstitution() != null && !professionals[i].getEmploymentInstitution().isEmpty()) { %> 
+										   	<%= professionals[i].getEmploymentInstitution() %> 
+										<% } %>
 										<br>
-									<% } %>	
-									<img class="img-thumbnail" src="<%= professionals[i].getProfilePicURI() %>" alt="Profile picture"><br>
-									<%= professionals[i].getFirstName() %> <%= professionals[i].getLastName() %><br>
-								 	<% if (professionals[i].getEmploymentStatus() != null && !professionals[i].getEmploymentStatus().isEmpty()) { %> 
-										<%= professionals[i].getEmploymentStatus() %> 
-									<% } %>
-									<br> 
-									<% if (professionals[i].getEmploymentInstitution() != null && !professionals[i].getEmploymentInstitution().isEmpty()) { %> 
-									   	<%= professionals[i].getEmploymentInstitution() %> 
-									<% } %>
-									<br>
+									</div>
+						 <% if (exportPage) { %>
 								</div>
-							</a>
-						<% } %>
+						 <% } else { %>
+								</a>
+						 <% } %>
+					 <% } %>
 						</div>
 					<% if (exportPage) { %>
 						<div class="buttonContainer text-center">
@@ -72,12 +77,12 @@
 							<a href="/TEDProject/admin/AdminServlet" class="btn btn-secondary">Cancel</a>
 						</div>
 					</form>
-				<% } 
+					<script src="/TEDProject/js/adminExportPage.js"></script>
+				 <% } 
 			   }
 			   db.close(); %>
 		</div>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>
-	<script src="/TEDProject/js/adminPage.js"></script>
 </body>
 </html>

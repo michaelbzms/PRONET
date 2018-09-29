@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-
 .grid_container_container {	
  	overflow-y: auto;
     max-height: 500px;
@@ -37,6 +36,14 @@
 
 .grid_item:hover{
 	background-color: #88c0ff;
+	text-decoration: none;
+}
+
+input[type=checkbox]:checked + .grid_item {
+	background-color: #88c0ff;
+}
+
+input[type=checkbox]:checked + .grid_item:hover {
 	text-decoration: none;
 }
 

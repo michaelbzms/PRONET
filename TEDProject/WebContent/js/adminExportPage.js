@@ -17,8 +17,10 @@ function checkIfAnyChecked() {
 }
 
 setInterval(function() {
-  if (Cookies.get("fileDownloading")) {    
-    Cookies.remove("fileDownloading", { path: '/TEDProject/admin' });		// clean the cookie for future downoads
-    location.href = "/TEDProject/admin/AdminServlet";		// redirect
-  }
+	if (Cookies.get("fileDownloading")) {
+		// clean the cookie for future downloads
+		Cookies.remove("fileDownloading", { path: '/TEDProject/admin' });
+		Cookies.remove("fileDownloading", { path: '/TEDProject/admin/' });
+		location.href = "/TEDProject/admin/AdminServlet";		// redirect
+	}
 }, 500);
