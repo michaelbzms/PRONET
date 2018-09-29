@@ -298,3 +298,8 @@ nav #active_page{
 	border-color: #b2cdff;
 	border-radius: 5px;
 }
+
+.cookie_disclaimer {
+	width: 50vw; 
+	margin: 0px auto;
+}

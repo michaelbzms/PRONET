@@ -97,7 +97,7 @@
 										<small class="text-secondary"><i>Request sent <%= MyUtil.getTimeAgo(db.getConnectionRequestDate(sessionProfID, profID)) %></i></small><br>
 										<a href="/TEDProject/prof/ConnectionServlet?action=cancel&ProfID=<%= profID %>" class="btn btn-outline-danger">Cancel Connection Request</a>
 								<%  } else {		// Any other not connected prof %>		
-										<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary">Connect</a>
+										<a href="/TEDProject/prof/ConnectionServlet?action=connect&ProfID=<%= profID %>" class="btn btn-primary mt-1">Connect</a>
 								<%  } %>
 							<% }
 						   } else {	%>

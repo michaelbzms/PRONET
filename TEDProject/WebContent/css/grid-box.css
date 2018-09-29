@@ -37,6 +37,7 @@
 .grid_item:hover{
 	background-color: #88c0ff;
 	text-decoration: none;
+	cursor: pointer;
 }
 
 input[type=checkbox]:checked + .grid_item {
