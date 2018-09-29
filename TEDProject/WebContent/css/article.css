@@ -76,28 +76,28 @@
 
 .article_img {
 	display: inline-block;
-	margin-right: 3px;
-	margin-bottom: 3px;
-	max-width: 500px;
-	max-height: 500px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	max-width: 400px;
+	max-height: 400px;
 	object-fit: contain;
 	cursor: pointer;
 }
 
 .article_vid {
 	display: inline-block;
-	margin-right: 3px;
-	margin-bottom: 3px;
-	max-height: 500px;
-	max-width: 500px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	max-height: 400px;
+	max-width: 400px;
 }
 
 .article_aud {
 	display: inline-block;
-	margin-right: 3px;
-	margin-bottom: 3px;
-	max-height: 250px;
-	max-width: 500px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	max-height: 200px;
+	max-width: 400px;
 }
 
 .custom-file {
