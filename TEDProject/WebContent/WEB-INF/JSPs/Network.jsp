@@ -56,25 +56,25 @@
 					<% List<Professional> Connections = db.getConnectedProfessionalsFor(prof.getID()); 
 					if ( Connections != null && Connections.isEmpty() ) { %>
 						<p><i>You have not got any connections.</i></p>
-					<% 	} else if ( Connections != null ) { %>
+				<% 	} else if ( Connections != null ) { %>
 						<ul id="connections_grid" class="grid_container">
-					<%		for (Professional p : Connections) { %>
+						<%	for (Professional p : Connections) { %>
 								<li class="grid_item">
 									<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
 									<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-								 	<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
+									<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
 										<%= p.getEmploymentStatus() %> 
-										<br> 
-									<% } 
-									   if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
-									   	<%= p.getEmploymentInstitution() %> 
-										<br>
 									<% } %>
-									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>					
+									<br>
+									<% if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
+										<%= p.getEmploymentInstitution() %>
+									<% } %>
+									<br>
+									<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>
 								</li>
 						<%	} %>
 						</ul>
-					 <% } %>
+				<%	} %>
 				</div>
 			</div>
 	<%	} 

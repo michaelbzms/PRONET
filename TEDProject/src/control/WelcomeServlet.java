@@ -189,7 +189,7 @@ public class WelcomeServlet extends HttpServlet {
 	            }
 	            response.sendRedirect("/TEDProject/prof/NavigationServlet?page=HomePage");
 			} else {     // SHOULD NOT HAPPEN
-				request.setAttribute("errorType", "???");   // unknown error
+				request.setAttribute("errorType", "dbError");   // unknown error
 				RequestDispatcher RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/ErrorPage.jsp");
 				RequetsDispatcherObj.forward(request, response);
 			}

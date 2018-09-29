@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, model.Professional, model.DataBaseBridge, model.SiteFunctionality" %>
 
-<% String searchString = request.getParameter("searchString"); %>
+<% String searchString = request.getParameter("searchString");   // guaranteed to exist from AJAXServlet %>
 
 <h4>Search results for "<%= searchString %>" are:</h4>
 
@@ -21,20 +21,17 @@
 						<li class="grid_item">
 							<img class="img-thumbnail" src="<%= p.getProfilePicURI() %>" alt="Profile picture"><br>
 							<b><%= p.getFirstName() %> <%= p.getLastName() %></b><br>
-							<% if (p.getEmploymentStatus() != null) { %> 
+							<% if (p.getEmploymentStatus() != null && !p.getEmploymentStatus().isEmpty()) { %> 
 								<%= p.getEmploymentStatus() %> 
-							<% } else { %> 
-								N/A  
 							<% } %>
-							<br> 
-							<% if (p.getEmploymentInstitution() != null) { %> <%= p.getEmploymentInstitution() %> 
-							<% } else { %> 
-								N/A
+							<br>
+							<% if (p.getEmploymentInstitution() != null && !p.getEmploymentInstitution().isEmpty()) { %> 
+								<%= p.getEmploymentInstitution() %>
 							<% } %>
 							<br>
 							<a href="/TEDProject/ProfileLink?ProfID=<%= p.getID() %>">View details</a>
 						</li>
-			<%		} 
+			<%		}
 				} %>
 			</ul>
 		</div>

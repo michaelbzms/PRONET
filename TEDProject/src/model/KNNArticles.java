@@ -22,6 +22,7 @@ public class KNNArticles {
 	private final double simScalingFactor = 3.0;        // how much important the difference in similarity should be versus the extra bonuses we give (who ara analogous to K) (should be sth 2 - 5)
 	private double[][] K_neighbours = null;
 	
+	
 	public KNNArticles(int k){
         if ( k <= 0 ) { 
         	System.err.println("K must be a positive number! Restoring K to default value of 3.");
@@ -195,10 +196,10 @@ public class KNNArticles {
     	Arrays.sort(ItemsToSort, new ItemComparator());
     	// 4. Overwrite ArticleIDs with ordered IDs in ItemsToSort
     	// DEBUG:
-    	System.out.println("___Articles bonuses_______________ ");
+    	//System.out.println("___Articles bonuses_______________ ");
     	for (int i = 0 ; i < ArticleIDs.length ; i++ ) {
     		// DEBUG:
-    		System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
+    		//System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
     		ArticleIDs[i] = ItemsToSort[i].getId();
     	}
     	return 0;
@@ -288,11 +289,11 @@ public class KNNArticles {
 		}
     	Arrays.sort(K_neighbours, new KNNComparator());
 		// DEBUG:
-    	System.out.println("___KNNs and their similarities________");
+    	//System.out.println("___KNNs and their similarities________");
     	for (int i = 0 ; i < maxNumber ; i++) {
     		KNNProfIDs[i] = connected_prof_IDs[(int) K_neighbours[i][0]];
     		// DEBUG:
-    		System.out.println((i+1) + ". id = " + KNNProfIDs[i] + ", similarity = " + K_neighbours[i][1]);
+    		//System.out.println((i+1) + ". id = " + KNNProfIDs[i] + ", similarity = " + K_neighbours[i][1]);
     	}
     	return KNNProfIDs;
     }

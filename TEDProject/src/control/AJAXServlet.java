@@ -61,8 +61,15 @@ public class AJAXServlet extends HttpServlet {
 			String articleIDstr, authorIDstr;
 			switch(action) {
 				case "searchProfessional":
-					RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/SearchResults.jsp");
-					RequetsDispatcherObj.forward(request, response);		
+					String searchString = request.getParameter("searchString");
+					if ( searchString == null ) {
+						out.write("Error: AJAX search professional reached server with invalid parameters");
+					} else if ( !SiteFunctionality.checkInputText(searchString, true, 255) ) {
+						out.write("Error: illegal search string input characters (or too long). Try again");
+					} else {
+						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/SearchResults.jsp");
+						RequetsDispatcherObj.forward(request, response);		
+					}
 					break;
 				case "connectionRequest":
 					String decision = request.getParameter("decision");
@@ -80,7 +87,7 @@ public class AJAXServlet extends HttpServlet {
 					String homeprofIDstr = request.getParameter("homeprof");
 					String awayprofIDstr = request.getParameter("awayprof");
 					if ( homeprofIDstr == null || awayprofIDstr == null ) {
-						out.write("AJAX load conversation request reached server with invalid parameters");
+						out.write("Error: AJAX load conversation request reached server with invalid parameters");
 					} else {
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Conversation.jsp");
 						RequetsDispatcherObj.forward(request, response);
@@ -91,10 +98,10 @@ public class AJAXServlet extends HttpServlet {
 					String sentByProfStr = request.getParameter("sentBy");
 					String sentToProfStr = request.getParameter("sentTo");
 					if ( text == null || sentByProfStr == null || sentToProfStr == null ) {
-						out.write("AJAX add message request reached server with invalid parameters"); 
+						out.write("Error: AJAX add message request reached server with invalid parameters"); 
 					} 
 					else if ( !SiteFunctionality.checkInputText(text, false, 65530) ) {      // mysql's TEXT's maximum size
-						out.write("illegal text message input characters (or too long)");
+						out.write("Error: illegal text message input characters (or too long)");
 					}
 					else {
 						text = text.replace("\n", "\n<br>\n");
@@ -103,7 +110,7 @@ public class AJAXServlet extends HttpServlet {
 							sentById = Integer.parseInt(sentByProfStr);
 							sentToId = Integer.parseInt(sentToProfStr);
 						} catch ( NumberFormatException e ) {
-							out.write("AJAX add message request reached server with invalid FORMAT parameters");
+							out.write("Error: AJAX add message request reached server with invalid FORMAT parameters");
 							return;
 						}
 						SiteFunctionality.addMessage(text, sentById, sentToId);
@@ -115,14 +122,14 @@ public class AJAXServlet extends HttpServlet {
 					String homeprof = request.getParameter("homeprof");
 					String awayprof = request.getParameter("awayprof");
 					if ( latestGot == null || homeprof == null || awayprof == null ) {
-						if (!warned) { System.out.println("Invalid arguements at checkForNewMessages action in AJAXServlet.java"); warned = true; }
+						if (!warned) { System.err.println("Invalid arguements at checkForNewMessages action in AJAXServlet.java"); warned = true; }
 					} else {
 						int homeprofID, awayprofID;
 						try {
 							homeprofID = Integer.parseInt(homeprof);
 							awayprofID = Integer.parseInt(awayprof);
 						} catch ( NumberFormatException e ) {
-							if (!warned) { System.out.println("Could not cast ProfIDs to int at checkForNewMessages action in AJAXServlet.java"); warned = true; }
+							if (!warned) { System.err.println("Could not cast ProfIDs to int at checkForNewMessages action in AJAXServlet.java"); warned = true; }
 							return;
 						}
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/NewMessages.jsp");
@@ -133,10 +140,10 @@ public class AJAXServlet extends HttpServlet {
 					String postText = request.getParameter("text");
 					Collection<Part> fileParts = request.getParts();
 					if ( postText == null || fileParts == null ) {
-						out.write("AJAX add article request reached server with invalid parameters");
+						out.write("Error: AJAX add article request reached server with invalid parameters");
 						System.out.println("AJAX add article request reached server with invalid parameters");
 					} else if ( !SiteFunctionality.checkInputText(postText, false, 16777210) ) {    // mysql's MEDIUMTEXT's maximum size
-						out.write("illegal post text input characters (or too long)");
+						out.write("Error: illegal post text input characters (or too long)");
 					} else {
 						// remove all non-file Parts
 						fileParts.removeIf((Part filePart) -> !filePart.getName().equals("file_input"));	
@@ -165,7 +172,7 @@ public class AJAXServlet extends HttpServlet {
 						DataBaseBridge db = new DataBaseBridge();
 						int articleID = SiteFunctionality.addArticle(request, db, postText, containsFiles);
 						if ( articleID < 0 ) {
-							out.write("failed to add article (wont attempt to save any files)");
+							out.write("Error: failed to add article (wont attempt to save any files)");
 							return;
 						}
 						if (containsFiles) {
@@ -178,13 +185,13 @@ public class AJAXServlet extends HttpServlet {
 				case "loadArticle":
 					articleIDstr = request.getParameter("ArticleID");
 					if ( articleIDstr == null ) {
-						out.write("error: empty request for article");
+						out.write("Error: empty request for article");
 					} else {
 						int articleID = -1;
 						try {
 							articleID = Integer.parseInt(articleIDstr);
 						} catch ( NumberFormatException e ) {
-							out.write("error: article ID not an integer number");
+							out.write("Error: article ID not an integer number");
 							return;
 						}   // "ArticleID" is already a request parameter as needed for Article.jsp
 						RequetsDispatcherObj = request.getRequestDispatcher("/WEB-INF/JSPs/Article.jsp");
@@ -195,8 +202,8 @@ public class AJAXServlet extends HttpServlet {
 					articleIDstr = request.getParameter("ArticleID");
 					authorIDstr = request.getParameter("AuthorID");
 					if (articleIDstr == null || authorIDstr == null) {
-						out.write("AJAX delete comment request reached server with invalid parameters");
-						System.out.println("AJAX delete comment request reached server with invalid parameters");
+						out.write("Error: AJAX delete comment request reached server with invalid parameters");
+						System.err.println("Error: AJAX delete comment request reached server with invalid parameters");
 					} else {
 						int articleID = -1;
 						int authorID = -1;
@@ -208,7 +215,7 @@ public class AJAXServlet extends HttpServlet {
 							return;
 						}
 						if ( SiteFunctionality.deleteArticle(articleID, authorID) < 0 ) {
-							out.write("failed to delete article");
+							out.write("Error: failed to delete article");
 							break;
 						}
 						out.write("success");
@@ -219,10 +226,10 @@ public class AJAXServlet extends HttpServlet {
 					articleIDstr = request.getParameter("ArticleID");
 					authorIDstr = request.getParameter("AuthorID");
 					if (commentText == null || articleIDstr == null || authorIDstr == null) {
-						out.write("AJAX add comment request reached server with invalid parameters");
-						System.out.println("AJAX add comment request reached server with invalid parameters");
+						out.write("Error: AJAX add comment request reached server with invalid parameters");
+						System.err.println("Error: AJAX add comment request reached server with invalid parameters");
 					} else if ( !SiteFunctionality.checkInputText(commentText, false, 65530) ) {   // mysql's TEXT's maximum size
-						out.write("illegal comment text input characters");
+						out.write("Error: illegal comment text input characters");
 					} else {
 						int articleID = -1;
 						int authorID = -1;
@@ -236,7 +243,7 @@ public class AJAXServlet extends HttpServlet {
 						commentText = commentText.replace("\n", "\n<br>\n");
 						int newCommentID = SiteFunctionality.addComment(articleID, authorID, commentText);
 						if ( newCommentID < 0 ) {
-							out.write("failed to add comment");
+							out.write("Error: failed to add comment");
 							break;
 						}
 						out.write(Integer.toString(newCommentID));
@@ -246,8 +253,8 @@ public class AJAXServlet extends HttpServlet {
 					String commentIDstr = request.getParameter("CommentID");
 					String sessionProfIDstr = request.getParameter("AuthorID");
 					if (commentIDstr == null || sessionProfIDstr == null) {
-						out.write("AJAX delete comment request reached server with invalid parameters");
-						System.out.println("AJAX delete comment request reached server with invalid parameters");
+						out.write("Error: AJAX delete comment request reached server with invalid parameters");
+						System.err.println("Error: AJAX delete comment request reached server with invalid parameters");
 					} else {
 						int commentID = -1;
 						int sessionProfID = -1;
@@ -259,7 +266,7 @@ public class AJAXServlet extends HttpServlet {
 							return;
 						}
 						if ( SiteFunctionality.deleteComment(commentID, sessionProfID) < 0 ) {
-							out.write("failed to delete comment");
+							out.write("Error: failed to delete comment");
 							break;
 						}
 						out.write("success");
@@ -269,8 +276,8 @@ public class AJAXServlet extends HttpServlet {
 					articleIDstr = request.getParameter("ArticleID");
 					String profIDstr = request.getParameter("ProfID");
 					if (articleIDstr == null || profIDstr == null) {
-						out.write("AJAX add comment request reached server with invalid parameters");
-						System.out.println("AJAX add comment request reached server with invalid parameters");
+						out.write("Error: AJAX add comment request reached server with invalid parameters");
+						System.err.println("Error: AJAX add comment request reached server with invalid parameters");
 					} else {
 						int articleID = -1;
 						int profID = -1;
@@ -294,7 +301,7 @@ public class AJAXServlet extends HttpServlet {
 					String interestBystr = request.getParameter("interestBy");
 					String articleIdstr = request.getParameter("articleID");
 					if ( type == null || commentORapplicationIDstr == null || interestBystr == null || articleIdstr == null ) {
-						out.write("error: ajax request missing parameter(s)");
+						out.write("Error: ajax request missing parameter(s)");
 					} else {
 						int articleId = -1, interestById = -1;
 						long commentID = -1;
@@ -308,7 +315,7 @@ public class AJAXServlet extends HttpServlet {
 								applicationID = Integer.parseInt(commentORapplicationIDstr);
 							}
 						} catch ( NumberFormatException e ) {
-							out.write("error: parameter should be integer number but isn't");
+							out.write("Error: parameter should be integer number but isn't");
 							return;
 						}
 						if ( type.equals("interest") ) {
@@ -327,7 +334,7 @@ public class AJAXServlet extends HttpServlet {
 							db.close();
 							out.write("success");
 						} else {
-							out.write("error: ambiguous type parameter");
+							out.write("Error: ambiguous type parameter");
 						}
 					}
 					break;

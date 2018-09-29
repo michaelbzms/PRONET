@@ -171,10 +171,10 @@ public class KNNWorkAds {
     	Arrays.sort(ItemsToSort, new ItemComparator());
     	// 4. Overwrite candidate_ads_IDs with ordered IDs in ItemsToSort
     	// DEBUG:
-		System.out.println("___WorkAd bonuses_______________ ");
+		//System.out.println("___WorkAd bonuses_______________ ");
     	for (int i = 0 ; i < candidate_ads_IDs.length ; i++ ) {
     		// DEBUG:
-    		System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
+    		//System.out.println("id: " + ItemsToSort[i].getId() + ", bonus: " + ItemsToSort[i].getBonus());
     		candidate_ads_IDs[i] = ItemsToSort[i].getId();
     	}
     	return 0;
