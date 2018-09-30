@@ -429,6 +429,9 @@ public class DataBaseBridge {
 	
 	public boolean addConnectedProfessionals(int prof1ID, int prof2ID) {
 		if (!connected) return false;
+		if ( areProfessionalsConnected(prof1ID, prof2ID) ) {       // if professionals are already connected then do not attempt to add a duplicate record
+			return true;
+		}
 		String insertString = "INSERT INTO ConnectedProfessionals (idProfessional1, idProfessional2, connectionDate) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement statement = connection.prepareStatement(insertString);
@@ -492,6 +495,9 @@ public class DataBaseBridge {
 	
 	public boolean createConnectionRequest(int askerID, int receiverID) {
 		if (!connected) return false;
+		if ( isThereAConnectionRequestBetween(askerID, receiverID) ) {      // do not add a duplicate connection request if there already exists one
+			return true;
+		}
 		String insertString = "INSERT INTO ConnectionRequests (idAsker, idReceiver, requestDate) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement statement = connection.prepareStatement(insertString);
@@ -504,6 +510,23 @@ public class DataBaseBridge {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean isThereAConnectionRequestBetween(int prof1ID, int prof2ID) {
+		if (!connected) return false;
+		String Query = "SELECT * FROM ConnectionRequests WHERE (idAsker = ? AND idReceiver = ?) OR (idAsker = ? AND idReceiver = ?)";
+		try {
+			PreparedStatement statement = connection.prepareStatement(Query);
+			statement.setInt(1, prof1ID);
+			statement.setInt(2, prof2ID);
+			statement.setInt(3, prof2ID);
+			statement.setInt(4, prof1ID);
+			ResultSet resultSet = statement.executeQuery();
+			return resultSet.next();            // false if empty set, true otherwise
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public boolean deleteConnection(int profID1, int profID2) {
