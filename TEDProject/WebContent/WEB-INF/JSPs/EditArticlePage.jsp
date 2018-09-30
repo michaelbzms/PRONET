@@ -64,7 +64,7 @@
 			   <p>You don't have permission to edit this article.</p>
 			 <% return;	   
 		   } %>
-		   
+		   <!-- Article -->
 			<div id="article<%= articleID %>" class="article">
 				<div class="d-flex flex-row vertical_center">
 					<div>
@@ -132,7 +132,7 @@
 					</form>
 				</div>
 			</div>
-		
+			<!-- js scripts -->
 			<script>
 				var content = new SimpleMDE({ element: document.getElementById("articleContent"), showIcons: ["code", "table"] });
 			</script>

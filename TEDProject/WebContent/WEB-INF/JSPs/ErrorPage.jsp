@@ -7,7 +7,7 @@
 	<link rel="icon" type="image/x-icon" href="/TEDProject/images/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="/TEDProject/css/lib/bootstrap.min.css"/>
-	<title>PRONET - Professional Networking and more</title>
+	<title>PRONET - Error Page</title>
 </head>
 <body>
 	<div class="main_container text-center">

@@ -33,7 +33,7 @@
 			</button>
 		</div>
 		<script src="/TEDProject/js/alerts/settingsAlerts.js"></script>
-		
+		<!-- Buttons to actually change seetings -->
 		<div class="buttonContainer changeButton">
 			<a href="/TEDProject/prof/NavigationServlet?page=ChangeSettings&attr=email" class="btn btn-primary btn-lg">Change Email</a>
 		</div>
