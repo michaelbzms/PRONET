@@ -49,7 +49,7 @@
 		<br>
 		<div class="form">
 			<h2 class="my_h2">SIGN UP</h2>
-			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data" onsubmit="return checkIdenticalPasswords()">
+			<form method="POST" action="/TEDProject/WelcomeServlet?register=true" enctype="multipart/form-data" onsubmit="return restrictPassword() && checkIdenticalPasswords();">
 				<label class="pl-1">First name: </label><input class="form_field" type="text" name="firstname" required><br>
 				<label class="pl-1">Last name: </label><input class="form_field" type="text" name="lastname" required><br>
 				<label class="pl-1">Email: </label><input class="form_field" type="email" name="email" required><br>
@@ -77,19 +77,11 @@
 		var tmzOffset = new Date().getTimezoneOffset(); 
 		document.getElementById("tmzOffset").value = tmzOffset;
 	</script>
-	<script>
-		function checkIdenticalPasswords() {
-			if ($("#password").val() != $("#rePassword").val()) {
-		        alert("Passwords do not match.");
-		        return false;
-		    }
-			return true;
-		}
-	</script>
 	<script> 
 	    $(function(){
 	    	$("#includedFooter").load("footer.html"); 
 	    });
     </script>
+	<script src="/TEDProject/js/passwordChecks.js"></script>  
 </body>
 </html>
