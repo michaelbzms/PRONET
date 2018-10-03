@@ -30,10 +30,10 @@
 			<h2 class="my_h2 text-center">Change Password</h2>
 			<br>
 			<div class="form pwd_form">
-				<form method="POST" action="/TEDProject/prof/ChangeServlet?attr=password" onsubmit="return checkIdenticalPasswords()">
+				<form method="POST" action="/TEDProject/prof/ChangeServlet?attr=password" onsubmit="return restrictPassword() && checkIdenticalPasswords();">
 					<label class="form_field">Current Password: </label><input class="form_field" type="password" name="currentPassword" required><br>
-					<label class="form_field">New Password: </label><input id="newPassword" class="form_field" type="password" name="newPassword" required><br>
-					<label class="form_field">Confirm New Password: </label><input id="reNewPassword" class="form_field" type="password" name="reNewPassword" required><br>
+					<label class="form_field">New Password: </label><input id="password" class="form_field" type="password" name="newPassword" required><br>
+					<label class="form_field">Confirm New Password: </label><input id="rePassword" class="form_field" type="password" name="reNewPassword" required><br>
 					<input class="btn btn-light d-block mt-2 mb-1 ml-auto mr-auto" type="submit" value="Submit">
 				</form>
 			</div>
@@ -55,14 +55,6 @@
 		<p class="text-center" ><a class="btn btn-secondary" href="/TEDProject/prof/NavigationServlet?page=Settings">Go back to Settings</a></p>
 		<jsp:include page="/footer.html"></jsp:include>
 	</div>
-	<script>
-		function checkIdenticalPasswords() {
-			if ($("#newPassword").val() != $("#reNewPassword").val()) {
-		        alert("Passwords do not match.");
-		        return false;
-		    }
-			return true;
-		}
-	</script>
+	<script src="/TEDProject/js/passwordChecks.js"></script>
 </body>
 </html>
